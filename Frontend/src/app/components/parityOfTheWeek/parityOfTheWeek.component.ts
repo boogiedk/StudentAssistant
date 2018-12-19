@@ -2,8 +2,8 @@ import { Http } from '@angular/http';
 import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './parityOfTheWeek.component.html',
+  styleUrls: ['./parityOfTheWeek.component.css']
 })
 export class AppComponent {
   public parityOfTheWeekModel: ParityOfTheWeekModel;
