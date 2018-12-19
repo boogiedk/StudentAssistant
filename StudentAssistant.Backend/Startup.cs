@@ -28,6 +28,9 @@ namespace StudentAssistant.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
+            services.AddSingleton(ParityOfTheWeekConfigurationModel.GetConfigurationValues());
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -37,8 +40,6 @@ namespace StudentAssistant.Backend
                         .AllowCredentials());
             });
 
-            services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
-            services.AddSingleton(ParityOfTheWeekConfigurationModel.GetConfigurationValues());
 
             services.AddAutoMapper();
             services.AddMvc();
@@ -50,26 +51,13 @@ namespace StudentAssistant.Backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
-
+            app.UseDefaultFiles(); 
+            app.UseStaticFiles(); 
+          
+            app.UseMvc();
             app.UseCors("CorsPolicy");
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
         }
     }
 }
