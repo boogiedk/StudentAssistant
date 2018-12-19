@@ -1,7 +1,7 @@
 import { Http } from '@angular/http';
 import { Component } from '@angular/core';
 @Component({
-  selector: 'app-root',
+  selector: 'parity',
   templateUrl: './parityOfTheWeek.component.html',
   styleUrls: ['./parityOfTheWeek.component.css']
 })
