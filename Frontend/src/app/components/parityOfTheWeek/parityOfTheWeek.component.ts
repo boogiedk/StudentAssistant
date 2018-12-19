@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './parityOfTheWeek.component.html',
   styleUrls: ['./parityOfTheWeek.component.css']
 })
-export class AppComponent {
+export class ParityComponent {
   public parityOfTheWeekModel: ParityOfTheWeekModel;
 
   constructor(http: Http) {

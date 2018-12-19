@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './components/parityOfTheWeek/parityOfTheWeek.component';
+import { ParityComponent } from './components/parityOfTheWeek/parityOfTheWeek.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    ParityComponent,
   ],
   imports: [
     BrowserModule,
@@ -15,6 +15,6 @@ import { AppComponent } from './components/parityOfTheWeek/parityOfTheWeek.compo
     AppRoutingModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ParityComponent]
 })
 export class AppModule { }
