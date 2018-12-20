@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models;
@@ -10,8 +11,8 @@ using StudentAssistant.Backend.ViewModels;
 namespace StudentAssistant.Backend.Controllers
 {
     [Produces("application/json")]
-    [Route("api/parity")]
-    public class ParityOfTheWeekController : Controller
+    [Microsoft.AspNetCore.Mvc.Route("api/parity")]
+    public class ParityOfTheWeekController : ApiController
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
@@ -20,10 +21,8 @@ namespace StudentAssistant.Backend.Controllers
             _parityOfTheWeekService = parityOfTheWeekService;
         }
 
-        public IActionResult Index => View();
-
-        [HttpGet]
-        [Route("today")]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("today")]
         public ParityOfTheWeekViewModel GenerateParityOfTheWeek()
         {
             var dateTimeParam = DateTime.Now;
