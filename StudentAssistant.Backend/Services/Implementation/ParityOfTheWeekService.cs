@@ -124,7 +124,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public ParityOfTheWeekViewModel PrepareParityOfTheWeekViewModel(ParityOfTheWeekModel input)
         {
-            if (input == null) throw new NotSupportedException($"{typeof(DateTime)} input раве null");
+            if (input == null) throw new NotSupportedException($"{typeof(DateTime)} input равен null");
 
             var resultViewModel = _mapper.Map<ParityOfTheWeekViewModel>(input);
 
