@@ -17,48 +17,6 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
     /// [Тестируемый метод]_[Сценарий]_[Ожидаемое поведение]
     /// </summary>
 
-    //[TestMethod]
-    //public void ManagerZReportRequests_ShouldBeAddRequest()
-    //{
-    //    var fixture = new Fixture();
-    //    fixture.Customize(new AutoMoqCustomization());
-    //    var timeNow = DateTimeProvider.Now;
-    //    var insertedTime = new DateTime(2018, 10, 7, 6, 5, 4);
-
-    //    var deviceDataService = fixture.Freeze<Mock<IFrDeviceDataService>>();
-
-    //    var dataService = fixture.Freeze<Mock<IZReportPrintRequestDataService>>();
-
-    //    var setting = fixture.Build<FrDeviceConfigurationModel>()
-    //        .With(w => w.Value, timeNow.ToString("yyyy-MM-dd HH:mm:ss"))
-    //        .Create();
-
-    //    var settings = new[]
-    //    {
-    //            setting
-    //        };
-
-    //    deviceDataService.Setup(s => s.GetSettingOfDevice(It.IsAny<int?>(), It.IsAny<int?>())).Returns(settings);
-
-    //    var request = fixture.Build<ZReportPrintRequestModel>()
-    //        .With(x => x.InsertedDate, insertedTime)
-    //        .Create();
-
-    //    //       dataService.Setup(s => s.GetLastActiveRequest(setting.FrDeviceId)).Returns(request);
-
-    //    var frDeviceAdded = false;
-    //    dataService.Setup(s => s.AddRequest(setting.FrDeviceId)).Callback(delegate { frDeviceAdded = true; });
-
-    //    fixture.Inject(deviceDataService);
-    //    fixture.Inject(dataService);
-
-    //    var service = fixture.Create<ZReportManagerService>();
-
-    //    service.ManagerZReportRequests();
-
-    //    Assert.IsTrue(frDeviceAdded);
-    //}
-
     public class ParityOfTheWeekTests
     {
         [Fact]
