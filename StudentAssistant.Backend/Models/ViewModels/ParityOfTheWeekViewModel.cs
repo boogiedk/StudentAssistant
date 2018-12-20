@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StudentAssistant.Backend.ViewModels
+namespace StudentAssistant.Backend.Models.ViewModels
 {
     /// <summary>
     /// Модель для отображения данных с формированием данных о заданном <see cref="DateTime"/> параметре.

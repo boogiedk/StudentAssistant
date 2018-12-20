@@ -4,15 +4,16 @@ using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models;
+using StudentAssistant.Backend.Models.ViewModels;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
-using StudentAssistant.Backend.ViewModels;
+
 
 namespace StudentAssistant.Backend.Controllers
 {
     [Produces("application/json")]
     [Microsoft.AspNetCore.Mvc.Route("api/parity")]
-    public class ParityOfTheWeekController : ApiController
+    public class ParityOfTheWeekController : ControllerBase
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
@@ -23,15 +24,44 @@ namespace StudentAssistant.Backend.Controllers
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
         [Microsoft.AspNetCore.Mvc.Route("today")]
-        public ParityOfTheWeekViewModel GenerateParityOfTheWeek()
+        public IActionResult GenerateParityOfTheWeek()
         {
-            var dateTimeParam = DateTime.Now;
+            try
+            {
+                var dateTimeParam = DateTime.Now;
 
-            var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
+                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
 
-            var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
+                var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
 
-            return resultViewModel;
+                return Ok(resultViewModel);
+            }
+            catch(Exception ex)
+            {
+                //log
+                return BadRequest(ex);
+            }
+        }
+
+        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("selected-date")]
+        public IActionResult GenerateParityOfTheWeek(DateTime selectedTime)
+        {
+            try
+            {
+                var dateTimeParam = selectedTime;
+
+                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
+
+                var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
+
+                return Ok(resultViewModel);
+            }
+            catch(Exception ex)
+            {
+                //log
+                return BadRequest(ex);
+            }
         }
     }
 }

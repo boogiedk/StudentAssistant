@@ -1,6 +1,6 @@
 ﻿using System;
 using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.ViewModels;
+using StudentAssistant.Backend.Models.ViewModels;
 
 namespace StudentAssistant.Backend.Services
 {
