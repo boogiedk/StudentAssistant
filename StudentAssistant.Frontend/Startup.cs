@@ -1,20 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StudentAssistant.Backend.Models.ConfigurationModels;
-using StudentAssistant.Backend.Services;
-using StudentAssistant.Backend.Services.Implementation;
 
-namespace StudentAssistant.Backend
+namespace StudentAssistant.Frontend
 {
     public class Startup
     {
@@ -28,19 +22,6 @@ namespace StudentAssistant.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-            });
-
-            services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
-            services.AddSingleton(ParityOfTheWeekConfigurationModel.GetConfigurationValues());
-
-            services.AddAutoMapper();
             services.AddMvc();
         }
 
@@ -50,7 +31,10 @@ namespace StudentAssistant.Backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true
+                });
             }
             else
             {
@@ -59,7 +43,6 @@ namespace StudentAssistant.Backend
 
             app.UseStaticFiles();
 
-            app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
