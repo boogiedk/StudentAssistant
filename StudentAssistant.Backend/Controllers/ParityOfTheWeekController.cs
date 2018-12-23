@@ -21,8 +21,8 @@ namespace StudentAssistant.Backend.Controllers
             _parityOfTheWeekService = parityOfTheWeekService;
         }
 
-        public IActionResult Index => View();
-
+        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("today")]
         public IActionResult GenerateParityOfTheWeek()
         {
             try
