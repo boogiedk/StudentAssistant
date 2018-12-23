@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.ViewModels;
+using StudentAssistant.Backend.Models.ViewModels;
 
 namespace StudentAssistant.Backend.Infrastructure.Automapper
 {
