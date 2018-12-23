@@ -3,6 +3,7 @@ using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ViewModels;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
@@ -44,11 +45,13 @@ namespace StudentAssistant.Backend.Controllers
 
         [Microsoft.AspNetCore.Mvc.HttpGet]
         [Microsoft.AspNetCore.Mvc.Route("selected-date")]
-        public IActionResult GenerateParityOfTheWeek(DateTime selectedTime)
+        public IActionResult GenerateParityOfTheWeek(ParityOfTheWeekRequestModel selectedDateTime)
         {
             try
             {
-                var dateTimeParam = selectedTime;
+                if (selectedDateTime == null) throw new NotSupportedException($"{typeof(ParityOfTheWeekRequestModel)} selectedDate равен null");
+
+                var dateTimeParam = selectedDateTime.SelectedDateTime;
 
                 var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
 
