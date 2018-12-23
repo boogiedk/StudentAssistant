@@ -5,13 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Compile Remove="Infrastructure\DI\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="Infrastructure\DI\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Infrastructure\DI\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Infrastructure\DI\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.2.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
     <PackageReference Include="Moq" Version="4.10.0" />
   </ItemGroup>
