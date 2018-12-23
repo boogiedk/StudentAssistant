@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models;
@@ -12,7 +13,7 @@ using StudentAssistant.Backend.Services.Implementation;
 namespace StudentAssistant.Backend.Controllers
 {
     [Produces("application/json")]
-    [Route("api/parity")]
+    [Microsoft.AspNetCore.Mvc.Route("api/parity")]
     public class ParityOfTheWeekController : ControllerBase
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
