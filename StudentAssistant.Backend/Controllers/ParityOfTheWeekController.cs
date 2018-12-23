@@ -38,7 +38,7 @@ namespace StudentAssistant.Backend.Controllers
             }
             catch(Exception ex)
             {
-                //log
+                // log
                 return BadRequest(ex);
             }
         }
