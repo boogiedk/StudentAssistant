@@ -64,6 +64,23 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
+        public bool isSchoolDay(DateTime timeNowParam)
+        {
+            if (timeNowParam.Month <= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
+                return false;
+
+            if (timeNowParam.Month == 1) // зимняя сессия - январь
+                return false;
+
+            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 8)) // первая неделя февраля - каникулы
+                return false;
+
+            if (timeNowParam.Month == 6) // летняя сессия - июнь
+                return false;
+
+            return true;
+        }
+
         public int GetCountParityOfWeek(DateTime timeNowParam)
         {
             try
