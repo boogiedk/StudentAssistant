@@ -4,6 +4,7 @@ using AutoMapper;
 using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.ConfigurationModels;
 using StudentAssistant.Backend.Models.ViewModels;
+using Humanizer;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -52,33 +53,68 @@ namespace StudentAssistant.Backend.Services.Implementation
                     ParityOfWeekCount = GetCountParityOfWeek(timeNow),
                     PartOfSemester = GetPartOfSemester(timeNow),
                     NumberOfSemester = GetNumberOfSemester(timeNow, _config.StartLearningYear),
-                    DayOfName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(timeNow.DayOfWeek)
+                    DayOfName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(timeNow.DayOfWeek),
+                    StatusDay = GetStatusDay(timeNow)
                 };
 
                 return parityOfTheWeekModel;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //log
                 throw new NotSupportedException($"Ошибка во время выполнения: {ex}");
             }
         }
 
-        public bool isSchoolDay(DateTime timeNowParam)
+        /// <summary>
+        /// Возвращает статус указанного дня.
+        /// </summary>
+        /// <param name="timeNowParam"></param>
+        /// <returns></returns>
+        private StatusDayType GetStatusDay(DateTime timeNowParam)
         {
-            if (timeNowParam.Month <= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
-                return false;
+            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
+                return StatusDayType.Holiday;
 
             if (timeNowParam.Month == 1) // зимняя сессия - январь
-                return false;
-
-            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 8)) // первая неделя февраля - каникулы
-                return false;
+                return StatusDayType.ExamsTime;
 
             if (timeNowParam.Month == 6) // летняя сессия - июнь
-                return false;
+                return StatusDayType.ExamsTime;
 
-            return true;
+            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 8)) // первая неделя февраля - каникулы
+                return StatusDayType.Holiday;
+
+            if (IsHoliday(timeNowParam)) // если это выходной
+                return StatusDayType.DayOff;
+
+            return StatusDayType.SchoolDay;
+        }
+
+        /// <summary>
+        /// Возвращает <see cref="true"/>, если переданная дата выпадает на выходной день, иначе <see cref="false"/>.
+        /// </summary>
+        /// <param name="timeNowParam"></param>
+        /// <param name="isSixDayWorkingWeek"></param>
+        /// <returns></returns>
+        private bool IsHoliday(DateTime timeNowParam, bool isSixDayWorkingWeek = false)
+        {
+            if (isSixDayWorkingWeek)
+            {
+                if (timeNowParam.Day == 7)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (timeNowParam.Day == 6 || timeNowParam.Day == 7)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public int GetCountParityOfWeek(DateTime timeNowParam)
@@ -89,8 +125,8 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 int result = 0;
 
-                if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // обнуление идет с июля по август
-                    return result;
+                //if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // обнуление идет с июля по август
+                //    return result;
 
                 if (GetPartOfSemester(timeNowParam) == 1)
                 {
@@ -99,13 +135,21 @@ namespace StudentAssistant.Backend.Services.Implementation
                 }
                 else
                 {
-                    result = GetWeekNumberOfYear(timeNowParam)
-                             - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 2, 1)); // февраль - начало 2 семестра
+                    if (timeNowParam.Month == 1 && (GetStatusDay(timeNowParam) == StatusDayType.ExamsTime
+                          || GetStatusDay(timeNowParam) == StatusDayType.Holiday)) // если зимняя сессия или каникулы, возвращает счетчик от начала года
+                    {
+                        result = GetWeekNumberOfYear(timeNowParam);
+                    }
+                    else
+                    {
+                        result = GetWeekNumberOfYear(timeNowParam)
+                                                   - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 2, 8)); // февраль - начало 2 семестра
+                    }
                 }
 
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //log
                 throw new NotSupportedException($"Ошибка во время выполнения: {ex}");
@@ -147,6 +191,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             resultViewModel.ParityOfWeekToday = input.ParityOfWeekToday ? "Чётная" : "Нечётная";
             resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D");
+            resultViewModel.StatusDay = input.StatusDay.Humanize();
 
             return resultViewModel;
         }
