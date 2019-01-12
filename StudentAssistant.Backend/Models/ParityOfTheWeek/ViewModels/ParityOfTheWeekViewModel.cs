@@ -39,5 +39,10 @@ namespace StudentAssistant.Backend.Models.ViewModels
         /// Номер семестра.
         /// </summary>
         public int NumberOfSemester { get; set; }
+
+        /// <summary>
+        /// Текстовый статус дня: учебный, выходной, каникулы, сессия.
+        /// </summary>
+        public string StatusDay { get; set; }
     }
 }
