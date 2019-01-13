@@ -49,7 +49,10 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                if (selectedDateTime == null) throw new NotSupportedException($"{typeof(ParityOfTheWeekRequestModel)} selectedDate равен null");
+                if (selectedDateTime == null)
+                {
+                  return BadRequest("Запрос не содержит данных.");
+                }
 
                 var dateTimeParam = selectedDateTime.SelectedDateTime;
 

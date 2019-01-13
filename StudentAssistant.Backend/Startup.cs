@@ -39,6 +39,9 @@ namespace StudentAssistant.Backend
 
             services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
             services.AddSingleton(ParityOfTheWeekConfigurationModel.GetConfigurationValues());
+            services.AddScoped<IUserSupportService, UserSupportService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IValidationService, ValidationService>();
 
             services.AddAutoMapper();
             services.AddMvc();
