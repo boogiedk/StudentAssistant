@@ -1,4 +1,6 @@
-﻿namespace StudentAssistant.Backend.Services
+﻿using StudentAssistant.Backend.Services;
+
+namespace StudentAssistant.Backend.Models.Email
 {
     public class EmailRequestModel
     {
@@ -8,9 +10,9 @@
         public string UserName { get; set; }
 
         /// <summary>
-        /// Почта пользователя.
+        /// Почта пользователя, куда адресовано сообщение.
         /// </summary>
-        public string Email { get; set; }
+        public string EmailTo { get; set; }
 
         /// <summary>
         /// Тема сообщения.
@@ -21,5 +23,11 @@
         /// Текст сообщения.
         /// </summary>
         public string TextBody { get; set; }
+
+        /// <summary>
+        /// Модель для хранения модели отправителя.
+        /// </summary>
+        public EmailAccountModel EmailAccount { get; set; }
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
 
 namespace StudentAssistant.Backend.Services.Implementation

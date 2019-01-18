@@ -23,7 +23,7 @@ namespace StudentAssistant.Backend.Controllers
         }
 
 
-        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.Route("sendfeedback")]
         public IActionResult SendFeedback(UserFeedbackRequestModel input)
         {
