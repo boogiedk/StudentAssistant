@@ -1,5 +1,8 @@
 ﻿namespace StudentAssistant.Backend.Services
 {
+    /// <summary>
+    /// Модель, содержащая данные об аккаунте отправителя.
+    /// </summary>
     public class EmailAccountModel
     {
         /// <summary>

@@ -1,5 +1,8 @@
 ﻿namespace StudentAssistant.Backend.Services
 {
+    /// <summary>
+    /// Модель запроса на отправку сообщения для поддержки.
+    /// </summary>
     public class UserSupportRequestModel
     {
         /// <summary>

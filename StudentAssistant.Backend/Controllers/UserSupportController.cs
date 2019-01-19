@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
@@ -10,7 +7,7 @@ using StudentAssistant.Backend.Services;
 namespace StudentAssistant.Backend.Controllers
 {
     [Produces("application/json")]
-    [Route("api/usersupport")]
+    [Route("api/support")]
     public class UserSupportController : ControllerBase
     {
         private readonly IUserSupportService _userSupportService;
@@ -22,10 +19,9 @@ namespace StudentAssistant.Backend.Controllers
             _validationService = validationService;
         }
 
-
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        [Microsoft.AspNetCore.Mvc.Route("sendfeedback")]
-        public IActionResult SendFeedback(UserFeedbackRequestModel input)
+        [HttpPost]
+        [Route("sendfeedback")]
+        public IActionResult SendFeedback([FromBody]UserFeedbackRequestModel input)
         {
             try
             {
@@ -34,13 +30,17 @@ namespace StudentAssistant.Backend.Controllers
                     return BadRequest("Запрос не содержит данных.");
                 }
 
+                // проверяем корректность данных в модели.
                 var resultValidationServiceModel = _validationService.ValidateRequest(input);
 
+                // если модель содержит ошибки, которые определил сервис валидации, то
+                // вернуть BadRequest()
                 if(resultValidationServiceModel.Any())
                 {
                     return BadRequest(resultValidationServiceModel);
                 }
 
+                // отправляем фидбек 
                 var result = _userSupportService.SendFeedback(input);
 
                 return Ok(result);
@@ -51,6 +51,5 @@ namespace StudentAssistant.Backend.Controllers
                 return BadRequest(ex);
             }
         }
-
     }
 }

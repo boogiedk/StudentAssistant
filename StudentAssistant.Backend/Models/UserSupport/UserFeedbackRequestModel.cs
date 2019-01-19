@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace StudentAssistant.Backend.Models.UserSupport
 {
     /// <summary>
-    /// Модель для отправления отзыва пользователь.
+    /// Модель для отправления отзыва пользователя.
     /// </summary>
     public class UserFeedbackRequestModel
     {
@@ -18,7 +14,7 @@ namespace StudentAssistant.Backend.Models.UserSupport
         /// <summary>
         /// Почта пользователя.
         /// </summary>
-        public string Email {get;set;}
+        public string EmailTo {get;set;}
 
         /// <summary>
         /// Тема сообщения.

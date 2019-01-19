@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.Email;
 
 namespace StudentAssistant.Backend.Services.Implementation
@@ -25,9 +21,10 @@ namespace StudentAssistant.Backend.Services.Implementation
                     };
                 }
 
-                MailMessage messageEmail = new MailMessage(input.EmailTo, input.EmailAccount.EmailFrom);
+                MailMessage messageEmail = new MailMessage(input.EmailAccount.EmailFrom, input.EmailTo);
 
                 messageEmail.Subject = input.Subject; // Заголовок (текст, который появляется в push-уведомлениях
+                messageEmail.Body = input.TextBody; // Тело сообщения
                 messageEmail.IsBodyHtml = false;
 
 
@@ -37,7 +34,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                         new MailAddress(input.EmailAccount
                             .HiddenEmail)); // hiddenEmail добавляет адресат, куда отправлять копию отправленного сообщения.
                 }
-
+                
+                // настройка smtp клиента и отправка сообщения.
                 using (var smtp = new SmtpClient())
                 {
                     smtp.Port = input.EmailAccount.OutputPort;
@@ -49,7 +47,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                     smtp.Send(messageEmail);
                 }
 
-                return new EmailResultModel {IsSended = true};
+                return new EmailResultModel
+                {
+                    IsSended = true,
+                    Message = "Сообщение успешно отправлено."
+                };
             }
             catch (Exception ex)
             {

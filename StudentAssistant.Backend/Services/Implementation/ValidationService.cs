@@ -1,4 +1,5 @@
 ﻿using StudentAssistant.Backend.Models.UserSupport;
+using StudentAssistant.Backend.Models.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,18 @@ namespace StudentAssistant.Backend.Services.Implementation
             if (input == null)
                 errorList.Add(new ValidationResultModel() { ErrorMessage = "Запрос не содержит данных." });
 
-            if(input.Email==null)
+            //TODO:
+            //проверить, что быстрее, equals, nullOrEmpty или input==null
+            if (string.IsNullOrEmpty(input.EmailTo))
                 errorList.Add(new ValidationResultModel() { ErrorMessage = "Запрос не содержит E-mail." });
 
-            if (input.TextBody == null)
+            if (string.IsNullOrEmpty(input.TextBody))
                 errorList.Add(new ValidationResultModel() { ErrorMessage = "Запрос не содержит текста." });
 
-            if (input.Subject == null)
+            if (string.IsNullOrEmpty(input.Subject))
                 errorList.Add(new ValidationResultModel() { ErrorMessage = "Запрос не содержит заголовка." });
 
-            if (input.UserName == null)
+            if (string.IsNullOrEmpty(input.UserName))
                 errorList.Add(new ValidationResultModel() { ErrorMessage = "Запрос не содержит имени пользователя." });
 
 

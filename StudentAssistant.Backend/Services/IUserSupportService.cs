@@ -1,11 +1,10 @@
 ﻿using StudentAssistant.Backend.Models.UserSupport;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StudentAssistant.Backend.Services
 {
+    /// <summary>
+    /// Сервис для поддержки пользователей.
+    /// </summary>
     public interface IUserSupportService
     {
         /// <summary>

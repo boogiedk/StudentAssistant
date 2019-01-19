@@ -2,6 +2,9 @@
 
 namespace StudentAssistant.Backend.Models.Email
 {
+    /// <summary>
+    /// Модель для отправки E-mail сообщения.
+    /// </summary>
     public class EmailRequestModel
     {
         /// <summary>

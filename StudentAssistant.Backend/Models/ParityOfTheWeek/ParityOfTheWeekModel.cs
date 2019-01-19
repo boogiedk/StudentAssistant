@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using Humanizer;
 
 namespace StudentAssistant.Backend.Models
 {
@@ -43,35 +41,5 @@ namespace StudentAssistant.Backend.Models
         /// Тип статуса дня: учебный, выходной, каникулы, сессия.
         /// </summary>
         public StatusDayType StatusDay { get; set; }
-    }
-
-    /// <summary>
-    /// Тип статуса дня.
-    /// </summary>
-    public enum StatusDayType
-    {
-        [Description("Каникулы")]
-        /// <summary>
-        /// Каникулы.
-        /// </summary>
-        Holiday = 1,
-
-        [Description("Учебный день")]
-        /// <summary>
-        /// Учебный день.
-        /// </summary>
-        SchoolDay = 2,
-
-        [Description("Сессия")]
-        /// <summary>
-        /// Экзамены. (Сессия)
-        /// </summary>
-        ExamsTime = 3,
-
-        [Description("Выходной день")]
-        /// <summary>
-        /// Выходной день
-        /// </summary>
-        DayOff = 4,
     }
 }

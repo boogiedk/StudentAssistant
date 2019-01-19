@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StudentAssistant.Backend.Models.ConfigurationModels;
+using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 
@@ -24,6 +18,7 @@ namespace StudentAssistant.Backend
         }
 
         public IConfiguration Configuration { get; }
+        public object EmailServiceConfiguration { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -42,6 +37,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<IUserSupportService, UserSupportService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IValidationService, ValidationService>();
+            services.AddSingleton(EmailServiceConfigurationModel.GetDefaultValues());
 
             services.AddAutoMapper();
             services.AddMvc();
@@ -53,7 +49,7 @@ namespace StudentAssistant.Backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+
             }
             else
             {
