@@ -6,20 +6,20 @@
 </head>
 <body>
 
-<p *ngIf="!parityOfTheWeekModel"><em>Загрузка...</em></p>
+    <p *ngIf="!parityOfTheWeekModel"><em>Загрузка...</em></p>
 
-<div *ngIf="parityOfTheWeekModel" class="blockText">
-    <div>
-        <h1> Сегодня {{ parityOfTheWeekModel.dateTimeRequest }}, <b>{{ parityOfTheWeekModel.dayOfName }}</b></h1>
-        <h1> Идёт <b>{{ parityOfTheWeekModel.parityOfWeekCount }}-ая</b> неделя</h1>
-        <h1> и <b>{{ parityOfTheWeekModel.numberOfSemester }}</b> ({{ parityOfTheWeekModel.partOfSemester }} половина) семестр</h1>
+    <div *ngIf="parityOfTheWeekModel" class="blockText">
         <div>
-            <h1><b>{{ parityOfTheWeekModel.parityOfWeekToday }} неделя</b></h1>
+            <h1> Сегодня {{ parityOfTheWeekModel.dateTimeRequest }} <b>{{ parityOfTheWeekModel.dayOfName }}</b> </h1>
+            <h1> Идёт <b>{{ parityOfTheWeekModel.parityOfWeekCount }}-ая</b> неделя</h1>
+            <h1> и <b>{{ parityOfTheWeekModel.numberOfSemester }}</b> ({{ parityOfTheWeekModel.partOfSemester }} половина) семестр</h1>
+            <div>
+                <h1><b>{{ parityOfTheWeekModel.parityOfWeekToday }} неделя</b></h1>
+            </div>
         </div>
         <div>
             <h1><b>{{ parityOfTheWeekModel.statusDay }}</b></h1>
         </div>
     </div>
-</div>
 </body>
 </html>
