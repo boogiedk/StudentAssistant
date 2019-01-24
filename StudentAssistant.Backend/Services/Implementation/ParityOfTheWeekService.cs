@@ -192,6 +192,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             resultViewModel.ParityOfWeekToday = input.ParityOfWeekToday ? "Чётная" : "Нечётная";
             resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D");
             resultViewModel.StatusDay = input.StatusDay.Humanize();
+            resultViewModel.IsParity = input.ParityOfWeekToday;
 
             return resultViewModel;
         }

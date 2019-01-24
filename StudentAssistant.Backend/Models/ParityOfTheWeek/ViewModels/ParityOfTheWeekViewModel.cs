@@ -41,5 +41,10 @@ namespace StudentAssistant.Backend.Models.ViewModels
         /// Текстовый статус дня: учебный, выходной, каникулы, сессия.
         /// </summary>
         public string StatusDay { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="bool"/> true, если неделя чётная, иначе<see cref="bool"/> false.
+        /// </summary>
+        public bool IsParity { get; set; }
     }
 }
