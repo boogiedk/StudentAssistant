@@ -1,4 +1,5 @@
 ﻿using System;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 
 namespace StudentAssistant.Backend.Models
 {

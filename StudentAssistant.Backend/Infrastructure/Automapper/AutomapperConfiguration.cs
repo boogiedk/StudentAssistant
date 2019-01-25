@@ -5,11 +5,11 @@ using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Models.ViewModels;
 
-namespace StudentAssistant.Backend.Infrastructure.Automapper
+namespace StudentAssistant.Backend.Infrastructure.AutoMapper
 {
-    public class AutomapperConfiguration : Profile
+    public class AutoMapperConfiguration : Profile
     {
-        public AutomapperConfiguration()
+        public AutoMapperConfiguration()
         {
             CreateMap<ParityOfTheWeekModel, ParityOfTheWeekViewModel>()
                 .ForMember(destination => destination.DateTimeRequest,

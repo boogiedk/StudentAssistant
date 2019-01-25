@@ -1,34 +1,34 @@
 ﻿using System.ComponentModel;
 
-namespace StudentAssistant.Backend.Models
+namespace StudentAssistant.Backend.Models.ParityOfTheWeek
 {
     /// <summary>
     /// Тип статуса дня.
     /// </summary>
     public enum StatusDayType
     {
-        [Description("Каникулы")]
         /// <summary>
         /// Каникулы.
         /// </summary>
+        [Description("Каникулы")]
         Holiday = 1,
 
-        [Description("Учебный день")]
         /// <summary>
         /// Учебный день.
         /// </summary>
+        [Description("Учебный день")]
         SchoolDay = 2,
 
-        [Description("Сессия")]
         /// <summary>
         /// Экзамены. (Сессия)
         /// </summary>
+        [Description("Сессия")]
         ExamsTime = 3,
 
-        [Description("Выходной день")]
         /// <summary>
         /// Выходной день
         /// </summary>
+        [Description("Выходной день")]
         DayOff = 4,
     }
 }

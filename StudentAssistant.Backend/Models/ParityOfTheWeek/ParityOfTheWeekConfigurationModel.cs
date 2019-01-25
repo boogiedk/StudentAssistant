@@ -7,7 +7,7 @@
     {
         public int StartLearningYear { get; set; }
 
-        public static ParityOfTheWeekConfigurationModel GetConfigurationValues()
+        public static ParityOfTheWeekConfigurationModel GetDefaulfValues()
         {
             var result = new ParityOfTheWeekConfigurationModel
             {

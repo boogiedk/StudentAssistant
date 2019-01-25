@@ -5,6 +5,7 @@ using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.ConfigurationModels;
 using StudentAssistant.Backend.Models.ViewModels;
 using Humanizer;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -13,9 +14,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IMapper _mapper;
         private readonly ParityOfTheWeekConfigurationModel _config;
 
-        public ParityOfTheWeekService(IMapper mapper
-            , ParityOfTheWeekConfigurationModel config
-            )
+        public ParityOfTheWeekService(IMapper mapper, ParityOfTheWeekConfigurationModel config)
         {
             _mapper = mapper;
             _config = config;
@@ -185,13 +184,14 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public ParityOfTheWeekViewModel PrepareParityOfTheWeekViewModel(ParityOfTheWeekModel input)
         {
-            if (input == null) throw new NotSupportedException($"{typeof(DateTime)} input равен null");
+            if (input == null) throw new NotSupportedException($"{typeof(ParityOfTheWeekModel)} input равен null");
 
             var resultViewModel = _mapper.Map<ParityOfTheWeekViewModel>(input);
 
             resultViewModel.ParityOfWeekToday = input.ParityOfWeekToday ? "Чётная" : "Нечётная";
             resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D");
             resultViewModel.StatusDay = input.StatusDay.Humanize();
+            resultViewModel.IsParity = input.ParityOfWeekToday;
 
             return resultViewModel;
         }
