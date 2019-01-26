@@ -24,4 +24,6 @@ interface ParityOfTheWeekModel {
     partOfSemester: number;
     dayOfName: string;
     numberOfSemester: number;
+    statusDay: string;
+    isParity: boolean;
 }

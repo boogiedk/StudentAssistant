@@ -5,14 +5,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\DI\" />
-    <Folder Include="wwwroot\" />
+    <Compile Remove="Infrastructure\Configuration\**" />
+    <Compile Remove="Infrastructure\DI\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="Infrastructure\Configuration\**" />
+    <Content Remove="Infrastructure\DI\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Infrastructure\Configuration\**" />
+    <EmbeddedResource Remove="Infrastructure\DI\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Infrastructure\Configuration\**" />
+    <None Remove="Infrastructure\DI\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.2.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Humanizer" Version="2.5.16" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="Moq" Version="4.10.0" />
   </ItemGroup>
 

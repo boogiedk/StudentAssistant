@@ -3,7 +3,6 @@ body {
     padding-top: 100px
 }
 
-/* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
@@ -12,15 +11,6 @@ body {
 .blockText {
     font-size: 10px;
     font-family: Courier;
-}
-
-
-b.parityTrue {
-    color: #60B054;
-}
-
-b.parityFalse {
-    color: #B05454;
 }
 
 
@@ -34,7 +24,34 @@ div.blockText {
     text-align: center;
 }
 
-
 h1 {
     font-family: Courier;
 }
+
+div.parityTrue {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 2px solid black;
+    font-family: Courier;
+    text-align: center;
+}
+
+div.parityTrue b {
+    color: #60B054;
+}
+
+div.parityFalse {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 2px solid black;
+    font-family: Courier;
+    text-align: center;
+}
+
+div.parityFalse b {
+        color: #B05454;
+    }

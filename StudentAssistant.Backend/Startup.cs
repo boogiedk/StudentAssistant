@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StudentAssistant.Backend.Models.ConfigurationModels;
+using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 
@@ -38,7 +32,11 @@ namespace StudentAssistant.Backend
             });
 
             services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
-            services.AddSingleton(ParityOfTheWeekConfigurationModel.GetConfigurationValues());
+            services.AddSingleton(ParityOfTheWeekConfigurationModel.GetDefaulfValues());
+            services.AddScoped<IUserSupportService, UserSupportService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IValidationService, ValidationService>();
+            services.AddSingleton(EmailServiceConfigurationModel.GetDefaultValues());
 
             services.AddAutoMapper();
             services.AddMvc();
@@ -50,7 +48,7 @@ namespace StudentAssistant.Backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+
             }
             else
             {

@@ -1,21 +1,21 @@
 ﻿using System;
 
-namespace StudentAssistant.Backend.Models
+namespace StudentAssistant.Backend.Models.ViewModels
 {
     /// <summary>
-    /// Модель для работы с сервисом, связанного с формированием данных о заданном <see cref="DateTime"/> параметре.
+    /// Модель для отображения данных с формированием данных о заданном <see cref="DateTime"/> параметре.
     /// </summary>
-    public class ParityOfTheWeekModel
+    public class ParityOfTheWeekViewModel
     {
         /// <summary>
         /// Время создания запроса на получение данных.
         /// </summary>
-        public DateTime DateTimeRequest { get; set; }
+        public string DateTimeRequest { get; set; }
 
         /// <summary>
-        /// Хранит <see cref="bool"/> true, если неделя чётная, иначе <see cref="bool"/> false.
+        /// Хранит <see cref="string"/> true, если неделя чётная, иначе <see cref="string"/> false.
         /// </summary>
-        public bool ParityOfWeekToday { get; set; }
+        public string ParityOfWeekToday { get; set; }
 
         /// <summary>
         /// Хранит количество прошедших недель с сентября до <see cref="DateTime"/> переданного параметра.
@@ -36,5 +36,15 @@ namespace StudentAssistant.Backend.Models
         /// Номер семестра.
         /// </summary>
         public int NumberOfSemester { get; set; }
+
+        /// <summary>
+        /// Текстовый статус дня: учебный, выходной, каникулы, сессия.
+        /// </summary>
+        public string StatusDay { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="bool"/> true, если неделя чётная, иначе<see cref="bool"/> false.
+        /// </summary>
+        public bool IsParity { get; set; }
     }
 }

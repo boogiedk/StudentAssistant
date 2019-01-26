@@ -3,7 +3,9 @@ using System.Globalization;
 using AutoMapper;
 using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.ConfigurationModels;
-using StudentAssistant.Backend.ViewModels;
+using StudentAssistant.Backend.Models.ViewModels;
+using Humanizer;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -12,8 +14,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IMapper _mapper;
         private readonly ParityOfTheWeekConfigurationModel _config;
 
-        public ParityOfTheWeekService(IMapper mapper,
-            ParityOfTheWeekConfigurationModel config)
+        public ParityOfTheWeekService(IMapper mapper, ParityOfTheWeekConfigurationModel config)
         {
             _mapper = mapper;
             _config = config;
@@ -38,46 +39,120 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public ParityOfTheWeekModel GenerateDataOfTheWeek(DateTime timeNowParam)
         {
-            if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
-            var timeNow = timeNowParam;
-
-            var parityOfTheWeekModel = new ParityOfTheWeekModel
+            try
             {
-                DateTimeRequest = timeNow,
-                ParityOfWeekToday = GetParityOfTheWeekByDateTime(timeNow),
-                ParityOfWeekCount = GetCountParityOfWeek(timeNow),
-                PartOfSemester = GetPartOfSemester(timeNow),
-                NumberOfSemester = GetNumberOfSemester(timeNow, _config.StartLearningYear),
-                DayOfName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(timeNow.DayOfWeek)
-            };
+                if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
 
+                var timeNow = timeNowParam;
 
+                var parityOfTheWeekModel = new ParityOfTheWeekModel
+                {
+                    DateTimeRequest = timeNow,
+                    ParityOfWeekToday = GetParityOfTheWeekByDateTime(timeNow),
+                    ParityOfWeekCount = GetCountParityOfWeek(timeNow),
+                    PartOfSemester = GetPartOfSemester(timeNow),
+                    NumberOfSemester = GetNumberOfSemester(timeNow, _config.StartLearningYear),
+                    DayOfName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(timeNow.DayOfWeek),
+                    StatusDay = GetStatusDay(timeNow)
+                };
 
-            return parityOfTheWeekModel;
+                return parityOfTheWeekModel;
+            }
+            catch (Exception ex)
+            {
+                //log
+                throw new NotSupportedException($"Ошибка во время выполнения: {ex}");
+            }
+        }
+
+        /// <summary>
+        /// Возвращает статус указанного дня.
+        /// </summary>
+        /// <param name="timeNowParam"></param>
+        /// <returns></returns>
+        private StatusDayType GetStatusDay(DateTime timeNowParam)
+        {
+            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
+                return StatusDayType.Holiday;
+
+            if (timeNowParam.Month == 1) // зимняя сессия - январь
+                return StatusDayType.ExamsTime;
+
+            if (timeNowParam.Month == 6) // летняя сессия - июнь
+                return StatusDayType.ExamsTime;
+
+            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 8)) // первая неделя февраля - каникулы
+                return StatusDayType.Holiday;
+
+            if (IsHoliday(timeNowParam)) // если это выходной
+                return StatusDayType.DayOff;
+
+            return StatusDayType.SchoolDay;
+        }
+
+        /// <summary>
+        /// Возвращает <see cref="true"/>, если переданная дата выпадает на выходной день, иначе <see cref="false"/>.
+        /// </summary>
+        /// <param name="timeNowParam"></param>
+        /// <param name="isSixDayWorkingWeek"></param>
+        /// <returns></returns>
+        private bool IsHoliday(DateTime timeNowParam, bool isSixDayWorkingWeek = false)
+        {
+            if (isSixDayWorkingWeek)
+            {
+                if (timeNowParam.Day == 7)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (timeNowParam.Day == 6 || timeNowParam.Day == 7)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public int GetCountParityOfWeek(DateTime timeNowParam)
         {
-            if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
+            try
+            {
+                if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
 
-            int result = 0;
+                int result = 0;
 
-            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // обнуление идет с июля по август
+                //if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // обнуление идет с июля по август
+                //    return result;
+
+                if (GetPartOfSemester(timeNowParam) == 1)
+                {
+                    result = GetWeekNumberOfYear(timeNowParam)
+                             - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 9, 1)); // сентябрь - начало уч. года - 1 семестр
+                }
+                else
+                {
+                    if (timeNowParam.Month == 1 && (GetStatusDay(timeNowParam) == StatusDayType.ExamsTime
+                          || GetStatusDay(timeNowParam) == StatusDayType.Holiday)) // если зимняя сессия или каникулы, возвращает счетчик от начала года
+                    {
+                        result = GetWeekNumberOfYear(timeNowParam);
+                    }
+                    else
+                    {
+                        result = GetWeekNumberOfYear(timeNowParam)
+                                                   - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 2, 8)); // февраль - начало 2 семестра
+                    }
+                }
+
                 return result;
-
-            if (((IParityOfTheWeekService)this).GetPartOfSemester(timeNowParam) == 1)
-            {
-                result = ((IParityOfTheWeekService)this).GetWeekNumberOfYear(timeNowParam)
-                         - ((IParityOfTheWeekService)this).GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 9, 1)); // сентябрь - начало уч. года - 1 семестр
             }
-            else
+            catch (Exception ex)
             {
-                result = ((IParityOfTheWeekService)this).GetWeekNumberOfYear(timeNowParam)
-                         - ((IParityOfTheWeekService)this).GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 2, 1)); // февраль - начало 2 семестра
+                //log
+                throw new NotSupportedException($"Ошибка во время выполнения: {ex}");
             }
-
-            return result;
         }
 
         public int GetWeekNumberOfYear(DateTime timeNowParam)
@@ -100,7 +175,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
 
-            if (((IParityOfTheWeekService)this).GetPartOfSemester(timeNowParam) == 1)
+            if (GetPartOfSemester(timeNowParam) == 1)
                 return (timeNowParam.Year - startLearningYear) * 2 + 1; // текущий год - год начала обучения = n лет обучения * 2 =
             // кол-во семестров +1 вначале учебного года
 
@@ -109,10 +184,14 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public ParityOfTheWeekViewModel PrepareParityOfTheWeekViewModel(ParityOfTheWeekModel input)
         {
+            if (input == null) throw new NotSupportedException($"{typeof(ParityOfTheWeekModel)} input равен null");
+
             var resultViewModel = _mapper.Map<ParityOfTheWeekViewModel>(input);
 
             resultViewModel.ParityOfWeekToday = input.ParityOfWeekToday ? "Чётная" : "Нечётная";
             resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D");
+            resultViewModel.StatusDay = input.StatusDay.Humanize();
+            resultViewModel.IsParity = input.ParityOfWeekToday;
 
             return resultViewModel;
         }

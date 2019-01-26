@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Net;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using StudentAssistant.Backend.Models;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Services;
-using StudentAssistant.Backend.Services.Implementation;
-using StudentAssistant.Backend.ViewModels;
 
 namespace StudentAssistant.Backend.Controllers
 {
     [Produces("application/json")]
     [Route("api/parity")]
-    public class ParityOfTheWeekController : Controller
+    public class ParityOfTheWeekController : ControllerBase
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
@@ -20,19 +16,56 @@ namespace StudentAssistant.Backend.Controllers
             _parityOfTheWeekService = parityOfTheWeekService;
         }
 
-        public IActionResult Index => View();
-
         [HttpGet]
         [Route("today")]
-        public ParityOfTheWeekViewModel GenerateParityOfTheWeek()
+        public IActionResult GenerateParityOfTheWeek()
         {
-            var dateTimeParam = DateTime.Now;
+            try
+            {
+                var dateTimeParam = DateTime.Now;
 
-            var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
+                // генерируем модель с данными о заданном дне.
+                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
 
-            var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
+                // подготавливаем модель для отображения (ViewModel)
+                var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
 
-            return resultViewModel;
+                return Ok(resultViewModel);
+            }
+            catch(Exception ex)
+            {
+                // log
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("selected-date")]
+        public IActionResult GenerateParityOfTheWeek([FromBody]ParityOfTheWeekRequestModel selectedDateTime)
+        {
+            try
+            {
+                if (selectedDateTime == null)
+                {
+                  return BadRequest("Запрос не содержит данных.");
+                }
+
+                // достаем из модели указанную дату.
+                var dateTimeParam = selectedDateTime.SelectedDateTime;
+
+                // генерируем модель с данными о заданном дне.
+                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
+
+                // подготавливаем модель для отображения (ViewModel)
+                var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
+
+                return Ok(resultViewModel);
+            }
+            catch(Exception ex)
+            {
+                //log
+                return BadRequest(ex);
+            }
         }
     }
 }
