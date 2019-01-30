@@ -30,5 +30,11 @@ namespace StudentAssistant.Backend.Models.ParityOfTheWeek
         /// </summary>
         [Description("Выходной день")]
         DayOff = 4,
+
+        /// <summary>
+        /// Праздничный выходной день
+        /// </summary>
+        [Description("Праздничный выходной день")]
+        HolidayWeekend = 5
     }
 }

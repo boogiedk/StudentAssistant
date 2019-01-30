@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using AutoMapper;
 using StudentAssistant.Backend.Models;
@@ -69,11 +70,15 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// Возвращает статус указанного дня.
         /// </summary>
         /// <param name="timeNowParam"></param>
+        /// <param name="holidaysDays"></param>
         /// <returns></returns>
-        private StatusDayType GetStatusDay(DateTime timeNowParam)
+        private StatusDayType GetStatusDay(DateTime timeNowParam, List<DateTime> holidaysDays = null)
         {
-            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
-                return StatusDayType.Holiday;
+            if (holidaysDays != null)
+            {
+                if (holidaysDays.Contains(timeNowParam)) // определяет, является ли дата праздничной
+                    return StatusDayType.HolidayWeekend;
+            }
 
             if (timeNowParam.Month == 1) // зимняя сессия - январь
                 return StatusDayType.ExamsTime;
@@ -81,7 +86,16 @@ namespace StudentAssistant.Backend.Services.Implementation
             if (timeNowParam.Month == 6) // летняя сессия - июнь
                 return StatusDayType.ExamsTime;
 
+            if (timeNowParam.Month == 12 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31)) // зимняя зачетная сессия - последняя неделя декабря
+                return StatusDayType.ExamsTime;
+
+            if (timeNowParam.Month == 5 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31)) // летняя сессия - последняя неделя мая
+                return StatusDayType.ExamsTime;
+
             if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 8)) // первая неделя февраля - каникулы
+                return StatusDayType.Holiday;
+
+            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
                 return StatusDayType.Holiday;
 
             if (IsHoliday(timeNowParam)) // если это выходной
