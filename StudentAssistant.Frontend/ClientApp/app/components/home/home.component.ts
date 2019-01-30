@@ -7,14 +7,13 @@ import { Http } from '@angular/http';
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-    _http: Http;
 
-    public constructor(http: Http) {
-        this._http = http;
+    public constructor(private http: Http) {
+
     }
 
     onSubmit(userFeedbackRequestModel: UserFeedbackRequestModel) {
-        this._http.post('http://localhost:18936/api/support/sendfeedback', userFeedbackRequestModel).subscribe(status => console.log(JSON.stringify(status)));
+        this.http.post('http://localhost:18936/api/support/sendfeedback', userFeedbackRequestModel).subscribe(status => console.log(JSON.stringify(status)));
     }
 }
 
