@@ -7,6 +7,9 @@ namespace StudentAssistant.Backend.Models.Validation
     /// </summary>
     public class ValidationResultModel
     {
+        /// <summary>
+        /// Текст с ошибкой.
+        /// </summary>
         public string ErrorMessage { get; set; }
     }
 }
