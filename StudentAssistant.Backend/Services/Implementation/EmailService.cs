@@ -21,11 +21,12 @@ namespace StudentAssistant.Backend.Services.Implementation
                     };
                 }
 
-                MailMessage messageEmail = new MailMessage(input.EmailAccount.EmailFrom, input.EmailTo);
-
-                messageEmail.Subject = input.Subject; // Заголовок (текст, который появляется в push-уведомлениях
-                messageEmail.Body = input.TextBody; // Тело сообщения
-                messageEmail.IsBodyHtml = false;
+                MailMessage messageEmail = new MailMessage(input.EmailAccount.EmailFrom, input.EmailTo)
+                {
+                    Subject = input.Subject, // Заголовок (текст, который появляется в push-уведомлениях
+                    Body = input.TextBody, // Тело сообщения
+                    IsBodyHtml = false
+                };
 
 
                 if (!string.IsNullOrEmpty(input.EmailAccount.HiddenEmail))

@@ -17,21 +17,28 @@ namespace StudentAssistant.Backend.Services.Implementation
             if (input == null)
                 errorList.Add(new ValidationResultModel { ErrorMessage = "Запрос не содержит данных." });
 
-            // создать общую модель ошибки для ответа клиенту
+            foreach(var errorModel in input)
+            {
+                errorList.Add(new ValidationResultModel { ErrorMessage = errorModel.ErrorMessage });
+            }
 
             return errorList;
         }
 
-        public List<ValidationResultModel> PrepareErrorResult(UserFeedbackResultModel input)
+        public ValidationResultModel PrepareErrorResult(UserFeedbackResultModel input)
         {
-            List<ValidationResultModel> errorList = new List<ValidationResultModel>();
+            var errorModel = new ValidationResultModel();
 
             if (input == null)
-                errorList.Add(new ValidationResultModel { ErrorMessage = "Запрос не содержит данных." });
+            {
+                errorModel = new ValidationResultModel { ErrorMessage = "Запрос не содержит данных." };
 
-            // создать общую модель ошибки для ответа клиенту
+                return errorModel;
+            }
 
-            return errorList;
+            errorModel = new ValidationResultModel { ErrorMessage = input.Message };
+
+            return errorModel;
         }
     }
 }

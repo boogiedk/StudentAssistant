@@ -35,6 +35,8 @@ namespace StudentAssistant.Backend.Controllers
                 {
                     var modelsErrors = ModelState.Values.SelectMany(v => v.Errors);
                     var errorMessages = _validationService.ValidateRequest(modelsErrors);
+
+                    // отправляем код 400 и результат валидации
                     return BadRequest(errorMessages);
                 }
 
@@ -45,6 +47,7 @@ namespace StudentAssistant.Backend.Controllers
                 if (!resultSendFeedback.IsSended)
                 {
                     var errorMessages = _validationService.PrepareErrorResult(resultSendFeedback);
+
                     return BadRequest(errorMessages);
                 }
 

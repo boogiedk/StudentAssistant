@@ -22,6 +22,6 @@ namespace StudentAssistant.Backend.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<ValidationResultModel> PrepareErrorResult(UserFeedbackResultModel input);
+        ValidationResultModel PrepareErrorResult(UserFeedbackResultModel input);
     }
 }
