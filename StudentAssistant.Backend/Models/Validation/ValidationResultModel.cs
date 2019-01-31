@@ -1,4 +1,6 @@
-﻿namespace StudentAssistant.Backend.Models.Validation
+﻿using Microsoft.AspNetCore.Http;
+
+namespace StudentAssistant.Backend.Models.Validation
 {
     /// <summary>
     /// Модель с результатами валидации.
