@@ -23,8 +23,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public bool GetParityOfTheWeekByDateTime(DateTime timeNowParam)
         {
-            if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
             var timeNow = timeNowParam;
 
             int firstDayOfStudy = (int)new DateTime(timeNow.Year, 9, 1).DayOfWeek;
@@ -42,8 +40,6 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             try
             {
-                if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
                 var timeNow = timeNowParam;
 
                 var parityOfTheWeekModel = new ParityOfTheWeekModel
@@ -134,8 +130,6 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             try
             {
-                if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
                 int result = 0;
 
                 //if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // обнуление идет с июля по август
@@ -171,8 +165,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public int GetWeekNumberOfYear(DateTime timeNowParam)
         {
-            if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
             int weekNumber = CultureInfo.CurrentCulture.Calendar
                 .GetWeekOfYear(timeNowParam, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             return weekNumber;
@@ -180,15 +172,11 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public int GetPartOfSemester(DateTime timeNowParam)
         {
-            if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
             return timeNowParam.Month <= 12 && timeNowParam.Month >= 9 ? 1 : 2;
         }
 
         public int GetNumberOfSemester(DateTime timeNowParam, int startLearningYear)
         {
-            if (timeNowParam == null) throw new NotSupportedException($"{typeof(DateTime)} timeNowParam равен null");
-
             if (GetPartOfSemester(timeNowParam) == 1)
                 return (timeNowParam.Year - startLearningYear) * 2 + 1; // текущий год - год начала обучения = n лет обучения * 2 =
             // кол-во семестров +1 вначале учебного года
