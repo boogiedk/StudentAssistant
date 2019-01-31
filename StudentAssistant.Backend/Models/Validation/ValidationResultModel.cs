@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
+﻿
 namespace StudentAssistant.Backend.Models.Validation
 {
     /// <summary>
