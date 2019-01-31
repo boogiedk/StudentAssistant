@@ -88,7 +88,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             if (timeNowParam.Month == 5 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31)) // летняя сессия - последняя неделя мая
                 return StatusDayType.ExamsTime;
 
-            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 8)) // первая неделя февраля - каникулы
+            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 9)) // первая неделя февраля - каникулы (сколько длятся каникулы?)
                 return StatusDayType.Holiday;
 
             if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) // летние каникулы - июль-август
@@ -110,14 +110,14 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             if (isSixDayWorkingWeek)
             {
-                if (timeNowParam.Day == 7)
+                if (timeNowParam.DayOfWeek == DayOfWeek.Sunday)
                 {
                     return true;
                 }
             }
             else
             {
-                if (timeNowParam.Day == 6 || timeNowParam.Day == 7)
+                if (timeNowParam.DayOfWeek == DayOfWeek.Saturday || timeNowParam.DayOfWeek == DayOfWeek.Sunday)
                 {
                     return true;
                 }
@@ -142,8 +142,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 }
                 else
                 {
-                    if (timeNowParam.Month == 1 && (GetStatusDay(timeNowParam) == StatusDayType.ExamsTime
-                          || GetStatusDay(timeNowParam) == StatusDayType.Holiday)) // если зимняя сессия или каникулы, возвращает счетчик от начала года
+                    if (GetStatusDay(timeNowParam) != StatusDayType.SchoolDay) // если зимняя сессия или каникулы, возвращает счетчик от начала года
                     {
                         result = GetWeekNumberOfYear(timeNowParam);
                     }
