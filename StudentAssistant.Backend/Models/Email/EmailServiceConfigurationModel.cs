@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StudentAssistant.Backend.Models.Email
+﻿namespace StudentAssistant.Backend.Services
 {
     /// <summary>
-    /// Модель, содержащая данные об аккаунте отправителя.
+    /// Модель, содержащая конфигурационные данные о сервисе <see cref="IEmailService"/>.
     /// </summary>
-    public class EmailAccountModel
+    public class EmailServiceConfigurationModel
     {
         /// <summary>
         /// Идентификатор аккаунта.

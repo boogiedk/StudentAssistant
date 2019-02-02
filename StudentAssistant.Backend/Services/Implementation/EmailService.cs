@@ -35,14 +35,14 @@ namespace StudentAssistant.Backend.Services.Implementation
                         new MailAddress(input.EmailAccount
                             .HiddenEmail)); // hiddenEmail добавляет адресат, куда отправлять копию отправленного сообщения.
                 }
-                
+
                 // настройка smtp клиента и отправка сообщения.
                 using (var smtp = new SmtpClient())
                 {
                     smtp.Port = input.EmailAccount.OutputPort;
                     smtp.UseDefaultCredentials = input.EmailAccount.UseDefaultCredentials == 1 ? true : false;
                     smtp.Host = input.EmailAccount.OutputHost;
-                    smtp.EnableSsl = input.EmailAccount.OutputEnableSSL == TypeEncrypt.SSL;
+                    smtp.EnableSsl = (TypeEncrypt)input.EmailAccount.OutputEnableSSL == TypeEncrypt.SSL;
                     smtp.Credentials = new NetworkCredential(input.EmailAccount.Login, input.EmailAccount.Password);
 
                     smtp.Send(messageEmail);

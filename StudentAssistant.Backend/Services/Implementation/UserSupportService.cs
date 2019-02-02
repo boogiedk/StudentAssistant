@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
 
@@ -9,13 +10,14 @@ namespace StudentAssistant.Backend.Services.Implementation
     {
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly EmailServiceConfigurationModel _config;
+        private readonly EmailServiceConfigurationModel _emailServiceConfigurationModel;
 
-        public UserSupportService(IMapper mapper,IEmailService emailService, EmailServiceConfigurationModel config)
+        public UserSupportService(IMapper mapper, IEmailService emailService, 
+            IOptions<EmailServiceConfigurationModel> emailAccountModel)
         {
             _mapper = mapper;
             _emailService = emailService;
-            _config = config;
+            _emailServiceConfigurationModel = emailAccountModel.Value;
         }
 
         public UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input)
@@ -44,7 +46,22 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             var emailRequestModel = _mapper.Map<EmailRequestModel>(input);
 
-            emailRequestModel.EmailAccount = _config.EmailAccountModel;
+            // из файла с конфигом достаем настройки аккаунта
+            emailRequestModel.EmailAccount = new EmailAccountModel
+            {
+                EmailFrom = _emailServiceConfigurationModel.EmailFrom,
+                Id = _emailServiceConfigurationModel.Id,
+                HiddenEmail = _emailServiceConfigurationModel.HiddenEmail,
+                InputEnableSSL = _emailServiceConfigurationModel.InputEnableSSL,
+                InputHost = _emailServiceConfigurationModel.InputHost,
+                Login = _emailServiceConfigurationModel.Login,
+                OutputPort = _emailServiceConfigurationModel.OutputPort,
+                Password = _emailServiceConfigurationModel.Password,
+                UseDefaultCredentials = _emailServiceConfigurationModel.UseDefaultCredentials,
+                OutputEnableSSL = _emailServiceConfigurationModel.OutputEnableSSL,
+                OutputHost = _emailServiceConfigurationModel.OutputHost,
+                InputPort = _emailServiceConfigurationModel.InputPort
+            };
 
             return emailRequestModel;
         }

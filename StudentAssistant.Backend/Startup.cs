@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.ConfigurationModels;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Services;
@@ -12,9 +13,22 @@ namespace StudentAssistant.Backend
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                            .SetBasePath(env.ContentRootPath + "\\Infrastructure\\Configuration")
+                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                            .AddJsonFile($"EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile($"ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
+                builder.AddApplicationInsightsSettings(developerMode: true);
+            }
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -32,11 +46,12 @@ namespace StudentAssistant.Backend
             });
 
             services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
-            services.AddSingleton(ParityOfTheWeekConfigurationModel.GetDefaulfValues());
             services.AddScoped<IUserSupportService, UserSupportService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IValidationService, ValidationService>();
-            services.AddSingleton(EmailServiceConfigurationModel.GetDefaultValues());
+
+            services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
+            services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
 
             services.AddAutoMapper();
             services.AddMvc();
