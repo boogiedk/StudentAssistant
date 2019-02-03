@@ -21,7 +21,7 @@ import { ParityOfTheWeekComponent } from './components/parityOfTheWeek/parityOfT
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'parity', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'parity', component: ParityOfTheWeekComponent },
             { path: '**', redirectTo: 'home' }
