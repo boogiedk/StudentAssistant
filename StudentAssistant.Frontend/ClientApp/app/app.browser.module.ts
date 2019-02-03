@@ -17,5 +17,13 @@ export class AppModule {
 }
 
 export function getBaseUrl() {
-    return document.getElementsByTagName('base')[0].href;
+    return "http://localhost:18936";
+}
+
+export function getParityOfTheWeekApi() {
+    return "/api/parity/today";
+}
+
+export function getUserSupportApi() {
+    return "/api/support/sendfeedback";
 }

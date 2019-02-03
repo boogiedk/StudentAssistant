@@ -13,11 +13,11 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly EmailServiceConfigurationModel _emailServiceConfigurationModel;
 
         public UserSupportService(IMapper mapper, IEmailService emailService, 
-            IOptions<EmailServiceConfigurationModel> emailAccountModel)
+            IOptions<EmailServiceConfigurationModel> emailServiceConfigurationModel)
         {
             _mapper = mapper;
             _emailService = emailService;
-            _emailServiceConfigurationModel = emailAccountModel.Value;
+            _emailServiceConfigurationModel = emailServiceConfigurationModel.Value;
         }
 
         public UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input)
