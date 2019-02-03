@@ -10,7 +10,6 @@ import { Inject } from '@angular/core';
 })
 export class HomeComponent {
     private _baseUrl: string;
-    private _userFeedbackResultModel: UserFeedbackResultModel;
 
     public constructor(private http: Http, @Inject('BASE_URL') baseUrl: string) {
         this._baseUrl = baseUrl;
@@ -18,9 +17,7 @@ export class HomeComponent {
 
     onSubmit(userFeedbackRequestModel: UserFeedbackRequestModel) {
         this.http.post(this._baseUrl + getUserSupportApi(), userFeedbackRequestModel)
-            .subscribe(result => {
-                this._userFeedbackResultModel = result.json() as UserFeedbackResultModel;
-            }, error => console.error(error));
+            .subscribe(status => console.log(JSON.stringify(status)));
     }
 }
 
@@ -30,11 +27,6 @@ export interface UserFeedbackRequestModel {
     emailTo: string;
     subject: string;
     textBody: string;
-}
-
-export interface UserFeedbackResultModel {
-    isSended: boolean;
-    message: string;
 }
 
 
