@@ -21,11 +21,12 @@ namespace StudentAssistant.Backend.Services.Implementation
                     };
                 }
 
-                MailMessage messageEmail = new MailMessage(input.EmailAccount.EmailFrom, input.EmailTo);
-
-                messageEmail.Subject = input.Subject; // Заголовок (текст, который появляется в push-уведомлениях
-                messageEmail.Body = input.TextBody; // Тело сообщения
-                messageEmail.IsBodyHtml = false;
+                MailMessage messageEmail = new MailMessage(input.EmailAccount.EmailFrom, input.EmailTo)
+                {
+                    Subject = input.Subject, // Заголовок (текст, который появляется в push-уведомлениях
+                    Body = input.TextBody, // Тело сообщения
+                    IsBodyHtml = false
+                };
 
 
                 if (!string.IsNullOrEmpty(input.EmailAccount.HiddenEmail))
@@ -34,14 +35,14 @@ namespace StudentAssistant.Backend.Services.Implementation
                         new MailAddress(input.EmailAccount
                             .HiddenEmail)); // hiddenEmail добавляет адресат, куда отправлять копию отправленного сообщения.
                 }
-                
+
                 // настройка smtp клиента и отправка сообщения.
                 using (var smtp = new SmtpClient())
                 {
                     smtp.Port = input.EmailAccount.OutputPort;
                     smtp.UseDefaultCredentials = input.EmailAccount.UseDefaultCredentials == 1 ? true : false;
                     smtp.Host = input.EmailAccount.OutputHost;
-                    smtp.EnableSsl = input.EmailAccount.OutputEnableSSL == TypeEncrypt.SSL;
+                    smtp.EnableSsl = (TypeEncrypt)input.EmailAccount.OutputEnableSSL == TypeEncrypt.SSL;
                     smtp.Credentials = new NetworkCredential(input.EmailAccount.Login, input.EmailAccount.Password);
 
                     smtp.Send(messageEmail);

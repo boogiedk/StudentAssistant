@@ -5,16 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Infrastructure\Configuration\**" />
     <Compile Remove="Infrastructure\DI\**" />
     <Compile Remove="wwwroot\**" />
-    <Content Remove="Infrastructure\Configuration\**" />
     <Content Remove="Infrastructure\DI\**" />
     <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="Infrastructure\Configuration\**" />
     <EmbeddedResource Remove="Infrastructure\DI\**" />
     <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="Infrastructure\Configuration\**" />
     <None Remove="Infrastructure\DI\**" />
     <None Remove="wwwroot\**" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 using Moq;
 using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.ConfigurationModels;
@@ -29,7 +30,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             var mapper = fixture.Freeze<Mock<IMapper>>();
-            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<ParityOfTheWeekConfigurationModel>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
             var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
@@ -49,7 +50,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             var mapper = fixture.Freeze<Mock<IMapper>>();
-            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<ParityOfTheWeekConfigurationModel>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
             var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
@@ -69,13 +70,13 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             var mapper = fixture.Freeze<Mock<IMapper>>();
-            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<ParityOfTheWeekConfigurationModel>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             var startLearningDate = 2016;
 
             // Act
             var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
-            var result = service.GetNumberOfSemester(dateTimeTest,startLearningDate);
+            var result = service.GetNumberOfSemester(dateTimeTest, startLearningDate);
 
             // Assert
             Assert.AreEqual(5, result);
@@ -91,7 +92,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             var mapper = fixture.Freeze<Mock<IMapper>>();
-            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<ParityOfTheWeekConfigurationModel>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
             var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
@@ -111,7 +112,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             var mapper = fixture.Freeze<Mock<IMapper>>();
-            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<ParityOfTheWeekConfigurationModel>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
             var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
@@ -129,7 +130,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             fixture.Customize(new AutoMoqCustomization());
 
             var mapper = fixture.Freeze<Mock<IMapper>>();
-            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<ParityOfTheWeekConfigurationModel>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             var dateTimeTest = new DateTime(2018, 11, 11);
 

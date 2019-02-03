@@ -30,20 +30,29 @@ namespace StudentAssistant.Backend.Controllers
                     return BadRequest("Запрос не содержит данных.");
                 }
 
-                // проверяем корректность данных в модели.
-                var resultValidationServiceModel = _validationService.ValidateRequest(input);
-
-                // если модель содержит ошибки, которые определил сервис валидации, то
-                // вернуть BadRequest()
-                if(resultValidationServiceModel.Any())
+                // валидируем и в случае наличия ошибок подготавливаем модель для ответа клиенту
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest(resultValidationServiceModel);
+                    var modelsErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    var errorMessages = _validationService.ValidateRequest(modelsErrors);
+
+                    // отправляем код 400 и результат валидации
+                    return BadRequest(errorMessages);
                 }
 
                 // отправляем фидбек 
-                var result = _userSupportService.SendFeedback(input);
+                var resultSendFeedback = _userSupportService.SendFeedback(input);
 
-                return Ok(result);
+                // если сообщение не отправлено, подготавливаем ответ с текстом ошибки
+                if (!resultSendFeedback.IsSended)
+                {
+                    var errorMessages = _validationService.PrepareErrorResult(resultSendFeedback);
+
+                    return BadRequest(errorMessages);
+                }
+
+                // отправляем код 200 и результат отправки сообщения
+                return Ok(resultSendFeedback);
             }
             catch (Exception ex)
             {
