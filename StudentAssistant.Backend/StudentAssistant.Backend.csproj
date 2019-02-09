@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StudentAssistant.DbLayer\StudentAssistant.DbLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="AutoMapper.Extensions.Microsoft.DependencyInjection">
       <HintPath>..\..\..\..\..\.nuget\packages\automapper.extensions.microsoft.dependencyinjection\6.0.0\lib\netstandard2.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll</HintPath>
     </Reference>

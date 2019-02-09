@@ -28,7 +28,12 @@
                     <a [routerLink]="['/parity']">
                         <span class='glyphicon glyphicon-th-list'></span> Сегодня
                     </a>
-                </li>            
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/schedule']">
+                        <span class='glyphicon glyphicon-th-list'></span> Расписание
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

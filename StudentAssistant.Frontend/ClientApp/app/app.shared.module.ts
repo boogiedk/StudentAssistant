@@ -8,13 +8,15 @@ import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 import { ParityOfTheWeekComponent } from './components/parityOfTheWeek/parityOfTheWeek.component';
+import { CourseScheduleComponent } from './components/courseSchedule/courseSchedule.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
         ParityOfTheWeekComponent,
-        HomeComponent
+        HomeComponent,
+        CourseScheduleComponent
     ],
     imports: [
         CommonModule,
@@ -24,6 +26,7 @@ import { ParityOfTheWeekComponent } from './components/parityOfTheWeek/parityOfT
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'parity', component: ParityOfTheWeekComponent },
+            { path: 'schedule', component: CourseScheduleComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ]

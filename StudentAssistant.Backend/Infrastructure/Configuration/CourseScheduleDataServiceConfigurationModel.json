@@ -1,0 +1,33 @@
+﻿{
+  "ListCourseSchedule": {
+    "ListCourseScheduleDatabaseModel": [
+      {
+        "numberWeek": [ 6 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "суббота",
+        "courseName": "Криптография",
+        "courseNumber": 1,
+        "courseType": 1,
+        "teacherFullName": "Семенов Семен"
+      },
+      {
+        "numberWeek": [ 4, 5, 7, 6 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "суббота",
+        "courseName": "Матан",
+        "courseNumber": 3,
+        "courseType": 1,
+        "teacherFullName": "Семенов Семен"
+      },
+      {
+        "numberWeek": [ 6, 7, 8 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "суббота",
+        "courseName": "Русский",
+        "courseNumber": 2,
+        "courseType": 1,
+        "teacherFullName": "Семенов Семен"
+      }
+    ]
+  }
+}
