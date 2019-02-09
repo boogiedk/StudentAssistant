@@ -1,12 +1,8 @@
-﻿using StudentAssistant.DbLayer.Models.CourseSchedule;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace StudentAssistant.DbLayer.Services
+namespace StudentAssistant.Backend.Services.Implementation
 {
-    /// <summary>
-    /// Модель с учебным расписанием.
-    /// </summary>
-    public class CourseScheduleDatabaseModel
+    public class CoursesViewModel
     {
         /// <summary>
         /// Номер недели.
@@ -16,12 +12,7 @@ namespace StudentAssistant.DbLayer.Services
         /// <summary>
         /// Чётность недели.
         /// </summary>
-        public bool ParityWeek { get; set; }
-
-        /// <summary>
-        /// Название дня недели.
-        /// </summary>
-        public string NameOfDayWeek { get; set; }
+        public string ParityWeek { get; set; }
 
         /// <summary>
         /// Название предмета.
@@ -36,7 +27,7 @@ namespace StudentAssistant.DbLayer.Services
         /// <summary>
         /// Тип предмета.
         /// </summary>
-        public CourseType CourseType { get; set; }
+        public string CourseType { get; set; }
 
         /// <summary>
         /// Полное имя преподавателя.

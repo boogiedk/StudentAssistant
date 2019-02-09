@@ -21,14 +21,16 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 if (input == null) throw new NullReferenceException("Отсутствуют входные параметры.");
 
-                var courseScheduleModel = _courseScheduleDataServiceConfigurationModel.ListCourseScheduleDatabaseModel
-                     .Where(w =>
-                     w.ParityWeek == input.ParityWeek
-                     && w.NumberWeek.Contains(input.NumberWeek)
-                     && w.NameOfDayWeek == input.NameOfDayWeek
-                     ).ToList();
+                // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
+                var courseScheduleModel = _courseScheduleDataServiceConfigurationModel.ListCourseScheduleDatabaseModel.Where(w => w.NameOfDayWeek == input.NameOfDayWeek);
 
-                return courseScheduleModel;
+                // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
+                // или если не указаны номера недель, то фильтруем по четности.
+                courseScheduleModel = courseScheduleModel.Where(w => (w.NumberWeek != null && w.NumberWeek.Contains(input.NumberWeek)) 
+                || (w.NumberWeek == null) && w.ParityWeek == input.ParityWeek);
+
+
+                return courseScheduleModel.ToList();
             }
             catch (Exception ex)
             {

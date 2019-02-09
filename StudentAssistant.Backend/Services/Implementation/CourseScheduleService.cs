@@ -28,27 +28,53 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
 
-            var courseScheduleParameters = new CourseScheduleParameters
+            try
             {
-                NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
-                NameOfDayWeek = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
-                ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest)          
-            };
+                // подготавливаем параметры для получения расписания
+                var courseScheduleParameters = new CourseScheduleParameters
+                {
+                    NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
+                    NameOfDayWeek = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
+                    ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest)
+                };
 
-            var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromDatabase(courseScheduleParameters);
+                var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromDatabase(courseScheduleParameters);
 
-            var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
+                var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
 
-            return courseScheduleModel;
+                return courseScheduleModel;
+            }
+            catch(Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+            }
         }
 
-        public List<CourseScheduleViewModel> PrepareCourseScheduleViewModel(List<CourseScheduleResultModel> input)
+        public CourseScheduleViewModel PrepareCourseScheduleViewModel(List<CourseScheduleResultModel> input)
         {
-            var courseScheduleViewModel = _mapper.Map<List<CourseScheduleViewModel>>(input);
+            if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
 
-            var sortedcourseScheduleViewModel = courseScheduleViewModel.OrderBy(o => o.CourseNumber).ToList();
+            try
+            {
+                // маппим список предметов из бд в модель представления
+                var coursesViewModel = _mapper.Map<List<CoursesViewModel>>(input);
 
-            return sortedcourseScheduleViewModel;
+                // сортируем по позиции в раписании
+                var sortedCoursesViewModel = coursesViewModel.OrderBy(o => o.CourseNumber).ToList();
+
+                // создаем результирующую модель представления
+                var resultCourseScheduleViewModel = new CourseScheduleViewModel
+                {
+                    CoursesViewModel = sortedCoursesViewModel,
+                    NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper()
+                };
+
+                return resultCourseScheduleViewModel;
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+            }
         }
     }
 }

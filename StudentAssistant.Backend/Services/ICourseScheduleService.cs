@@ -24,6 +24,6 @@ namespace StudentAssistant.Backend.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<CourseScheduleViewModel> PrepareCourseScheduleViewModel(List<CourseScheduleResultModel> input);
+        CourseScheduleViewModel PrepareCourseScheduleViewModel(List<CourseScheduleResultModel> input);
     }
 }

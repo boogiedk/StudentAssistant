@@ -2,31 +2,401 @@
   "ListCourseSchedule": {
     "ListCourseScheduleDatabaseModel": [
       {
-        "numberWeek": [ 6 ],
-        "parityWeek": true,
-        "nameOfDayWeek": "суббота",
-        "courseName": "Криптография",
+        // понедельник
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Физическая культура и спорт",
         "courseNumber": 1,
         "courseType": 1,
-        "teacherFullName": "Семенов Семен"
+        "coursePlace": "ФОК",
+        "teacherFullName": ""
       },
       {
-        "numberWeek": [ 4, 5, 7, 6 ],
+        "numberWeek": [ 10, 12, 14, 16 ],
         "parityWeek": true,
-        "nameOfDayWeek": "суббота",
-        "courseName": "Матан",
-        "courseNumber": 3,
-        "courseType": 1,
-        "teacherFullName": "Семенов Семен"
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Основы теории кодирования",
+        "courseNumber": 1,
+        "courseType": 3,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Кунин Н.Т"
       },
       {
-        "numberWeek": [ 6, 7, 8 ],
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Биометрические сист. аутентификации",
+        "courseNumber": 2,
+        "courseType": 2,
+        "coursePlace": "441",
+        "teacherFullName": "Сумина С.В"
+      },
+      {
+        "numberWeek": [],
         "parityWeek": true,
-        "nameOfDayWeek": "суббота",
-        "courseName": "Русский",
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Безопасность систем баз данных",
         "courseNumber": 2,
         "courseType": 1,
-        "teacherFullName": "Семенов Семен"
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Федин Ф.О"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Биометрические сист. аутентификации",
+        "courseNumber": 3,
+        "courseType": 1,
+        "coursePlace": "113",
+        "teacherFullName": "Сумина С.В"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Катастрофоустойчивость информационных систем",
+        "courseNumber": 3,
+        "courseType": 2,
+        "coursePlace": "КБ1№4/5",
+        "teacherFullName": "Вершинин А.Н"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Катастрофоустойчивость информационных систем",
+        "courseNumber": 4,
+        "courseType": 1,
+        "coursePlace": "КБ1№9",
+        "teacherFullName": "Карамышева Е.О"
+      },
+      {
+        "numberWeek": [ 4, 8, 12, 18 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Организация ЭВМ и вычислительных систем",
+        "courseNumber": 4,
+        "courseType": 3,
+        "coursePlace": "КБ1№11",
+        "teacherFullName": "Кравченко В.Б"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Безопасность систем баз данных",
+        "courseNumber": 5,
+        "courseType": 2,
+        "coursePlace": "305",
+        "teacherFullName": "Федин Ф.О"
+      },
+      {
+        "numberWeek": [ 3, 5, 7, 9, 11, 13, 15 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Безопасность систем баз данных",
+        "courseNumber": 6,
+        "courseType": 2,
+        "coursePlace": "КБ1№13",
+        "teacherFullName": "Федин Ф.О"
+      },
+      {
+        "numberWeek": [ 6, 8 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "понедельник",
+        "courseName": "Безопасность систем баз данных",
+        "courseNumber": 6,
+        "courseType": 2,
+        "coursePlace": "КБ1№13",
+        "teacherFullName": "Федин Ф.О"
+      },
+      // вторник
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "вторник",
+        "courseName": "Военная кафедра",
+        "courseNumber": 1,
+        "courseType": 2,
+        "coursePlace": "",
+        "teacherFullName": ""
+      },
+
+      // среда
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "среда",
+        "courseName": "Угрозы инфорационной безопасности автоматизированных систем",
+        "courseNumber": 1,
+        "courseType": 1,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Матвиенко В.А"
+      },
+      {
+        "numberWeek": [ 2, 6, 10, 14 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Основы теории кодирования",
+        "courseNumber": 1,
+        "courseType": 2,
+        "coursePlace": "КБ1№4/5",
+        "teacherFullName": "Кадомкин В.В"
+      },
+      {
+        "numberWeek": [ 4, 8, 12, 16 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Основы теории кодирования",
+        "courseNumber": 1,
+        "courseType": 1,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Кадомкин В.В"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "среда",
+        "courseName": "Угрозы информационной безопасности автоматизированных систем",
+        "courseNumber": 2,
+        "courseType": 2,
+        "coursePlace": "326",
+        "teacherFullName": "Матвиенко В.А"
+      },
+      {
+        "numberWeek": [ 2, 6, 10, 14 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Основы теории кодирования",
+        "courseNumber": 2,
+        "courseType": 2,
+        "coursePlace": "КБ1№4/5",
+        "teacherFullName": "Кадомкин В.В"
+      },
+      {
+        "numberWeek": [ 4, 8, 12, 16 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Основы теории кодирования",
+        "courseNumber": 2,
+        "courseType": 1,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Кадомкин В.В"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "среда",
+        "courseName": "Угрозы инфорационной безопасности автоматизированных систем",
+        "courseNumber": 3,
+        "courseType": 2,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Матвиенко В.А"
+      },
+      {
+        "numberWeek": [ 6, 8, 10, 12, 14, 16 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Угрозы инфорационной безопасности автоматизированных систем",
+        "courseNumber": 3,
+        "courseType": 3,
+        "coursePlace": "КБ1№4/5",
+        "teacherFullName": "Матвиенко В.А"
+      },
+      {
+        "numberWeek": [ 5, 7 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "среда",
+        "courseName": "Математические основы криптологии",
+        "courseNumber": 4,
+        "courseType": 3,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Кунин Н.Т"
+      },
+      {
+        "numberWeek": [ 6, 8 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Математические основы криптологии",
+        "courseNumber": 4,
+        "courseType": 3,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Кунин Н.Т"
+      },
+      {
+        "numberWeek": [ 9, 11 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "среда",
+        "courseName": "Математические основы криптологии",
+        "courseNumber": 5,
+        "courseType": 2,
+        "coursePlace": "256",
+        "teacherFullName": "Григорьев В.И"
+      },
+      {
+        "numberWeek": [ 10, 12, 14, 16 ],
+        "parityWeek": true,
+        "nameOfDayWeek": "среда",
+        "courseName": "Математические основы криптологии",
+        "courseNumber": 5,
+        "courseType": 3,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Кунин Н.Т"
+      },
+      // четверг
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "четверг",
+        "courseName": "Физическая культура и спорт",
+        "courseNumber": 2,
+        "courseType": 1,
+        "coursePlace": "ФОК",
+        "teacherFullName": ""
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "четверг",
+        "courseName": "Математические основы криптологии",
+        "courseNumber": 3,
+        "courseType": 2,
+        "coursePlace": "232",
+        "teacherFullName": "Лозовецкий В.В"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "четверг",
+        "courseName": "Математические основы криптологии",
+        "courseNumber": 3,
+        "courseType": 1,
+        "coursePlace": "КБ1№3",
+        "teacherFullName": "Лозовецкий В.В"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "четверг",
+        "courseName": "Аппаратные средства вычислительной техники",
+        "courseNumber": 4,
+        "courseType": 2,
+        "coursePlace": "257",
+        "teacherFullName": "Никольский А.Н"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "четверг",
+        "courseName": "Аппаратные средства вычислительной техники",
+        "courseNumber": 4,
+        "courseType": 1,
+        "coursePlace": "257",
+        "teacherFullName": "Никольский А.Н"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "четверг",
+        "courseName": "Аппаратные средства вычислительной техники",
+        "courseNumber": 5,
+        "courseType": 2,
+        "coursePlace": "257",
+        "teacherFullName": "Никольский А.Н"
+      },
+      // пятница
+
+      {
+        "numberWeek": [ 1, 5, 9, 13 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Организация ЭВМ и вычислительных систем",
+        "courseNumber": 2,
+        "courseType": 2,
+        "coursePlace": "КБ1№4/5",
+        "teacherFullName": "Кравченко В.Б"
+      },
+      {
+        "numberWeek": [ 3, 7, 11, 15 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Организация ЭВМ и вычислительных систем",
+        "courseNumber": 2,
+        "courseType": 1,
+        "coursePlace": "КБ1№9",
+        "teacherFullName": "Кравченко В.Б"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Физическая культура и спорт",
+        "courseNumber": 2,
+        "courseType": 2,
+        "coursePlace": "ФОК",
+        "teacherFullName": ""
+      },
+      {
+        "numberWeek": [ 1, 5, 9, 13 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Организация ЭВМ и вычислительных систем",
+        "courseNumber": 3,
+        "courseType": 2,
+        "coursePlace": "КБ1№4/5",
+        "teacherFullName": "Кравченко В.Б"
+      },
+      {
+        "numberWeek": [ 3, 7, 11, 15 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Организация ЭВМ и вычислительных систем",
+        "courseNumber": 2,
+        "courseType": 1,
+        "coursePlace": "КБ1№9",
+        "teacherFullName": "Кравченко В.Б"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": true,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Физическая культура и спорт",
+        "courseNumber": 3,
+        "courseType": 2,
+        "coursePlace": "ФОК",
+        "teacherFullName": ""
+      },
+      {
+        "numberWeek": [ 1, 5, 9, 13 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Основы управленческой деятельности",
+        "courseNumber": 4,
+        "courseType": 2,
+        "coursePlace": "350",
+        "teacherFullName": "Терешника О.С"
+      },
+      {
+        "numberWeek": [ 3, 7, 11, 15 ],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "Основы управленческой деятельности",
+        "courseNumber": 4,
+        "courseType": 1,
+        "coursePlace": "342",
+        "teacherFullName": "Терешника О.С"
+      },
+      {
+        "numberWeek": [],
+        "parityWeek": false,
+        "nameOfDayWeek": "пятница",
+        "courseName": "БЖД",
+        "courseNumber": 5,
+        "courseType": 2,
+        "coursePlace": "265",
+        "teacherFullName": ""
       }
     ]
   }

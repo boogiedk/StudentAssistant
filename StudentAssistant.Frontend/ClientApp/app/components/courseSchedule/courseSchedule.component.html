@@ -1,10 +1,50 @@
-﻿<table>
-    <tr>
-        <th>Name</th>
-        <th>Age</th>
-    </tr>
-    <tr>
-        <td>Finn</td>
-        <td>10</td>
-    </tr>
+﻿
+<!--interface CourseScheduleModel {
+    parityWeek: string;
+    nameOfDayWeek: string;
+    courseName: string;
+    courseNumber: number;
+    courseType: number;
+    teacherFullName: string;
+    numberWeek: string;
+    courseType: string;
+}-->
+
+
+<!--<ul *ngIf="courses">
+    <li *ngFor="let course of courses">
+        {{course.courseName}}
+    </li>
+</ul>-->
+
+<h2>Расписание</h2>
+<table class="table-fill" *ngIf="courses">
+    <thead>
+        <tr>
+            <th>
+                <span id="dayEventValue"> {{courses.nameOfDayWeek}} </span>
+            </th>
+        </tr>
+        <tr>
+            <th>№</th>
+            <th>Предмет</th>
+            <th>Тип предмета</th>
+            <th>Преподаватель</th>
+            <th>Кабинет</th>
+            <th>Четность недели</th>
+            <th>Номер недели</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        <tr *ngFor="let course of courses.coursesViewModel">
+            <td>{{course.courseNumber}}</td>
+            <td>{{course.courseName}}</td>
+            <td>{{course.courseType}}</td>
+            <td>{{course.teacherFullName}}</td>
+            <td>{{course.coursePlace}}</td>
+            <td>{{course.parityWeek}}</td>
+            <td>{{course.numberWeek}}</td>
+
+        </tr>
+    </tbody>
 </table>

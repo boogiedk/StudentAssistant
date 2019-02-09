@@ -29,16 +29,51 @@ namespace StudentAssistant.Backend.Controllers
             {
                 var dateTimeNow = DateTime.Now;
 
+               // dateTimeNow = new DateTime(2019, 02, 20); тест
+
                 var courseScheduleRequestModel = new CourseScheduleRequestModel
                 {
                     DateTimeRequest = dateTimeNow
                 };
 
+                // отправляем запрос на получение расписания
                 var courseScheduleResultModel = _courseScheduleService.GetCourseSchedule(courseScheduleRequestModel);
 
+                // подготавливаем ViewModel для отображения
                 var courseScheduleViewModel = _courseScheduleService.PrepareCourseScheduleViewModel(courseScheduleResultModel);
 
-                return Ok(courseScheduleResultModel);
+                return Ok(courseScheduleViewModel);
+            }
+            catch (Exception ex)
+            {
+                // log
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("tomorrow")]
+        public IActionResult GetCourseScheduleTomorrow()
+        {
+            try
+            {
+                var dateTimeNow = DateTime.Now;
+
+                // добавляем +1 день
+                dateTimeNow = dateTimeNow.AddDays(1); 
+
+                var courseScheduleRequestModel = new CourseScheduleRequestModel
+                {
+                    DateTimeRequest = dateTimeNow
+                };
+
+                // отправляем запрос на получение расписания
+                var courseScheduleResultModel = _courseScheduleService.GetCourseSchedule(courseScheduleRequestModel);
+
+                // подготавливаем ViewModel для отображения
+                var courseScheduleViewModel = _courseScheduleService.PrepareCourseScheduleViewModel(courseScheduleResultModel);
+
+                return Ok(courseScheduleViewModel);
             }
             catch (Exception ex)
             {
