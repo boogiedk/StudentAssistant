@@ -43,5 +43,10 @@ namespace StudentAssistant.Backend.Services
         /// Полное имя преподавателя.
         /// </summary>
         public string TeacherFullName { get; set; }
+
+        /// <summary>
+        /// Место проведения.
+        /// </summary>
+        public string CoursePlace { get; set; }
     }
 }
