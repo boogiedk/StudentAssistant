@@ -27,3 +27,7 @@ export function getParityOfTheWeekApi() {
 export function getUserSupportApi() {
     return "/api/support/sendfeedback";
 }
+
+export function getCourseScheduleApi() {
+    return "/api/schedule/today";
+}

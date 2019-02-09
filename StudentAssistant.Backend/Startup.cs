@@ -8,6 +8,9 @@ using StudentAssistant.Backend.Models.ConfigurationModels;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
+using StudentAssistant.DbLayer.Services;
+using StudentAssistant.DbLayer.Services.Implementation;
+using System.Collections.Generic;
 
 namespace StudentAssistant.Backend
 {
@@ -21,6 +24,7 @@ namespace StudentAssistant.Backend
                             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                             .AddJsonFile($"EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
                             .AddJsonFile($"ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile($"CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
                             .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
@@ -49,9 +53,16 @@ namespace StudentAssistant.Backend
             services.AddScoped<IUserSupportService, UserSupportService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IValidationService, ValidationService>();
+            services.AddScoped<ICourseScheduleService, CourseScheduleService>();
+            services.AddScoped<ICourseScheduleDataService, CourseScheduleDataService>();
 
             services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
+
+            services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
+
+         //   services.Configure<CourseScheduleDataServiceConfigurationModel>(options =>
+         //   options.ListCourseScheduleDatabaseModel = Configuration.GetSection("ListCourseScheduleDatabaseModel").Get<List<CourseScheduleDatabaseModel>>());
 
             services.AddAutoMapper();
             services.AddMvc();
