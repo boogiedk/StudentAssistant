@@ -2,6 +2,9 @@
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
+    /// <summary>
+    /// Модель представления с данными о днях из расписании.
+    /// </summary>
     public class CoursesViewModel
     {
         /// <summary>

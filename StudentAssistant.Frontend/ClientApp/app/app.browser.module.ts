@@ -28,6 +28,10 @@ export function getUserSupportApi() {
     return "/api/support/sendfeedback";
 }
 
-export function getCourseScheduleApi() {
+export function getCourseScheduleTodayApi() {
     return "/api/schedule/today";
+}
+
+export function getCourseScheduleTomorrowApi() {
+    return "/api/schedule/tomorrow";
 }

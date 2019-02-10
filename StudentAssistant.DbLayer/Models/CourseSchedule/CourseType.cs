@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
+    /// <summary>
+    /// Тип предмета.
+    /// </summary>
     public enum CourseType
     {
         /// <summary>
