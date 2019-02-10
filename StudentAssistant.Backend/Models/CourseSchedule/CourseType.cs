@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule
 {
+    /// <summary>
+    /// Тип предмета.
+    /// </summary>
     public enum CourseType
     {
         /// <summary>

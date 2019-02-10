@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Services;
@@ -28,8 +24,6 @@ namespace StudentAssistant.Backend.Controllers
             try
             {
                 var dateTimeNow = DateTime.Now;
-
-               // dateTimeNow = new DateTime(2019, 02, 20); тест
 
                 var courseScheduleRequestModel = new CourseScheduleRequestModel
                 {

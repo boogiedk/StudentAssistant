@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using Humanizer;
-using Microsoft.Extensions.Options;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -38,13 +35,14 @@ namespace StudentAssistant.Backend.Services.Implementation
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest)
                 };
 
+                // отправляем запрос на получение расписания по указанным параметрам
                 var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromDatabase(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
 
                 return courseScheduleModel;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new NotSupportedException("Ошибка во время выполнения. " + ex);
             }
@@ -56,6 +54,25 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             try
             {
+                // если отсутствуют данные о расписании, возвращаем дефолтную модель
+                // TODO: продумать более корректную дефолтную модель
+                if (!input.Any())
+                {
+                    var emptyCourseScheduleViewModel = new CourseScheduleViewModel()
+                    {
+                        NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
+                        CoursesViewModel = new List<CoursesViewModel>() { new CoursesViewModel() {
+                        CourseName = "Данных не найдено",
+                        TeacherFullName = "Данных не найдено",
+                        CourseType = "Данных не найдено",
+                        CoursePlace = "Данных не найдено",
+                        ParityWeek = "Данных не найдено" }
+                        }
+                    };
+
+                    return emptyCourseScheduleViewModel;
+                }
+
                 // маппим список предметов из бд в модель представления
                 var coursesViewModel = _mapper.Map<List<CoursesViewModel>>(input);
 

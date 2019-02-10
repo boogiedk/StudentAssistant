@@ -58,11 +58,7 @@ namespace StudentAssistant.Backend
 
             services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
-
             services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
-
-         //   services.Configure<CourseScheduleDataServiceConfigurationModel>(options =>
-         //   options.ListCourseScheduleDatabaseModel = Configuration.GetSection("ListCourseScheduleDatabaseModel").Get<List<CourseScheduleDatabaseModel>>());
 
             services.AddAutoMapper();
             services.AddMvc();
@@ -84,6 +80,7 @@ namespace StudentAssistant.Backend
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

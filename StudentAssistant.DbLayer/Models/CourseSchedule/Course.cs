@@ -2,6 +2,9 @@
 
 namespace StudentAssistant.DbLayer.Services
 {
+    /// <summary>
+    /// Модель, характеризующая учебный предмет.
+    /// </summary>
     public class Course
     {
         /// <summary>

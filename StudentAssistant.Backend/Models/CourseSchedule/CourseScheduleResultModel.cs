@@ -1,12 +1,11 @@
 ﻿using StudentAssistant.Backend.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Services;
 using System.Collections.Generic;
 
 namespace StudentAssistant.Backend.Services
 {
     /// <summary>
     /// Модель с учебным расписанием.
-    /// </summary>
+    /// </summary
     public class CourseScheduleResultModel
     {
         /// <summary>
