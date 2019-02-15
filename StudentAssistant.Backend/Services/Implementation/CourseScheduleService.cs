@@ -71,7 +71,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     };
 
                     return emptyCourseScheduleViewModel;
-                }
+                } 
 
                 // маппим список предметов из бд в модель представления
                 var coursesViewModel = _mapper.Map<List<CoursesViewModel>>(input);
