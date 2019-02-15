@@ -74,7 +74,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             if (holidaysDays != null)
             {
                 // определяет, является ли дата праздничной
-                if (holidaysDays.Contains(timeNowParam)) 
+                if (holidaysDays.Contains(timeNowParam))
                     return StatusDayType.HolidayWeekend;
             }
 
@@ -83,27 +83,27 @@ namespace StudentAssistant.Backend.Services.Implementation
                 return StatusDayType.ExamsTime;
 
             // летняя сессия - июнь
-            if (timeNowParam.Month == 6) 
+            if (timeNowParam.Month == 6)
                 return StatusDayType.ExamsTime;
 
             // зимняя зачетная сессия - последняя неделя декабря
-            if (timeNowParam.Month == 12 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31)) 
+            if (timeNowParam.Month == 12 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31))
                 return StatusDayType.ExamsTime;
 
             // летняя сессия - последняя неделя мая
-            if (timeNowParam.Month == 5 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31)) 
+            if (timeNowParam.Month == 5 && (timeNowParam.Day >= 24 && timeNowParam.Day <= 31))
                 return StatusDayType.ExamsTime;
 
             // первая неделя февраля - каникулы (сколько длятся каникулы?)
-            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 9)) 
+            if (timeNowParam.Month == 2 && timeNowParam < new DateTime(timeNowParam.Year, 2, 9))
                 return StatusDayType.Holiday;
 
             // летние каникулы - июль-август
-            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8) 
+            if (timeNowParam.Month >= 7 && timeNowParam.Month <= 8)
                 return StatusDayType.Holiday;
 
-            // если это выходной
-            if (IsHoliday(timeNowParam)) 
+            // выходной
+            if (IsHoliday(timeNowParam))
                 return StatusDayType.DayOff;
 
             return StatusDayType.SchoolDay;
@@ -113,7 +113,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// Возвращает <see cref="true"/>, если переданная дата выпадает на выходной день, иначе <see cref="false"/>.
         /// </summary>
         /// <param name="timeNowParam"></param>
-        /// <param name="isSixDayWorkingWeek"></param>
+        /// <param name="isSixDayWorkingWeek">5-ти или 6-ти дневная рабочая неделя.</param>
         /// <returns></returns>
         private bool IsHoliday(DateTime timeNowParam, bool isSixDayWorkingWeek = false)
         {
@@ -145,12 +145,15 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     // сентябрь - начало уч. года - 1 семестр
                     result = GetWeekNumberOfYear(timeNowParam)
-                             - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 9, 1)); 
+                             - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 9, 1));
                 }
                 else
                 {
+                    var currentStatusDay = GetStatusDay(timeNowParam);
+
                     // если зимняя сессия или каникулы, возвращает счетчик от начала года
-                    if (GetStatusDay(timeNowParam) != StatusDayType.SchoolDay) 
+                    if (currentStatusDay == StatusDayType.ExamsTime
+                        || currentStatusDay == StatusDayType.Holiday)
                     {
                         result = GetWeekNumberOfYear(timeNowParam);
                     }
@@ -158,7 +161,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     {
                         // февраль - начало 2 семестра
                         result = GetWeekNumberOfYear(timeNowParam)
-                                                   - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 2, 8)); 
+                                                   - GetWeekNumberOfYear(new DateTime(timeNowParam.Year, 2, 8));
                     }
                 }
 
@@ -188,7 +191,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             // текущий год - год начала обучения = n лет обучения * 2 =
             // кол-во семестров +1 вначале учебного года
             if (GetPartOfSemester(timeNowParam) == 1)
-                return (timeNowParam.Year - startLearningYear) * 2 + 1; 
+                return (timeNowParam.Year - startLearningYear) * 2 + 1;
 
             return (timeNowParam.Year - startLearningYear) * 2;
         }

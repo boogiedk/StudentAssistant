@@ -1,0 +1,16 @@
+{
+  "EmailServiceConfigurationModel": {
+    "Id": "0",
+    "EmailFrom": "", /*email*/
+    "HiddenEmail": "",
+    "InputEnableSSL": "1",
+    "Login": "", /*login email*/
+    "InputHost": "pop.yandex.ru",
+    "OutputHost": "smtp.yandex.ru",
+    "OutputPort": "587",
+    "InputPort": "995",
+    "Password": "", /*password*/
+    "OutputEnableSSL": "1",
+    "UseDefaultCredentials": "1"
+  }
+}
