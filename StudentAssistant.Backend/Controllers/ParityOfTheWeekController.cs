@@ -22,10 +22,23 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                var dateTimeParam = DateTime.Now;
+                /*
+               * В будущем, когда будет разработан сервис авторизации и аутентификации, в качестве параметра в каждый метод контроллера будет передаваться
+               * модель с данными, в том числе, данные о часовом поясе. Соответственно, цепочка вызова метода сервиса будет такова:
+               * запрос клиента -> получение времени в UTC на сервере -> прибавление к времени UTC кол-во часов из пояса -> вызов метода сервиса.
+               */
+
+                var userAccountRequestData = new UserAccountRequestDataParityOfTheWeek
+                {
+                    TimeZoneId = "Russian Standard Time"
+                };
+
+                var dateTimeOffsetRequestUtc = DateTimeOffset.UtcNow;
+
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 // генерируем модель с данными о заданном дне.
-                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
+                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeOffsetRequestUser);
 
                 // подготавливаем модель для отображения (ViewModel)
                 var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);

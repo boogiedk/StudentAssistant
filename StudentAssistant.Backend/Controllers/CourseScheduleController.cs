@@ -5,7 +5,7 @@ using StudentAssistant.Backend.Services;
 
 namespace StudentAssistant.Backend.Controllers
 {
-  
+
     [Produces("application/json")]
     [Route("api/schedule")]
     public class CourseScheduleController : ControllerBase
@@ -16,18 +16,31 @@ namespace StudentAssistant.Backend.Controllers
         {
             _courseScheduleService = courseScheduleService;
         }
-        
+
         [HttpGet]
         [Route("today")]
         public IActionResult GetCourseScheduleToday()
         {
             try
             {
-                var dateTimeNow = DateTime.Now;
+                  /*
+                 * В будущем, когда будет разработан сервис авторизации и аутентификации, в качестве параметра в каждый метод контроллера будет передаваться
+                 * модель с данными, в том числе, данные о часовом поясе. Соответственно, цепочка вызова метода сервиса будет такова:
+                 * запрос клиента -> получение времени в UTC на сервере -> прибавление к времени UTC кол-во часов из пояса -> вызов метода сервиса.
+                 */
+
+                var userAccountRequestData = new UserAccountRequestDataCourseSchedule
+                {
+                    TimeZoneId = "Russian Standard Time"
+                };
+
+                var dateTimeOffsetRequestUtc = DateTimeOffset.UtcNow;
+
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 var courseScheduleRequestModel = new CourseScheduleRequestModel
                 {
-                    DateTimeRequest = dateTimeNow
+                    DateTimeRequest = dateTimeOffsetRequestUser
                 };
 
                 // отправляем запрос на получение расписания
@@ -51,14 +64,24 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                var dateTimeNow = DateTime.Now;
+                 /*
+                 * В будущем, когда будет разработан сервис авторизации и аутентификации, в качестве параметра в каждый метод контроллера будет передаваться
+                 * модель с данными, в том числе, данные о часовом поясе. Соответственно, цепочка вызова метода сервиса будет такова:
+                 * запрос клиента -> получение времени в UTC на сервере -> прибавление к времени UTC кол-во часов из пояса -> вызов метода сервиса.
+                 */
 
-                // добавляем +1 день
-                dateTimeNow = dateTimeNow.AddDays(1); 
+                var userAccountRequestData = new UserAccountRequestDataCourseSchedule
+                {
+                    TimeZoneId = "Russian Standard Time"
+                };
+
+                var dateTimeOffsetRequestUtc = DateTimeOffset.UtcNow;
+
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 var courseScheduleRequestModel = new CourseScheduleRequestModel
                 {
-                    DateTimeRequest = dateTimeNow
+                    DateTimeRequest = dateTimeOffsetRequestUser
                 };
 
                 // отправляем запрос на получение расписания

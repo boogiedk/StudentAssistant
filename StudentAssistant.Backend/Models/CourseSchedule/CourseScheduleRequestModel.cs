@@ -13,6 +13,6 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
         /// <summary>
         /// Время, по которому нужно вернуть расписание.
         /// </summary>
-        public DateTime DateTimeRequest { get; set; }
+        public DateTimeOffset DateTimeRequest { get; set; }
     }
 }
