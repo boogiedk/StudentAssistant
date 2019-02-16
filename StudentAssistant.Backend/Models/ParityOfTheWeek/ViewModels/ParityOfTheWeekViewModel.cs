@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace StudentAssistant.Backend.Models.ViewModels
+namespace StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels
 {
     /// <summary>
-    /// Модель для отображения данных с формированием данных о заданном <see cref="DateTime"/> параметре.
+    /// Модель для отображения данных с формированием данных о заданном <see cref="DateTimeOffset"/> параметре.
     /// </summary>
     public class ParityOfTheWeekViewModel
     {
@@ -18,7 +18,7 @@ namespace StudentAssistant.Backend.Models.ViewModels
         public string ParityOfWeekToday { get; set; }
 
         /// <summary>
-        /// Хранит количество прошедших недель с сентября до <see cref="DateTime"/> переданного параметра.
+        /// Хранит количество прошедших недель с сентября до <see cref="DateTimeOffset"/> переданного параметра.
         /// </summary>
         public int ParityOfWeekCount { get; set; }
 

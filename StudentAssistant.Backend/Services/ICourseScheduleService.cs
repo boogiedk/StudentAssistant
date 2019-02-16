@@ -1,6 +1,6 @@
 ﻿using StudentAssistant.Backend.Models.CourseSchedule;
-using StudentAssistant.Backend.Services.Implementation;
 using System.Collections.Generic;
+using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 
 namespace StudentAssistant.Backend.Services
 {

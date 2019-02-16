@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.Models.ConfigurationModels;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 using StudentAssistant.DbLayer.Services;
 using StudentAssistant.DbLayer.Services.Implementation;
 using System.Collections.Generic;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 
 namespace StudentAssistant.Backend
 {

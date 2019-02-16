@@ -1,7 +1,6 @@
 ﻿using System;
-using StudentAssistant.Backend.Models.ParityOfTheWeek;
 
-namespace StudentAssistant.Backend.Models
+namespace StudentAssistant.Backend.Models.ParityOfTheWeek
 {
     /// <summary>
     /// Модель для работы с сервисом, связанного с формированием данных о заданном <see cref="DateTimeOffset"/> параметре.

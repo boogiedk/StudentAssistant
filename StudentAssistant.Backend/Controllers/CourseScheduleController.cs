@@ -36,7 +36,8 @@ namespace StudentAssistant.Backend.Controllers
 
                 var dateTimeOffsetRequestUtc = DateTimeOffset.UtcNow;
 
-                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc,
+                    TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 var courseScheduleRequestModel = new CourseScheduleRequestModel
                 {

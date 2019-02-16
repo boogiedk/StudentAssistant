@@ -1,6 +1,6 @@
 ﻿using System;
-using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.Models.ViewModels;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 
 namespace StudentAssistant.Backend.Services
 {

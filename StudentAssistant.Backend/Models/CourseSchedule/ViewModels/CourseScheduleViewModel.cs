@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using StudentAssistant.Backend.Services.Implementation;
 
-namespace StudentAssistant.Backend.Services.Implementation
+namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
 {
     /// <summary>
     /// Модель представления для расписания.

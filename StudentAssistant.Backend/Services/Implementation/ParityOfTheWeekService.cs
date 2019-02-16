@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using AutoMapper;
-using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.Models.ConfigurationModels;
-using StudentAssistant.Backend.Models.ViewModels;
 using Humanizer;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using Microsoft.Extensions.Options;
+using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

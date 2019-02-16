@@ -1,4 +1,4 @@
-﻿namespace StudentAssistant.Backend.Services
+﻿namespace StudentAssistant.Backend.Models.Email
 {
     /// <summary>
     /// Тип шифрования.
