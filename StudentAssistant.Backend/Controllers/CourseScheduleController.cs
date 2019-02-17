@@ -76,9 +76,15 @@ namespace StudentAssistant.Backend.Controllers
                     TimeZoneId = "Russian Standard Time"
                 };
 
+                // берем utc время
                 var dateTimeOffsetRequestUtc = DateTimeOffset.UtcNow;
 
-                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
+                // переводим utc время в часовой пояс пользователя
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, 
+                    TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
+
+                // добавляем 1 день для отображения расписания
+                dateTimeOffsetRequestUser = dateTimeOffsetRequestUser.AddDays(1);
 
                 var courseScheduleRequestModel = new CourseScheduleRequestModel
                 {
