@@ -1,7 +1,6 @@
-﻿using StudentAssistant.Backend.Models.CourseSchedule;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace StudentAssistant.Backend.Services
+namespace StudentAssistant.Backend.Models.CourseSchedule
 {
     /// <summary>
     /// Модель с учебным расписанием.

@@ -5,7 +5,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using Moq;
 using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.Models.ConfigurationModels;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 using Xunit;

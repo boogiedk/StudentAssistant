@@ -2,9 +2,11 @@
 using AutoMapper;
 using Humanizer;
 using StudentAssistant.Backend.Models;
+using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.Email;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Models.UserSupport;
-using StudentAssistant.Backend.Models.ViewModels;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 using StudentAssistant.DbLayer.Services;

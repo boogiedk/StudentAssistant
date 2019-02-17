@@ -1,4 +1,6 @@
-﻿namespace StudentAssistant.Backend.Services
+﻿using StudentAssistant.Backend.Services;
+
+namespace StudentAssistant.Backend.Models.Email
 {
     /// <summary>
     /// Модель, содержащая конфигурационные данные о сервисе <see cref="IEmailService"/>.
