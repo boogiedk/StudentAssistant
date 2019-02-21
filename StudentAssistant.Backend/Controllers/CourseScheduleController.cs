@@ -1,22 +1,33 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
+using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Services;
 
 namespace StudentAssistant.Backend.Controllers
 {
-
+    /// <summary>
+    /// Контроллер с методами для работы с расписанием.
+    /// </summary>
     [Produces("application/json")]
     [Route("api/schedule")]
     public class CourseScheduleController : ControllerBase
     {
         private readonly ICourseScheduleService _courseScheduleService;
 
+         /// <summary>
+         /// Основной конструктор.
+         /// </summary>
+         /// <param name="courseScheduleService"></param>
         public CourseScheduleController(ICourseScheduleService courseScheduleService)
         {
             _courseScheduleService = courseScheduleService;
         }
 
+        /// <summary>
+        /// Метод для получения расписания на текущий день.
+        /// </summary>
+        /// <returns><see cref="CourseScheduleViewModel"/> Модель представления.</returns>
         [HttpGet]
         [Route("today")]
         public IActionResult GetCourseScheduleToday()
@@ -59,6 +70,10 @@ namespace StudentAssistant.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Метод для получения расписания на завтрашний день.
+        /// </summary>
+        /// <returns><see cref="CourseScheduleViewModel"/> Модель представления.</returns>
         [HttpGet]
         [Route("tomorrow")]
         public IActionResult GetCourseScheduleTomorrow()

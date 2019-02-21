@@ -2412,3 +2412,9 @@ body > article {
                 margin-top: 0;
             }
 }
+
+.button-api {
+    border-radius: 8px;
+    font-size: 24px;
+    background-color: #444;
+}

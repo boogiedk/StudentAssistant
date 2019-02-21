@@ -1,21 +1,33 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services;
 
 namespace StudentAssistant.Backend.Controllers
 {
+    /// <summary>
+    /// Контроллер с методами для получения данных о дне недели.
+    /// </summary>
     [Produces("application/json")]
     [Route("api/parity")]
     public class ParityOfTheWeekController : ControllerBase
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
+        /// <summary>
+        /// Основной конструктор.
+        /// </summary>
+        /// <param name="parityOfTheWeekService"></param>
         public ParityOfTheWeekController(IParityOfTheWeekService parityOfTheWeekService)
         {
             _parityOfTheWeekService = parityOfTheWeekService;
         }
 
+        /// <summary>
+        /// Метод для получения данных о текущем дне недели.
+        /// </summary>
+        /// <returns><see cref="ParityOfTheWeekViewModel"/>Модель представления.</returns>
         [HttpGet]
         [Route("today")]
         public IActionResult GenerateParityOfTheWeek()
@@ -45,13 +57,18 @@ namespace StudentAssistant.Backend.Controllers
 
                 return Ok(resultViewModel);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // log
                 return BadRequest(ex);
             }
         }
 
+        /// <summary>
+        /// Метод для получения данных о указанном дне недели.
+        /// </summary>
+        /// <returns><see cref="ParityOfTheWeekViewModel"/>Модель представления.</returns>
+        /// <param name="selectedDateTime">Модель, содержащая выбранную дату.</param>
         [HttpGet]
         [Route("selected-date")]
         public IActionResult GenerateParityOfTheWeek([FromBody]ParityOfTheWeekRequestModel selectedDateTime)
@@ -60,7 +77,7 @@ namespace StudentAssistant.Backend.Controllers
             {
                 if (selectedDateTime == null)
                 {
-                  return BadRequest("Запрос не содержит данных.");
+                    return BadRequest("Запрос не содержит данных.");
                 }
 
                 // достаем из модели указанную дату.
@@ -74,7 +91,7 @@ namespace StudentAssistant.Backend.Controllers
 
                 return Ok(resultViewModel);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //log
                 return BadRequest(ex);
