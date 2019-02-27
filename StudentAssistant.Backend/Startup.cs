@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,10 @@ using StudentAssistant.Backend.Services.Implementation;
 using StudentAssistant.DbLayer.Services;
 using StudentAssistant.DbLayer.Services.Implementation;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace StudentAssistant.Backend
 {
@@ -60,6 +64,25 @@ namespace StudentAssistant.Backend
             services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
             services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "StudentAssistant API",
+                    Description = "A StudentAssistant ASP.NET Core Web API",
+                    License = new License
+                    {
+                        Name = "MIT License",
+                        Url = "https://github.com/boogiedk/StudentAssistant/blob/master/LICENSE"
+                    }
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+             
             services.AddAutoMapper();
             services.AddMvc();
         }
@@ -80,6 +103,16 @@ namespace StudentAssistant.Backend
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentAssistant API v1");
+            });
 
             app.UseMvc(routes =>
             {

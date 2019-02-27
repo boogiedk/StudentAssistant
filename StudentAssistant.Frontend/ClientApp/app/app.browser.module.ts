@@ -35,3 +35,7 @@ export function getCourseScheduleTodayApi() {
 export function getCourseScheduleTomorrowApi() {
     return "/api/schedule/tomorrow";
 }
+
+export function getSwaggerApi() {
+    return "/swagger";
+}

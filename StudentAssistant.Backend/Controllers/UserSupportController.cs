@@ -6,6 +6,9 @@ using StudentAssistant.Backend.Services;
 
 namespace StudentAssistant.Backend.Controllers
 {
+    /// <summary>
+    /// Контроллер с методами для работы с обратной связью.
+    /// </summary>
     [Produces("application/json")]
     [Route("api/support")]
     public class UserSupportController : ControllerBase
@@ -13,19 +16,29 @@ namespace StudentAssistant.Backend.Controllers
         private readonly IUserSupportService _userSupportService;
         private readonly IValidationService _validationService;
 
+        /// <summary>
+        /// Основной конструктор.
+        /// </summary>
+        /// <param name="userSupportService"></param>
+        /// <param name="validationService"></param>
         public UserSupportController(IUserSupportService userSupportService, IValidationService validationService)
         {
             _userSupportService = userSupportService;
             _validationService = validationService;
         }
 
+        /// <summary>
+        /// Метод для отправки обратной связи.
+        /// </summary>
+        /// <param name="userFeedbackRequestModel">Модель, содержащая данные для отправки отзыва пользователя.</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("sendfeedback")]
-        public IActionResult SendFeedback([FromBody]UserFeedbackRequestModel input)
+        public IActionResult SendFeedback([FromBody]UserFeedbackRequestModel userFeedbackRequestModel)
         {
             try
             {
-                if (input == null)
+                if (userFeedbackRequestModel == null)
                 {
                     return BadRequest("Запрос не содержит данных.");
                 }
@@ -41,7 +54,7 @@ namespace StudentAssistant.Backend.Controllers
                 }
 
                 // отправляем фидбек 
-                var resultSendFeedback = _userSupportService.SendFeedback(input);
+                var resultSendFeedback = _userSupportService.SendFeedback(userFeedbackRequestModel);
 
                 // если сообщение не отправлено, подготавливаем ответ с текстом ошибки
                 if (!resultSendFeedback.IsSended)
