@@ -151,6 +151,26 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Assert
             Assert.AreEqual(expectedModel.DateTimeRequest, result.DateTimeRequest);
         }
+
+        [Fact]
+        public void GetStatusDay_ReturnsCorrectStatusDay_ShouldBeReturns_StatusDay()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization());
+
+            var mapper = fixture.Freeze<Mock<IMapper>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
+
+            var dateTimeTest = new DateTime(2018, 11, 11);
+
+            // Act
+            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var result = service.GetStatusDay(dateTimeTest);
+
+            // Assert
+            Assert.AreEqual(StatusDayType.DayOff,result);
+        }
     }
 }
 
