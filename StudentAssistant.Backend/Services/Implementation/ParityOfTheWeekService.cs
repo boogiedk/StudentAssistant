@@ -67,7 +67,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// <param name="dateTimeOffsetParam"></param>
         /// <param name="holidaysDays"></param>
         /// <returns></returns>
-        private StatusDayType GetStatusDay(DateTimeOffset dateTimeOffsetParam, List<DateTimeOffset> holidaysDays = null)
+        public StatusDayType GetStatusDay(DateTimeOffset dateTimeOffsetParam, List<DateTimeOffset> holidaysDays = null)
         {
             if (holidaysDays != null)
             {
