@@ -108,12 +108,12 @@ namespace StudentAssistant.Backend.Services.Implementation
         }
 
         /// <summary>
-        /// Возвращает <see cref="true"/>, если переданная дата выпадает на выходной день, иначе <see cref="false"/>.
+        /// Возвращает <see cref="bool"/>, если переданная дата выпадает на выходной день, иначе <see cref="bool"/>.
         /// </summary>
         /// <param name="dateTimeOffsetParam"></param>
         /// <param name="isSixDayWorkingWeek">5-ти или 6-ти дневная рабочая неделя.</param>
         /// <returns></returns>
-        private bool IsHoliday(DateTimeOffset dateTimeOffsetParam, bool isSixDayWorkingWeek = false)
+        public bool IsHoliday(DateTimeOffset dateTimeOffsetParam, bool isSixDayWorkingWeek = false)
         {
             if (isSixDayWorkingWeek)
             {

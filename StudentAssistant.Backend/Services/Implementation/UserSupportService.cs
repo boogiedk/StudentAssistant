@@ -40,7 +40,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private EmailRequestModel PrepareUserFeedbackRequestForEmailService(UserFeedbackRequestModel input)
+        public EmailRequestModel PrepareUserFeedbackRequestForEmailService(UserFeedbackRequestModel input)
         {
             if (input == null) throw new NotSupportedException($"{typeof(UserFeedbackRequestModel)} input равен null");
 
