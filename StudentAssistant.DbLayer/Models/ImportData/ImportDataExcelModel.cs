@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StudentAssistant.Backend.Models.ImportData
+﻿namespace StudentAssistant.DbLayer.Models.ImportData
 {
     /// <summary>
     /// Модель для импорта данных из Excel.
@@ -40,34 +35,6 @@ namespace StudentAssistant.Backend.Models.ImportData
         /// </summary>
         public double OtherCell { get; set; }
 
-        /// <summary>
-        /// Предмет.
-        /// </summary>
-        public string CourseName { get; set; }
-
-        /// <summary>
-        /// Неделя.
-        /// </summary>
-        public string ParityWeek { get; set; }
-
-        /// <summary>
-        /// Вид занятий.
-        /// </summary>
-        public string CourseType { get; set; }
-
-        /// <summary>
-        /// ФИО преподавателя.
-        /// </summary>
-        public string TeacherFullName { get; set; }
-
-        /// <summary>
-        /// Номер аудитории.
-        /// </summary>
-        public string CoursePlace { get; set; }
-    }
-
-    public class CourseModel
-    {
         /// <summary>
         /// Предмет.
         /// </summary>

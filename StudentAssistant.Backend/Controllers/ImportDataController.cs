@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.DbLayer.Services;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -12,20 +13,27 @@ namespace StudentAssistant.Backend.Controllers
     [Route("api/importData")]
     public class ImportDataController : ControllerBase
     {
-        public readonly IImportDataExcelService _importDataExcelService;
+        public readonly IImportDataExcelService _iImportDataExcelService;
 
         public ImportDataController(IImportDataExcelService importDataExcelService)
         {
-            _importDataExcelService = importDataExcelService;
+            _iImportDataExcelService = importDataExcelService;
         }
 
         [Route("loadfile")]
         [HttpGet]
         public IActionResult LoadExcelFile()
         {
-           _importDataExcelService.LoadExcelFile();
+            try
+            {
+                var listImportDataExcelModel = _iImportDataExcelService.LoadExcelFile();
 
-           return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+               return BadRequest(ex);
+            }
         }
     }
 }

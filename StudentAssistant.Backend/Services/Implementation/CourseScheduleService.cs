@@ -13,13 +13,17 @@ namespace StudentAssistant.Backend.Services.Implementation
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly ICourseScheduleDataService _courseScheduleDataService;
+        private readonly IImportDataExcelService _importDataExcelService;
         private readonly IMapper _mapper;
 
-        public CourseScheduleService(IParityOfTheWeekService parityOfTheWeekService, IMapper mapper, ICourseScheduleDataService courseScheduleDataService)
+        public CourseScheduleService(IParityOfTheWeekService parityOfTheWeekService,
+            IMapper mapper, ICourseScheduleDataService courseScheduleDataService,
+            IImportDataExcelService importDataExcelService)
         {
             _parityOfTheWeekService = parityOfTheWeekService;
             _mapper = mapper;
             _courseScheduleDataService = courseScheduleDataService;
+            _importDataExcelService = importDataExcelService;
         }
 
         public List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleRequestModel input)
@@ -37,7 +41,9 @@ namespace StudentAssistant.Backend.Services.Implementation
                 };
 
                 // отправляем запрос на получение расписания по указанным параметрам
-                var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromDatabase(courseScheduleParameters);
+                //   var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromJsonFile(courseScheduleParameters);
+
+                var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromExcelFile(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
 
@@ -72,7 +78,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     };
 
                     return emptyCourseScheduleViewModel;
-                } 
+                }
 
                 // маппим список предметов из бд в модель представления
                 var coursesViewModel = _mapper.Map<List<CoursesViewModel>>(input);
