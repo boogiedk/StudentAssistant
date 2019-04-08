@@ -8,10 +8,17 @@ namespace StudentAssistant.DbLayer.Services
     public interface ICourseScheduleDataService
     {
         /// <summary>
-        /// Возвращает расписание, взятое из базы данных.
+        /// Возвращает расписание, взятое из Json файла.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<CourseScheduleDatabaseModel> GetCourseScheduleFromDatabase(CourseScheduleParameters input);
+        List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFile(CourseScheduleParameters input);
+
+        /// <summary>
+        /// Возвращает расписание, взятое из Excel файла.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFile(CourseScheduleParameters input);
     }
 }
