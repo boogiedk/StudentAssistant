@@ -14,11 +14,9 @@ namespace StudentAssistant.DbLayer.Services
         List<ImportDataExcelModel> LoadExcelFile();
 
         /// <summary>
-        /// Маппит модель из модели иморта в модель в модель базы данных.
+        /// Возвращает список с данными для расписания.
         /// </summary>
-        /// <param name="importDataExcelModels"></param>
         /// <returns></returns>
-        List<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(
-            List<ImportDataExcelModel> importDataExcelModels);
+        List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels();
     }
 }

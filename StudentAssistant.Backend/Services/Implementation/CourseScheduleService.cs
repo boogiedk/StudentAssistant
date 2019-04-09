@@ -11,19 +11,16 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class CourseScheduleService : ICourseScheduleService
     {
-        private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly ICourseScheduleDataService _courseScheduleDataService;
-        private readonly IImportDataExcelService _importDataExcelService;
+        private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly IMapper _mapper;
 
         public CourseScheduleService(IParityOfTheWeekService parityOfTheWeekService,
-            IMapper mapper, ICourseScheduleDataService courseScheduleDataService,
-            IImportDataExcelService importDataExcelService)
+            IMapper mapper, ICourseScheduleDataService courseScheduleDataService)
         {
+            _courseScheduleDataService = courseScheduleDataService;
             _parityOfTheWeekService = parityOfTheWeekService;
             _mapper = mapper;
-            _courseScheduleDataService = courseScheduleDataService;
-            _importDataExcelService = importDataExcelService;
         }
 
         public List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleRequestModel input)
@@ -43,6 +40,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // отправляем запрос на получение расписания по указанным параметрам
                 //   var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromJsonFile(courseScheduleParameters);
 
+                // на данным момент расписание берется из Excel файла.
                 var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromExcelFile(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
