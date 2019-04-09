@@ -60,6 +60,11 @@ namespace StudentAssistant.Backend
             services.AddScoped<ICourseScheduleService, CourseScheduleService>();
             services.AddScoped<ICourseScheduleDataService, CourseScheduleDataService>();
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
+            services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
+
+            //services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
+            //services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
+            //services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
 
             services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));

@@ -22,7 +22,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class ImportDataExcelService : IImportDataExcelService
     {
-
         public List<ImportDataExcelModel> LoadExcelFile()
         {
             string fileName = @"Infrastructure\ScheduleFile\scheduleFile.xlsx";
@@ -112,12 +111,12 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
 
             // Создает Json файл с расписанием
-            // CreateJsonFileForConfig(importDataExcelModels);
+            CreateJsonFileForConfig(importDataExcelModels);
 
             return importDataExcelModels;
         }
 
-        public List<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(List<ImportDataExcelModel> importDataExcelModels)
+        private List<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(List<ImportDataExcelModel> importDataExcelModels)
         {
             var resultList = new List<CourseScheduleDatabaseModel>();
 
@@ -141,6 +140,16 @@ namespace StudentAssistant.Backend.Services.Implementation
             return resultList;
         }
 
+        public List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
+        {
+            var importDataExcelModels = LoadExcelFile();
+
+            var courseScheduleDatabaseModel = 
+                PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
+
+            return courseScheduleDatabaseModel;
+        }
+
         /// <summary>
         /// Создает Json файл с данными из Excel.
         /// </summary>
@@ -151,9 +160,9 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             var result = PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
 
-            string jsondata = JsonConvert.SerializeObject(result);
+            string jsonData = JsonConvert.SerializeObject(result);
 
-            File.WriteAllText(fileName + "output.json", jsondata);
+            File.WriteAllText(fileName + "output.json", jsonData);
         }
 
         /// <summary>
@@ -186,7 +195,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// </summary>
         /// <param name="courseType"></param>
         /// <returns></returns>
-        public CourseType ParseCourseType(string courseType)
+        private CourseType ParseCourseType(string courseType)
         {
             if (string.IsNullOrEmpty(courseType))
             {
@@ -211,7 +220,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// </summary>
         /// <param name="numberWeek"></param>
         /// <returns></returns>
-        public List<int> ParseNumberWeek(string numberWeek)
+        private List<int> ParseNumberWeek(string numberWeek)
         {
             if (string.IsNullOrEmpty(numberWeek))
             {
@@ -237,7 +246,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public bool IsNumberContains(string input)
+        private bool IsNumberContains(string input)
         {
             foreach (char c in input)
                 if (Char.IsNumber(c))

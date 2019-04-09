@@ -13,27 +13,9 @@ namespace StudentAssistant.Backend.Controllers
     [Route("api/importData")]
     public class ImportDataController : ControllerBase
     {
-        public readonly IImportDataExcelService _iImportDataExcelService;
-
-        public ImportDataController(IImportDataExcelService importDataExcelService)
+        public ImportDataController()
         {
-            _iImportDataExcelService = importDataExcelService;
         }
 
-        [Route("loadfile")]
-        [HttpGet]
-        public IActionResult LoadExcelFile()
-        {
-            try
-            {
-                var listImportDataExcelModel = _iImportDataExcelService.LoadExcelFile();
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-               return BadRequest(ex);
-            }
-        }
     }
 }
