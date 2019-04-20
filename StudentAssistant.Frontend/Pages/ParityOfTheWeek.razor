@@ -1,0 +1,104 @@
+﻿@page "/parityOfTheWeek"
+@inject HttpClient Http
+
+
+@if (parityOfTheWeekViewModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Сегодня - @parityOfTheWeekViewModel.DayOfName</title>
+    </head>
+    <body>
+        @if (parityOfTheWeekViewModel.IsParity)
+        {
+            <div class="parityTrue">
+                <div>
+                    <h1> Сегодня @parityOfTheWeekViewModel.DateTimeRequest <b>@parityOfTheWeekViewModel.DayOfName</b> </h1>
+                    <h1> Идёт <b>@parityOfTheWeekViewModel.ParityOfWeekCount-ая</b> неделя</h1>
+                    <h1> и <b>@parityOfTheWeekViewModel.NumberOfSemester</b> (@parityOfTheWeekViewModel.PartOfSemester половина) семестр</h1>
+                    <div>
+                        <h1><b>@parityOfTheWeekViewModel.ParityOfWeekToday неделя</b></h1>
+                    </div>
+                </div>
+                <div>
+                    <h1><b>@parityOfTheWeekViewModel.StatusDay</b></h1>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="parityFalse">
+                <div>
+                    <h1> Сегодня @parityOfTheWeekViewModel.DateTimeRequest <b>@parityOfTheWeekViewModel.DayOfName</b> </h1>
+                    <h1> Идёт <b>@parityOfTheWeekViewModel.ParityOfWeekCount-ая</b> неделя</h1>
+                    <h1> и <b>@parityOfTheWeekViewModel.NumberOfSemester</b> (@parityOfTheWeekViewModel.PartOfSemester половина) семестр</h1>
+                    <div>
+                        <h1><b>@parityOfTheWeekViewModel.ParityOfWeekToday неделя</b></h1>
+                    </div>
+                </div>
+                <div>
+                    <h1><b>@parityOfTheWeekViewModel.StatusDay</b></h1>
+                </div>
+            </div>
+        }
+    </body>
+</html>
+}
+
+@functions {
+    ParityOfTheWeekViewModel parityOfTheWeekViewModel;
+
+    protected override async Task OnInitAsync()
+    {
+        parityOfTheWeekViewModel = await Http.GetJsonAsync<ParityOfTheWeekViewModel>("http://localhost:18936/api/parity/today");
+    }
+
+    class ParityOfTheWeekViewModel
+    {
+        /// <summary>
+        /// Время создания запроса на получение данных.
+        /// </summary>
+        public string DateTimeRequest { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="string"/> true, если неделя чётная, иначе <see cref="string"/> false.
+        /// </summary>
+        public string ParityOfWeekToday { get; set; }
+
+        /// <summary>
+        /// Хранит количество прошедших недель с сентября до <see cref="DateTimeOffset"/> переданного параметра.
+        /// </summary>
+        public int ParityOfWeekCount { get; set; }
+
+        /// <summary>
+        /// Номер части семестра.
+        /// </summary>
+        public int PartOfSemester { get; set; }
+
+        /// <summary>
+        /// Название дня недели.
+        /// </summary>
+        public string DayOfName { get; set; }
+
+        /// <summary>
+        /// Номер семестра.
+        /// </summary>
+        public int NumberOfSemester { get; set; }
+
+        /// <summary>
+        /// Текстовый статус дня: учебный, выходной, каникулы, сессия.
+        /// </summary>
+        public string StatusDay { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="bool"/> true, если неделя чётная, иначе<see cref="bool"/> false.
+        /// </summary>
+        public bool IsParity { get; set; }
+    }
+}

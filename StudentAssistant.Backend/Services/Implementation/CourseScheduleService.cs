@@ -86,7 +86,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 // создаем результирующую модель представления
                 var resultCourseScheduleViewModel = new CourseScheduleViewModel
-                {
+                {   
                     CoursesViewModel = sortedCoursesViewModel,
                     NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper()
                 };

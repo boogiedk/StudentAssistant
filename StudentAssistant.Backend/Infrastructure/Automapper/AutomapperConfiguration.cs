@@ -29,8 +29,8 @@ namespace StudentAssistant.Backend.Infrastructure.AutoMapper
 
             CreateMap<CourseScheduleResultModel, CoursesViewModel>()
                 .ForMember(destination => destination.CourseType, opts => opts.MapFrom(src => src.CourseType.Humanize()))
-                .ForMember(destination => destination.ParityWeek, opts => opts.MapFrom(src => src.ParityWeek ? "Чётная" : "Нечётная"));
-
+                .ForMember(destination => destination.ParityWeek, opts => opts.MapFrom(src => src.ParityWeek ? "Чётная" : "Нечётная"))
+                .ForMember(destination => destination.NumberWeek, opts => opts.MapFrom(src => string.Join(", ", src.NumberWeek)));
             //.ForMember(dest => dest.BookTitle,
             //    opts => opts.MapFrom(src => src.Title));
 

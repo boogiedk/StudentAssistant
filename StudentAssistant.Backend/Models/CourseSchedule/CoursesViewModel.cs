@@ -10,7 +10,7 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
         /// <summary>
         /// Номер недели.
         /// </summary>
-        public List<int> NumberWeek { get; set; }
+        public string NumberWeek { get; set; }
 
         /// <summary>
         /// Чётность недели.

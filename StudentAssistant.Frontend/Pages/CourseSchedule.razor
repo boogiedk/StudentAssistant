@@ -1,0 +1,122 @@
+﻿@page "/courseSchedule"
+@inject HttpClient Http
+
+@if (courseScheduleViewModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<table>
+    <thead>
+        <tr>
+            <th>
+                <span id="dayEventValue"> @courseScheduleViewModel.NameOfDayWeek</span>
+            </th>
+        </tr>
+        <tr>
+            <th>№</th>
+            <th>Предмет</th>
+            <th>Тип предмета</th>
+            <th>Преподаватель</th>
+            <th>Кабинет</th>
+            <th>Четность недели</th>
+            <th>Номер недели</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        @foreach (var course in courseScheduleViewModel.CoursesViewModel)
+        {
+            <tr>
+                <td>@course.CourseNumber</td>
+                <td>@course.CourseName</td>
+                <td>@course.CourseType</td>
+                <td>@course.TeacherFullName</td>
+                <td>@course.CoursePlace</td>
+                <td>@course.ParityWeek</td>
+                <td>@course.NumberWeek</td>             
+            </tr>
+        }
+        </tbody>
+</table>
+}
+
+<button class="nextweek btn" onclick="@GetCourseScheduleTomorrow">Расписание на завтра</button>
+
+@functions {
+    CourseScheduleViewModel courseScheduleViewModel;
+
+    protected override async Task OnInitAsync()
+    {
+        await GetCourseScheduleToday();
+    }
+
+    protected async Task GetCourseScheduleToday()
+    {
+        courseScheduleViewModel = await Http.GetJsonAsync<CourseScheduleViewModel>("http://localhost:18936/api/schedule/today");
+    }
+
+    protected async Task GetCourseScheduleTomorrow()
+    {
+        courseScheduleViewModel = await Http.GetJsonAsync<CourseScheduleViewModel>("http://localhost:18936/api/schedule/tomorrow");
+    }
+
+
+    /// <summary>
+    /// Модель представления для расписания.
+    /// </summary>
+    class CourseScheduleViewModel
+    {
+        /// <summary>
+        /// Название дня недели.
+        /// </summary>
+        public string NameOfDayWeek { get; set; }
+
+        /// <summary>
+        /// Список с данными о днях из расписании.
+        /// </summary>
+        public List<CoursesViewModel> CoursesViewModel { get; set; }
+    }
+
+    /// <summary>
+    /// Модель представления с данными о днях из расписании.
+    /// </summary>
+    class CoursesViewModel
+    {
+        /// <summary>
+        /// Номер недели.
+        /// </summary>
+        public string NumberWeek { get; set; }
+
+        /// <summary>
+        /// Чётность недели.
+        /// </summary>
+        public string ParityWeek { get; set; }
+
+        /// <summary>
+        /// Название предмета.
+        /// </summary>
+        public string CourseName { get; set; }
+
+        /// <summary>
+        /// Номер предмета.
+        /// </summary>
+        public int CourseNumber { get; set; }
+
+        /// <summary>
+        /// Тип предмета.
+        /// </summary>
+        public string CourseType { get; set; }
+
+        /// <summary>
+        /// Полное имя преподавателя.
+        /// </summary>
+        public string TeacherFullName { get; set; }
+
+        /// <summary>
+        /// Место проведения.
+        /// </summary>
+        public string CoursePlace { get; set; }
+    }
+}
+
