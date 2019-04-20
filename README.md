@@ -11,7 +11,7 @@
 
 Student Assistant - this is a web service with an open source project. The created for a convenient and flexible way to monitor the study schedule. 
 
-![screenshot](https://pp.userapi.com/c849124/v849124521/11f18e/WP265gLwf8Y.jpg)
+![screenshot](https://pp.userapi.com/c849228/v849228253/179dde/hnQ37ll5f8I.jpg)
 
 ## Compiling
 
