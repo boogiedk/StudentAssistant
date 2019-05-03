@@ -120,5 +120,53 @@ namespace StudentAssistant.Backend.Controllers
                 return BadRequest(ex);
             }
         }
+
+        /// <summary>
+        /// Метод для получения расписания на завтрашний день.
+        /// </summary>
+        /// <returns><see cref="CourseScheduleViewModel"/> Модель представления.</returns>
+        [HttpPost]
+        [Route("selected")]
+        public IActionResult GetCourseScheduleSelected([FromBody]CourseScheduleRequestModel model)
+        {
+            try
+            {
+                /*
+                * В будущем, когда будет разработан сервис авторизации и аутентификации, в качестве параметра в каждый метод контроллера будет передаваться
+                * модель с данными, в том числе, данные о часовом поясе. Соответственно, цепочка вызова метода сервиса будет такова:
+                * запрос клиента -> получение времени в UTC на сервере -> прибавление к времени UTC кол-во часов из пояса -> вызов метода сервиса.
+                */
+
+                var userAccountRequestData = new UserAccountRequestDataCourseSchedule
+                {
+                    TimeZoneId = "Russian Standard Time"
+                };
+
+                // берем utc время
+                var dateTimeOffsetRequestUtc = model.DateTimeRequest;
+
+                // переводим utc время в часовой пояс пользователя
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc,
+                    TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
+
+                var courseScheduleRequestModel = new CourseScheduleRequestModel
+                {
+                    DateTimeRequest = dateTimeOffsetRequestUser
+                };
+
+                // отправляем запрос на получение расписания
+                var courseScheduleResultModel = _courseScheduleService.GetCourseSchedule(courseScheduleRequestModel);
+
+                // подготавливаем ViewModel для отображения
+                var courseScheduleViewModel = _courseScheduleService.PrepareCourseScheduleViewModel(courseScheduleResultModel);
+
+                return Ok(courseScheduleViewModel);
+            }
+            catch (Exception ex)
+            {
+                // log
+                return BadRequest(ex);
+            }
+        }
     }
 }

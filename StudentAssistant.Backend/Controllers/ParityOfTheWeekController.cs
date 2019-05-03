@@ -47,7 +47,8 @@ namespace StudentAssistant.Backend.Controllers
 
                 var dateTimeOffsetRequestUtc = DateTimeOffset.UtcNow;
 
-                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc, 
+                    TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 // генерируем модель с данными о заданном дне.
                 var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeOffsetRequestUser);
@@ -69,7 +70,7 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns><see cref="ParityOfTheWeekViewModel"/>Модель представления.</returns>
         /// <param name="selectedDateTime">Модель, содержащая выбранную дату.</param>
-        [HttpGet]
+        [HttpPost]
         [Route("selected-date")]
         public IActionResult GenerateParityOfTheWeek([FromBody]ParityOfTheWeekRequestModel selectedDateTime)
         {
@@ -80,11 +81,18 @@ namespace StudentAssistant.Backend.Controllers
                     return BadRequest("Запрос не содержит данных.");
                 }
 
-                // достаем из модели указанную дату.
-                var dateTimeParam = selectedDateTime.SelectedDateTime;
+                var userAccountRequestData = new UserAccountRequestDataParityOfTheWeek
+                {
+                    TimeZoneId = "Russian Standard Time"
+                };
+
+                var dateTimeOffsetRequestUtc = selectedDateTime.SelectedDateTime;
+
+                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc,
+                    TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 // генерируем модель с данными о заданном дне.
-                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeParam);
+                var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeOffsetRequestUser);
 
                 // подготавливаем модель для отображения (ViewModel)
                 var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);

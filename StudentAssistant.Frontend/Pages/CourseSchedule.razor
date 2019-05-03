@@ -1,71 +1,154 @@
 ﻿@page "/courseSchedule"
+@using System.Globalization
+@using Microsoft.AspNetCore
+@using Microsoft.AspNetCore.Components
+@using NodaTime
+@using static NodaTime.Extensions.DateTimeExtensions;
+@using BlazorNodaTimeDateTimePicker
+
 @inject HttpClient Http
 
-@if (courseScheduleViewModel == null)
+@if (_courseScheduleViewModel == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-<table>
-    <thead>
-        <tr>
-            <th>
-                <span id="dayEventValue"> @courseScheduleViewModel.NameOfDayWeek</span>
-            </th>
-        </tr>
-        <tr>
-            <th>№</th>
-            <th>Предмет</th>
-            <th>Тип предмета</th>
-            <th>Преподаватель</th>
-            <th>Кабинет</th>
-            <th>Четность недели</th>
-            <th>Номер недели</th>
-        </tr>
-    </thead>
-    <tbody class="table-hover">
-        @foreach (var course in courseScheduleViewModel.CoursesViewModel)
-        {
+    <table>
+        <thead>
+            <div class="dayEventValue">
+                <button class="transparentButtonWhiteText" onclick="@FocusedToElement">
+                    @_selectedDate.ToDateTimeUnspecified().ToString("dddd dd MMMM",
+             new CultureInfo("ru-RU")).ToUpper()
+                </button>
+
+                <div class="d-flex flex-sm-row flex-column">
+                    <div class="mr-3 order-1 order-sm-0">
+                        <DatePicker Visible="@_isVisibleDatePicker"
+                                    SelectedDateChanged=SelectedDateChanged
+                                    ShowClose="@true"
+                                    Selected=@Selected
+                                    FormatProvider="@(new CultureInfo("ru-RU"))"
+                                    DaysOfWeekDisabled=@(new IsoDayOfWeek[] { IsoDayOfWeek.Sunday }) />
+                    </div>
+                </div>
+            </div>
             <tr>
-                <td>@course.CourseNumber</td>
-                <td>@course.CourseName</td>
-                <td>@course.CourseType</td>
-                <td>@course.TeacherFullName</td>
-                <td>@course.CoursePlace</td>
-                <td>@course.ParityWeek</td>
-                <td>@course.NumberWeek</td>             
+                <th>№</th>
+                <th>Предмет</th>
+                <th>Тип предмета</th>
+                <th>Преподаватель</th>
+                <th>Кабинет</th>
+                <th>Четность недели</th>
+                <th>Номер недели</th>
             </tr>
-        }
+        </thead>
+        <tbody class="table-hover">
+            @foreach (var course in _courseScheduleViewModel.CoursesViewModel)
+            {
+                <tr>
+                    <td>@course.CourseNumber</td>
+                    <td>@course.CourseName</td>
+                    <td>@course.CourseType</td>
+                    <td>@course.TeacherFullName</td>
+                    <td>@course.CoursePlace</td>
+                    <td>@course.ParityWeek</td>
+                    <td>@course.NumberWeek</td>
+                </tr>
+            }
         </tbody>
-</table>
+    </table>
+
 }
 
-<button class="nextweek btn" onclick="@GetCourseScheduleTomorrow">Расписание на завтра</button>
-
 @functions {
-    CourseScheduleViewModel courseScheduleViewModel;
+    LocalDate _selectedDate;
+    CourseScheduleViewModel _courseScheduleViewModel;
+    bool _isVisibleDatePicker = false;
 
     protected override async Task OnInitAsync()
     {
         await GetCourseScheduleToday();
     }
 
-    protected async Task GetCourseScheduleToday()
+    void FocusedToElement()
     {
-        courseScheduleViewModel = await Http.GetJsonAsync<CourseScheduleViewModel>("http://localhost:18936/api/schedule/today");
+        _isVisibleDatePicker = true;
     }
 
-    protected async Task GetCourseScheduleTomorrow()
+    void Selected(LocalDate localDate)
     {
-        courseScheduleViewModel = await Http.GetJsonAsync<CourseScheduleViewModel>("http://localhost:18936/api/schedule/tomorrow");
+        _selectedDate = localDate;
+        _isVisibleDatePicker = false;
+        StateHasChanged();
     }
 
+    void SelectedDateChanged(LocalDate? localDate)
+    {
+        _selectedDate = localDate ?? SystemClock.Instance.GetCurrentInstant().InUtc().LocalDateTime.Date;
+
+        var dateTimeOffset = ConvertLocalDateToDateTimeOffset(localDate);
+
+        _isVisibleDatePicker = false;
+
+        Console.WriteLine(dateTimeOffset);
+
+        GetCourseScheduleSelected(dateTimeOffset);
+
+        StateHasChanged();
+    }
+
+    public DateTimeOffset ConvertLocalDateToDateTimeOffset(LocalDate? localDate)
+    {
+        try
+        {
+            if (!localDate.HasValue)
+            {
+                return DateTimeOffset.UtcNow;
+            }
+            var dateTimeString = localDate.Value.AtMidnight().ToDateTimeUnspecified()
+                    .ToString(CultureInfo.InvariantCulture);
+
+            var result = DateTimeOffset.Parse(dateTimeString);
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return DateTimeOffset.UtcNow;
+        }
+    }
+
+    public async Task GetCourseScheduleToday()
+    {
+        _courseScheduleViewModel = await Http.GetJsonAsync<CourseScheduleViewModel>($"{Startup.url}/api/schedule/today");
+    }
+
+    public async Task GetCourseScheduleTomorrow()
+    {
+        _courseScheduleViewModel = await Http.GetJsonAsync<CourseScheduleViewModel>($"{Startup.url}/api/schedule/tomorrow");
+    }
+
+    public async Task GetCourseScheduleSelected(DateTimeOffset dateTimeOffset)
+    {
+        var requestModel = new CourseScheduleRequestModel()
+        {
+            DateTimeRequest = dateTimeOffset
+        };
+
+        _courseScheduleViewModel = await Http.PostJsonAsync<CourseScheduleViewModel>($"{Startup.url}/api/schedule/selected", requestModel);
+
+        Console.WriteLine(_courseScheduleViewModel.NameOfDayWeek
+                          + " " + _courseScheduleViewModel.CoursesViewModel.Count);
+
+        StateHasChanged();
+    }
 
     /// <summary>
     /// Модель представления для расписания.
     /// </summary>
-    class CourseScheduleViewModel
+    public class CourseScheduleViewModel
     {
         /// <summary>
         /// Название дня недели.
@@ -81,7 +164,7 @@ else
     /// <summary>
     /// Модель представления с данными о днях из расписании.
     /// </summary>
-    class CoursesViewModel
+    public class CoursesViewModel
     {
         /// <summary>
         /// Номер недели.
@@ -118,5 +201,16 @@ else
         /// </summary>
         public string CoursePlace { get; set; }
     }
-}
 
+    /// <summary>
+    /// Модель запросов на получение расписания.
+    /// </summary>
+    public class CourseScheduleRequestModel
+    {
+        /// <summary>
+        /// Время, по которому нужно вернуть расписание.
+        /// </summary>
+        public DateTimeOffset DateTimeRequest { get; set; }
+    }
+
+}

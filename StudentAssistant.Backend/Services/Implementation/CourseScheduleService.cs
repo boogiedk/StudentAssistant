@@ -41,7 +41,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                 //   var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromJsonFile(courseScheduleParameters);
 
                 // на данным момент расписание берется из Excel файла.
-                var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromExcelFile(courseScheduleParameters);
+                var courseScheduleDatabaseModel = _courseScheduleDataService
+                    .GetCourseScheduleFromExcelFile(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
 
