@@ -13,6 +13,7 @@ using StudentAssistant.DbLayer.Services.Implementation;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Microsoft.AspNetCore.Rewrite;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -118,13 +119,19 @@ namespace StudentAssistant.Backend
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentAssistant API v1");
+                c.RoutePrefix = string.Empty;
             });
+
+            //var option = new RewriteOptions();
+            //option.AddRedirect("^$", "swagger");
+            //app.UseRewriter(option);
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
 
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",

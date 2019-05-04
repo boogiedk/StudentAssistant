@@ -6,7 +6,7 @@ using StudentAssistant.Backend.Models.Email;
 namespace StudentAssistant.Backend.Services.Implementation
 {
     public class EmailService : IEmailService
-    {
+    { 
         public EmailResultModel SendEmail(EmailRequestModel input)
         {
             try

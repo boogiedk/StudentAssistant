@@ -3,24 +3,19 @@
 namespace StudentAssistant.Backend.Models.CourseSchedule
 {
     /// <summary>
-    /// Модель с учебным расписанием.
+    /// Модель представления с данными о днях из расписания.
     /// </summary>
-    public class CourseScheduleResultModel
+    public class CourseViewModel
     {
         /// <summary>
         /// Номер недели.
         /// </summary>
-        public List<int> NumberWeek { get; set; }
+        public string NumberWeek { get; set; }
 
         /// <summary>
         /// Чётность недели.
         /// </summary>
-        public bool ParityWeek { get; set; }
-
-        /// <summary>
-        /// Название дня недели.
-        /// </summary>
-        public string NameOfDayWeek { get; set; }
+        public string ParityWeek { get; set; }
 
         /// <summary>
         /// Название предмета.
@@ -35,7 +30,7 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
         /// <summary>
         /// Тип предмета.
         /// </summary>
-        public CourseType CourseType { get; set; }
+        public string CourseType { get; set; }
 
         /// <summary>
         /// Полное имя преподавателя.

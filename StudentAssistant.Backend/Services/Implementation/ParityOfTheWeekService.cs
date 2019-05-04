@@ -11,13 +11,13 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class ParityOfTheWeekService : IParityOfTheWeekService
     {
-        private readonly IMapper _mapper;
         private readonly ParityOfTheWeekConfigurationModel _parityOfTheWeekConfigurationModel;
+        private readonly IMapper _mapper;
 
         public ParityOfTheWeekService(IMapper mapper, IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel)
         {
-            _mapper = mapper;
             _parityOfTheWeekConfigurationModel = parityOfTheWeekConfigurationModel.Value;
+            _mapper = mapper;
         }
 
         public bool GetParityOfTheWeekByDateTime(DateTimeOffset dateTimeOffsetParam)
@@ -204,6 +204,10 @@ namespace StudentAssistant.Backend.Services.Implementation
             resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D");
             resultViewModel.StatusDay = input.StatusDay.Humanize();
             resultViewModel.IsParity = input.ParityOfWeekToday;
+            // тестовый вариант
+            resultViewModel.SelectedDateStringValue = input.DateTimeRequest.Date 
+                                                      == DateTimeOffset.UtcNow.Date ? "Сегодня" : "Выбрано";
+            //
 
             return resultViewModel;
         }
