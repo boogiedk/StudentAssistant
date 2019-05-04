@@ -3,7 +3,7 @@
 namespace StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels
 {
     /// <summary>
-    /// Модель для отображения данных с формированием данных о заданном <see cref="DateTimeOffset"/> параметре.
+    /// Модель для отображения данных о дне недели по заданному <see cref="DateTimeOffset"/> параметру.
     /// </summary>
     public class ParityOfTheWeekViewModel
     {
@@ -46,5 +46,10 @@ namespace StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels
         /// Хранит <see cref="bool"/> true, если неделя чётная, иначе<see cref="bool"/> false.
         /// </summary>
         public bool IsParity { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="string"/> с значением "Сегодня" или "Выбрано".
+        /// </summary>
+        public string SelectedDateStringValue { get; set; }
     }
 }

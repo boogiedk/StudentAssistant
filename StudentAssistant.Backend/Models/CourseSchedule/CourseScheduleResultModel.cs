@@ -4,7 +4,7 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
 {
     /// <summary>
     /// Модель с учебным расписанием.
-    /// </summary
+    /// </summary>
     public class CourseScheduleResultModel
     {
         /// <summary>

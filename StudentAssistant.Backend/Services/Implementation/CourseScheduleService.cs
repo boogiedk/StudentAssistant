@@ -23,7 +23,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             _mapper = mapper;
         }
 
-        public List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleRequestModel input)
+        public List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleDtoModel input)
         {
             if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
 
@@ -67,7 +67,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     var emptyCourseScheduleViewModel = new CourseScheduleViewModel()
                     {
                         NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
-                        CoursesViewModel = new List<CoursesViewModel>() { new CoursesViewModel() {
+                        CoursesViewModel = new List<CourseViewModel>() { new CourseViewModel() {
                         CourseName = "Данных не найдено",
                         TeacherFullName = "Данных не найдено",
                         CourseType = "Данных не найдено",
@@ -80,7 +80,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 }
 
                 // маппим список предметов из бд в модель представления
-                var coursesViewModel = _mapper.Map<List<CoursesViewModel>>(input);
+                var coursesViewModel = _mapper.Map<List<CourseViewModel>>(input);
 
                 // сортируем по позиции в раписании
                 var sortedCoursesViewModel = coursesViewModel.OrderBy(o => o.CourseNumber).ToList();

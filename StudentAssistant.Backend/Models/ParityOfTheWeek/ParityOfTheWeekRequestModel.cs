@@ -3,13 +3,13 @@
 namespace StudentAssistant.Backend.Models.ParityOfTheWeek
 {
     /// <summary>
-    /// Модель для запросов. (!)
+    /// Модель запроса на получение данных о дне недели.
     /// </summary>
     public class ParityOfTheWeekRequestModel
     {
         /// <summary>
-        /// Выбранная пользователем дата, по которой нужно вывести информацию.
+        /// Выбранная пользователем дата, по которой нужно получить информацию.
         /// </summary>
-        public DateTime SelectedDateTime { get; set; }
+        public DateTimeOffset SelectedDateTime { get; set; }
     }
 }

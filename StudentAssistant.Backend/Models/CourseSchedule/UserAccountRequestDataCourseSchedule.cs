@@ -1,7 +1,7 @@
 ﻿namespace StudentAssistant.Backend.Models.CourseSchedule
 {
     /// <summary>
-    /// Модель, содержащая данные о пользователе, которая нужна для отобрадения корректной информации.
+    /// Модель, содержащая данные о пользователе.
     /// </summary>
     public class UserAccountRequestDataCourseSchedule
     {

@@ -10,64 +10,70 @@
 
 @if (_parityOfTheWeekViewModel == null)
 {
-    <p><em>Loading...</em></p>
+<p><em>Loading...</em></p>
 }
 else
 {
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Сегодня - @_parityOfTheWeekViewModel.DayOfName</title>
-    </head>
-    <body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@_parityOfTheWeekViewModel.SelectedDateStringValue - @_parityOfTheWeekViewModel.DayOfName</title>
+</head>
+<body>
 
-            <div class="@_parityStyle">
-                <div>
-                    <h1>
-                        Сегодня
-                        <button class="transparentButtonBlackText" onclick="@FocusedToElement">
-                            @_parityOfTheWeekViewModel.DateTimeRequest
-                        </button>
-                        <b>@_parityOfTheWeekViewModel.DayOfName</b>
-                    </h1>
-                    <div class="d-flex flex-sm-row flex-column">
-                        <div class="mr-3 order-1 order-sm-0">
-                            <DatePicker Visible="@_isVisibleDatePicker"
-                                        SelectedDateChanged=SelectedDateChanged
-                                        ShowClose="@true"
-                                        Selected=@Selected
-                                        FormatProvider="@(new CultureInfo("ru-RU"))"
-                                        DaysOfWeekDisabled=@(new IsoDayOfWeek[] { IsoDayOfWeek.Sunday }) />
-                        </div>
-                    </div>
-                    <h1> Идёт <b>@_parityOfTheWeekViewModel.ParityOfWeekCount-ая</b> неделя</h1>
-                    <h1> и <b>@_parityOfTheWeekViewModel.NumberOfSemester</b> (@_parityOfTheWeekViewModel.PartOfSemester половина) семестр</h1>
-                    <div>
-                        <h1><b>@_parityOfTheWeekViewModel.ParityOfWeekToday неделя</b></h1>
-                    </div>
-                </div>
-                <div>
-                    <h1><b>@_parityOfTheWeekViewModel.StatusDay</b></h1>
+    <div class="@_parityStyle">
+        <div>
+            <h1>
+                @_parityOfTheWeekViewModel.SelectedDateStringValue
+                <button class="transparentButtonBlackText" onclick="@FocusedToElement">
+                    @_parityOfTheWeekViewModel.DateTimeRequest
+                </button>
+                <b>@_parityOfTheWeekViewModel.DayOfName</b>
+            </h1>
+            <div class="d-flex flex-sm-row flex-column">
+                <div class="mr-3 order-1 order-sm-0">
+                    <DatePicker Visible="@_isVisibleDatePicker"
+                                SelectedDateChanged=SelectedDateChanged
+                                ShowClose="@true"
+                                Selected=@Selected
+                                FormatProvider="@(new CultureInfo("ru-RU"))"
+                                DaysOfWeekDisabled=@(new IsoDayOfWeek[] { IsoDayOfWeek.Sunday })
+                                DisplayDaysOfWeek="@true" />
                 </div>
             </div>
-       
-    </body>
+            <h1> Идёт <b>@_parityOfTheWeekViewModel.ParityOfWeekCount-ая</b> неделя</h1>
+            <h1> и <b>@_parityOfTheWeekViewModel.NumberOfSemester</b> (@_parityOfTheWeekViewModel.PartOfSemester половина) семестр</h1>
+            <div>
+                <h1><b>@_parityOfTheWeekViewModel.ParityOfWeekToday неделя</b></h1>
+            </div>
+        </div>
+        <div>
+            <h1><b>@_parityOfTheWeekViewModel.StatusDay</b></h1>
+        </div>
+    </div>
+
+</body>
 </html>
 }
 
 @functions {
+    static readonly LocalDate DefaultLocalDate = SystemClock.Instance.GetCurrentInstant().InUtc().LocalDateTime.Date;
 
-    LocalDate _selectedDate;
+    LocalDate _selectedDate = DefaultLocalDate;
     bool _isVisibleDatePicker = false;
     ParityOfTheWeekViewModel _parityOfTheWeekViewModel;
     string _parityStyle = string.Empty;
 
     protected override async Task OnInitAsync()
     {
-        _parityOfTheWeekViewModel = await Http.GetJsonAsync<ParityOfTheWeekViewModel>($"{Startup.url}/api/parity/today");
+        var dateTimeOffset = ConvertLocalDateToDateTimeOffset(DefaultLocalDate);
+
+        await GetParityOfTheWeek(dateTimeOffset);
 
         _parityStyle = $"parity{_parityOfTheWeekViewModel.IsParity}";
+
+        Console.WriteLine(_parityOfTheWeekViewModel.SelectedDateStringValue);
     }
 
     void FocusedToElement()
@@ -84,7 +90,7 @@ else
 
     void SelectedDateChanged(LocalDate? localDate)
     {
-        _selectedDate = localDate ?? SystemClock.Instance.GetCurrentInstant().InUtc().LocalDateTime.Date;
+        _selectedDate = localDate ?? DefaultLocalDate;
 
         var dateTimeOffset = ConvertLocalDateToDateTimeOffset(localDate);
 
@@ -124,7 +130,7 @@ else
             SelectedDateTime = dateTimeOffset
         };
 
-        _parityOfTheWeekViewModel = await Http.PostJsonAsync<ParityOfTheWeekViewModel>($"{Startup.url}/api/parity/selected-date", requestModel);
+        _parityOfTheWeekViewModel = await Http.PostJsonAsync<ParityOfTheWeekViewModel>($"{Startup.url}/api/parity/selected", requestModel);
 
         _parityStyle = $"parity{_parityOfTheWeekViewModel.IsParity}";
 
@@ -172,6 +178,11 @@ else
         /// Хранит <see cref="bool"/> true, если неделя чётная, иначе<see cref="bool"/> false.
         /// </summary>
         public bool IsParity { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="string"/> с значением "Сегодня" или "Выбрано".
+        /// </summary>
+        public string SelectedDateStringValue { get; set; }
     }
 
     /// <summary>

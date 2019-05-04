@@ -3,9 +3,9 @@
 namespace StudentAssistant.Backend.Models.CourseSchedule
 {
     /// <summary>
-    /// Модель представления с данными о днях из расписании.
+    /// Модель представления с данными о днях из расписания.
     /// </summary>
-    public class CoursesViewModel
+    public class CourseViewModel
     {
         /// <summary>
         /// Номер недели.

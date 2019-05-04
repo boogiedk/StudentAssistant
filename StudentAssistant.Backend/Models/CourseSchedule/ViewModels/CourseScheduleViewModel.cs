@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using StudentAssistant.Backend.Services.Implementation;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
 {
@@ -14,8 +13,8 @@ namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
         public string NameOfDayWeek { get; set; }
 
         /// <summary>
-        /// Список с данными о днях из расписании.
+        /// Список с данными о днях из расписания.
         /// </summary>
-        public List<CoursesViewModel> CoursesViewModel { get;set;}
+        public List<CourseViewModel> CoursesViewModel { get; set; }
     }
 }

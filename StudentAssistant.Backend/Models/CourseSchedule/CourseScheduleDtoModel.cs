@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule
 {
     /// <summary>
-    /// Модель запроса на получение расписания.
+    /// Dto модель с данными для получения расписания.
     /// </summary>
-    public class CourseScheduleRequestModel
+    public class CourseScheduleDtoModel
     {
         /// <summary>
         /// Время, для которого нужно вернуть расписание.

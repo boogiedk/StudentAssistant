@@ -14,7 +14,7 @@ namespace StudentAssistant.Backend.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleRequestModel input);
+        List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleDtoModel input);
 
         /// <summary>
         /// Подготавливает модель представления.
