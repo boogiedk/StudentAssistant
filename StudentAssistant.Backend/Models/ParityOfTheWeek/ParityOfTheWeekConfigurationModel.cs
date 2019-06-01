@@ -1,4 +1,4 @@
-﻿namespace StudentAssistant.Backend.Models.ConfigurationModels
+﻿namespace StudentAssistant.Backend.Models.ParityOfTheWeek
 {
     /// <summary>
     /// Модель с конфигурационными данными для сервиса <see cref="ParityOfTheWeek"/>, генерирующего данные о дне.

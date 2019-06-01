@@ -577,5 +577,6 @@ ASALocalRun/
 .localhistory/
 
 # End of https://www.gitignore.io/api/rider,angular,aspnetcore,visualstudio,visualstudiocode
-/StudentAssistant.Backend/Infrastructure/Configuration/EmailServiceConfigurationModel.json
-/StudentAssistant.Backend/Infrastructure/Configuration/ParityOfTheWeekConfigurationModel.json
+
+# /StudentAssistant.Backend/Infrastructure/Configuration/EmailServiceConfigurationModel.json
+# /StudentAssistant.Backend/Infrastructure/Configuration/ParityOfTheWeekConfigurationModel.json

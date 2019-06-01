@@ -1,4 +1,5 @@
-﻿using StudentAssistant.Backend.Models.UserSupport;
+﻿using StudentAssistant.Backend.Models.Email;
+using StudentAssistant.Backend.Models.UserSupport;
 
 namespace StudentAssistant.Backend.Services
 {
@@ -12,6 +13,13 @@ namespace StudentAssistant.Backend.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input); 
+        UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input);
+
+        /// <summary>
+        /// Метод для подготовки и маппинга модели <see cref="UserFeedbackRequestModel"/> в <see cref="EmailRequestModel"/>.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        EmailRequestModel PrepareUserFeedbackRequestForEmailService(UserFeedbackRequestModel input);
     }
 }

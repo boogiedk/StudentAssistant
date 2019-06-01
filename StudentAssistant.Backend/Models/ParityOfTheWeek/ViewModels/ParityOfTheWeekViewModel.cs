@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace StudentAssistant.Backend.Models.ViewModels
+namespace StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels
 {
     /// <summary>
-    /// Модель для отображения данных с формированием данных о заданном <see cref="DateTime"/> параметре.
+    /// Модель для отображения данных о дне недели по заданному <see cref="DateTimeOffset"/> параметру.
     /// </summary>
     public class ParityOfTheWeekViewModel
     {
@@ -18,7 +18,7 @@ namespace StudentAssistant.Backend.Models.ViewModels
         public string ParityOfWeekToday { get; set; }
 
         /// <summary>
-        /// Хранит количество прошедших недель с сентября до <see cref="DateTime"/> переданного параметра.
+        /// Хранит количество прошедших недель с сентября до <see cref="DateTimeOffset"/> переданного параметра.
         /// </summary>
         public int ParityOfWeekCount { get; set; }
 
@@ -46,5 +46,10 @@ namespace StudentAssistant.Backend.Models.ViewModels
         /// Хранит <see cref="bool"/> true, если неделя чётная, иначе<see cref="bool"/> false.
         /// </summary>
         public bool IsParity { get; set; }
+
+        /// <summary>
+        /// Хранит <see cref="string"/> с значением "Сегодня" или "Выбрано".
+        /// </summary>
+        public string SelectedDateStringValue { get; set; }
     }
 }

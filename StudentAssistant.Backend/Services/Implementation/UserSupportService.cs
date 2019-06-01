@@ -8,16 +8,16 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class UserSupportService : IUserSupportService
     {
-        private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
         private readonly EmailServiceConfigurationModel _emailServiceConfigurationModel;
+        private readonly IEmailService _emailService;
+        private readonly IMapper _mapper;
 
         public UserSupportService(IMapper mapper, IEmailService emailService, 
             IOptions<EmailServiceConfigurationModel> emailServiceConfigurationModel)
         {
-            _mapper = mapper;
-            _emailService = emailService;
             _emailServiceConfigurationModel = emailServiceConfigurationModel.Value;
+            _emailService = emailService;
+            _mapper = mapper;
         }
 
         public UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input)
@@ -40,7 +40,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private EmailRequestModel PrepareUserFeedbackRequestForEmailService(UserFeedbackRequestModel input)
+        public EmailRequestModel PrepareUserFeedbackRequestForEmailService(UserFeedbackRequestModel input)
         {
             if (input == null) throw new NotSupportedException($"{typeof(UserFeedbackRequestModel)} input равен null");
 

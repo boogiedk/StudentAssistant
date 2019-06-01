@@ -5,7 +5,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using Moq;
 using StudentAssistant.Backend.Models;
-using StudentAssistant.Backend.Models.ConfigurationModels;
+using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 using Xunit;
@@ -15,13 +15,13 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 {
     /// <summary>
     /// Принцип именования методов:
-    /// [Тестируемый метод]_[Сценарий]_[Ожидаемое поведение]
+    /// [Тестируемый метод]_[Сценарий]_[Ожидаемое поведение]_[Результат]
     /// </summary>
 
     public class ParityOfTheWeekTests
     {
         [Fact]
-        public void GetPartOfSemester_ReturnsPartOFSemester_ShouldBeReturns_1()
+        public void GetPartOfSemester_ReturnsPartOFSemester_ShouldBeReturns1()
         {
             // Arrange
             var fixture = new Fixture();
@@ -41,7 +41,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Fact]
-        public void GetCountParityOfWeek_ReturnsCountOfParity_ShouldBeReturns_10()
+        public void GetCountParityOfWeek_ReturnsCountOfParity_ShouldBeReturns10()
         {
             // Arrange
             var fixture = new Fixture();
@@ -61,7 +61,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Fact]
-        public void GetNumberOfSemester_ReturnsNumberOfSemester_ShouldBeReturns_5()
+        public void GetNumberOfSemester_ReturnsNumberOfSemester_ShouldBeReturns5()
         {
             // Arrange
             var fixture = new Fixture();
@@ -83,7 +83,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Fact]
-        public void GetParityOfTheWeekByDateTime_ReturnsParityBoolValue_ShouldBeReturns_True()
+        public void GetParityOfTheWeekByDateTime_ReturnsParityBoolValue_ShouldBeReturnsTrue()
         {
             // Arrange
             var fixture = new Fixture();
@@ -103,7 +103,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Fact]
-        public void GetWeekNumberOfYear_ReturnsWeekOfYear_ShouldBeReturns_45()
+        public void GetWeekNumberOfYear_ReturnsWeekOfYear_ShouldBeReturns45()
         {
             // Arrange
             var fixture = new Fixture();
@@ -123,7 +123,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Fact]
-        public void GenerateDataOfTheWeek_ReturnsCorrectModel_ShouldBeReturns_ParityOfTheWeekModel()
+        public void GenerateDataOfTheWeek_ReturnsCorrectModel_ShouldBeReturnsParityOfTheWeekModel()
         {
             // Arrange
             var fixture = new Fixture();
@@ -150,6 +150,46 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
             // Assert
             Assert.AreEqual(expectedModel.DateTimeRequest, result.DateTimeRequest);
+        }
+
+        [Fact]
+        public void GetStatusDay_ReturnsCorrectStatusDay_ShouldBeReturnsStatusDay()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization());
+
+            var mapper = fixture.Freeze<Mock<IMapper>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
+
+            var dateTimeTest = new DateTime(2018, 11, 11);
+
+            // Act
+            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var result = service.GetStatusDay(dateTimeTest);
+
+            // Assert
+            Assert.AreEqual(StatusDayType.DayOff,result);
+        }
+
+        [Fact]
+        public void IsHoliday_ReturnsTrueOrFalse_ShouldBeReturnsTrue()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization());
+
+            var mapper = fixture.Freeze<Mock<IMapper>>();
+            var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
+
+            var dateTimeTest = new DateTime(2018, 11, 11);
+
+            // Act
+            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var result = service.IsHoliday(dateTimeTest);
+
+            // Assert
+            Assert.AreEqual(true, result);
         }
     }
 }

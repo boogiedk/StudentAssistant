@@ -1,17 +1,16 @@
 ﻿using System;
-using StudentAssistant.Backend.Models.ParityOfTheWeek;
 
-namespace StudentAssistant.Backend.Models
+namespace StudentAssistant.Backend.Models.ParityOfTheWeek
 {
     /// <summary>
-    /// Модель для работы с сервисом, связанного с формированием данных о заданном <see cref="DateTime"/> параметре.
+    /// Модель для работы с сервисом, связанного с формированием данных о заданном <see cref="DateTimeOffset"/> параметре.
     /// </summary>
     public class ParityOfTheWeekModel
     {
         /// <summary>
         /// Время создания запроса на получение данных.
         /// </summary>
-        public DateTime DateTimeRequest { get; set; }
+        public DateTimeOffset DateTimeRequest { get; set; }
 
         /// <summary>
         /// Хранит <see cref="bool"/> true, если неделя чётная, иначе <see cref="bool"/> false.
@@ -19,7 +18,7 @@ namespace StudentAssistant.Backend.Models
         public bool ParityOfWeekToday { get; set; }
 
         /// <summary>
-        /// Хранит количество прошедших недель с сентября до <see cref="DateTime"/> переданного параметра.
+        /// Хранит количество прошедших недель с сентября до <see cref="DateTimeOffset"/> переданного параметра.
         /// </summary>
         public int ParityOfWeekCount { get; set; }
 
