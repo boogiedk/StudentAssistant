@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://192.168.1.224:7501/",  // "http://localhost:50477/"
+      "applicationUrl": "http://localhost:50477/",
       "sslPort": 0
     }
   },
@@ -12,7 +12,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development" // http://192.168.1.224:7501/
+        "ASPNETCORE_ENVIRONMENT": "Development" 
       }
     },
     "StudentAssistant.Frontend": {
@@ -21,7 +21,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://192.168.1.224:7501/" // "http://localhost:50478" 
+      "applicationUrl": "http://localhost:50478" 
     }
   }
 }

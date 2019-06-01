@@ -35,6 +35,11 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
+                if (requestModel == null)
+                {
+                    return BadRequest("Запрос не содержит данных.");
+                }
+
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
                 var userAccountRequestData = new UserAccountRequestDataCourseSchedule
                 {
