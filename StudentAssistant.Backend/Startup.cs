@@ -15,6 +15,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Rewrite;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace StudentAssistant.Backend
@@ -59,9 +60,11 @@ namespace StudentAssistant.Backend
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IValidationService, ValidationService>();
             services.AddScoped<ICourseScheduleService, CourseScheduleService>();
-            services.AddScoped<ICourseScheduleDataService, CourseScheduleDataService>();
+            services.AddScoped<ICourseScheduleFileService, CourseScheduleFileService>();
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
             services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
+            services.AddScoped<IDownloadExcelFileService, DownloadExcelFileService>();
+            services.AddScoped<ICourseScheduleDatabaseService,CourseScheduleDatabaseService>();
 
             //services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             //services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));

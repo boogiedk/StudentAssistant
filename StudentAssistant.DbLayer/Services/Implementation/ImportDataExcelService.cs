@@ -22,7 +22,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class ImportDataExcelService : IImportDataExcelService
     {
-        public List<ImportDataExcelModel> LoadExcelFile()
+        private List<ImportDataExcelModel> LoadExcelFile()
         {
             string fileName = @"Infrastructure\ScheduleFile\scheduleFile.xlsx";
 

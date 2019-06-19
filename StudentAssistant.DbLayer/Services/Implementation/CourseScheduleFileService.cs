@@ -3,23 +3,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
-    public class CourseScheduleDataService : ICourseScheduleDataService
+    public class CourseScheduleFileService : ICourseScheduleFileService
     {
         private readonly IImportDataExcelService _importDataExcelService;
         private readonly IImportDataJsonService _importDataJsonService;
 
-        public CourseScheduleDataService(IImportDataExcelService importDataExcelService, 
-            IImportDataJsonService importDataJsonService)
+        public CourseScheduleFileService(
+            IImportDataExcelService importDataExcelService, 
+            IImportDataJsonService importDataJsonService
+            )
         {
             _importDataExcelService = importDataExcelService;
             _importDataJsonService = importDataJsonService;
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFile(CourseScheduleParameters input)
+        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFileByParameters(CourseScheduleParameters input)
         {
             try
             {
@@ -47,7 +50,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFile(CourseScheduleParameters input)
+        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFileByParameters(CourseScheduleParameters input)
         {
             try
             {
@@ -72,6 +75,22 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
 
                 return courseScheduleModel.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+            }
+        }
+
+        public List<CourseScheduleDatabaseModel> GetFromExcel()
+        {
+            try
+            {
+                var courseScheduleDatabaseModel =
+                    _importDataExcelService
+                        .GetCourseScheduleDatabaseModels();
+
+                return courseScheduleDatabaseModel.ToList();
             }
             catch (Exception ex)
             {

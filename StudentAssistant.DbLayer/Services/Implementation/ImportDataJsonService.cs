@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {

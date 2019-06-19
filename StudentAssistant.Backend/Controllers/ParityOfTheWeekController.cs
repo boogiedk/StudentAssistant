@@ -54,7 +54,7 @@ namespace StudentAssistant.Backend.Controllers
                 var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeOffsetRequestUser);
 
                 // подготавливаем модель для отображения (ViewModel)
-                var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
+                var resultViewModel = _parityOfTheWeekService.PrepareViewModel(parityOfTheWeekModel);
 
                 return Ok(resultViewModel);
             }

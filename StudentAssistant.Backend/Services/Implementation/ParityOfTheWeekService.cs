@@ -14,7 +14,10 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly ParityOfTheWeekConfigurationModel _parityOfTheWeekConfigurationModel;
         private readonly IMapper _mapper;
 
-        public ParityOfTheWeekService(IMapper mapper, IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel)
+        public ParityOfTheWeekService(
+            IMapper mapper, 
+            IOptions<ParityOfTheWeekConfigurationModel> 
+                parityOfTheWeekConfigurationModel)
         {
             _parityOfTheWeekConfigurationModel = parityOfTheWeekConfigurationModel.Value;
             _mapper = mapper;
@@ -194,7 +197,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             return (dateTimeOffsetParam.Year - startLearningYear) * 2;
         }
 
-        public ParityOfTheWeekViewModel PrepareParityOfTheWeekViewModel(ParityOfTheWeekModel input)
+        public ParityOfTheWeekViewModel PrepareViewModel(ParityOfTheWeekModel input)
         {
             if (input == null) throw new NotSupportedException($"{typeof(ParityOfTheWeekModel)} input равен null");
 

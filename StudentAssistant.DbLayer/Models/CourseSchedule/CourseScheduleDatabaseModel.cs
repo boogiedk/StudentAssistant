@@ -1,7 +1,6 @@
-﻿using StudentAssistant.DbLayer.Models.CourseSchedule;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace StudentAssistant.DbLayer.Services
+namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
     /// <summary>
     /// Модель с учебным расписанием.

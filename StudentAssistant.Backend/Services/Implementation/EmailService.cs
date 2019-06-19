@@ -7,7 +7,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class EmailService : IEmailService
     { 
-        public EmailResultModel SendEmail(EmailRequestModel input)
+        public EmailResultModel Send(EmailRequestModel input)
         {
             try
             {

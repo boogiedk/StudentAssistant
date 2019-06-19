@@ -28,7 +28,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             var emailRequestModel = PrepareUserFeedbackRequestForEmailService(input);
 
             // отправка фидбека через почтовый сервис
-            var resultEmailModel = _emailService.SendEmail(emailRequestModel);
+            var resultEmailModel = _emailService.Send(emailRequestModel);
 
             var feedbackResultModel = _mapper.Map<UserFeedbackResultModel>(resultEmailModel);
 
