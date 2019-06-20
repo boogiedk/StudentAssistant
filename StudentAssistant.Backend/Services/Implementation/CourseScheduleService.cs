@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.Backend.Services.Implementation
@@ -16,20 +17,20 @@ namespace StudentAssistant.Backend.Services.Implementation
     {
         private readonly ICourseScheduleDatabaseService _courseScheduleDatabaseService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
-        private readonly IDownloadExcelFileService _downloadExcelFileService;
+        private readonly IDownloadFileService _downloadFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly IMapper _mapper;
 
         public CourseScheduleService(
             IMapper mapper, ICourseScheduleFileService courseScheduleFileService,
             ICourseScheduleDatabaseService courseScheduleDatabaseService,
-            IDownloadExcelFileService downloadExcelFileService,
+            IDownloadFileService downloadFileService,
             IParityOfTheWeekService parityOfTheWeekService
             )
         {
             _courseScheduleDatabaseService = courseScheduleDatabaseService ?? throw new ArgumentNullException(nameof(courseScheduleDatabaseService));
             _courseScheduleFileService = courseScheduleFileService ?? throw new ArgumentNullException(nameof(courseScheduleFileService));
-            _downloadExcelFileService = downloadExcelFileService ?? throw new ArgumentNullException(nameof(downloadExcelFileService));
+            _downloadFileService = downloadFileService ?? throw new ArgumentNullException(nameof(downloadFileService));
             _parityOfTheWeekService = parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -118,16 +119,26 @@ namespace StudentAssistant.Backend.Services.Implementation
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // проверяем свежесть файла
-                var isNewFile = _downloadExcelFileService.CheckCurrentExcelFile(DateTimeOffset.UtcNow);
+                var isNewFile = _downloadFileService.CheckCurrentExcelFile(DateTimeOffset.UtcNow);
+
+                var downloadFileParametersModel = new DownloadFileParametersModel
+                {
+                    PathToFile = @"Infrastructure\ScheduleFile",
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/3d4/"),
+                    FileNameLocal = "scheduleFile",
+                    FileNameRemote = "KBiSP-3-kurs-2-sem",
+                    FileFormat = "xlsx"
+                };
 
                 // если не свежий => качаем новый (не менее часа)
-                if (!isNewFile.Result) await _downloadExcelFileService.DownloadAsync(cancellationToken);
+                if (!isNewFile.Result) await _downloadFileService.DownloadAsync(
+                    downloadFileParametersModel, cancellationToken);
 
                 // берем лист из excel файла
                 var courseScheduleDatabaseModels = _courseScheduleFileService.GetFromExcel();
 
                 // отправляем запрос на сохранения данных в бд
-                await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels);
+                await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
 
             }
             catch (Exception ex)

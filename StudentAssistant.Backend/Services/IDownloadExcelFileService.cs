@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using StudentAssistant.Backend.Models.DownloadFileService;
 
 namespace StudentAssistant.Backend.Services
 {
     /// <summary>
     /// Сервис для скачивания Excel файла.
     /// </summary>
-   public interface IDownloadExcelFileService
+   public interface IDownloadFileService
    {
        /// <summary>
        /// Проверяет актуальность Excel файла.
@@ -20,6 +21,8 @@ namespace StudentAssistant.Backend.Services
        /// Скачивает Excel файл с URL университета.
        /// </summary>
        /// <returns></returns>
-       Task DownloadAsync(CancellationToken cancellationToken);
+       Task DownloadAsync(
+           DownloadFileParametersModel downloadFileParametersModel,
+           CancellationToken cancellationToken);
    }
 }

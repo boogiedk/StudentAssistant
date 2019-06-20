@@ -63,7 +63,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<ICourseScheduleFileService, CourseScheduleFileService>();
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
             services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
-            services.AddScoped<IDownloadExcelFileService, DownloadExcelFileService>();
+            services.AddScoped<IDownloadFileService, DownloadFileService>();
             services.AddScoped<ICourseScheduleDatabaseService,CourseScheduleDatabaseService>();
 
             //services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));

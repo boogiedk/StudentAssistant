@@ -1,16 +1,18 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using SQLitePCL;
+using StudentAssistant.Backend.Models.DownloadFileService;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
-    public class DownloadExcelFileService : IDownloadExcelFileService
+    public class DownloadFileService : IDownloadFileService
     {
         // вынести в конфиг
         private readonly string _pathToFile = @"Infrastructure\ScheduleFile";
-        private readonly string _remoteUri = "https://www.mirea.ru/upload/medialibrary/3d4/";
         private readonly string _localFileName = "scheduleFile.xlsx";
         //
         public Task<bool> CheckCurrentExcelFile(DateTimeOffset dateTimeOffset) => Task.Run(() =>
@@ -20,19 +22,30 @@ namespace StudentAssistant.Backend.Services.Implementation
             return lastAccessTimeUtc.Date == dateTimeOffset.Date;
         });
 
-        public async Task DownloadAsync(CancellationToken cancellationToken)
+        public async Task DownloadAsync(
+            DownloadFileParametersModel downloadFileParametersModel,
+            CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // В будущем значение будет зависеть от выбранной группы
-                var fileNameRemote = "KBiSP-3-kurs-2-sem.xlsx"; 
+                using (var client = new HttpClient())
+                {
+                    using (var result = await client.GetAsync(
+                        $@"{downloadFileParametersModel.RemoteUri}/{downloadFileParametersModel.FileNameRemote}.{downloadFileParametersModel.FileFormat}", 
+                        cancellationToken))
+                    {
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var fileBytes = await result.Content.ReadAsByteArrayAsync();
 
-                // DownloadAsync the Web resource and save it into the current filesystem folder.
-                await new WebClient().DownloadFileTaskAsync(
-                    new Uri(_remoteUri + fileNameRemote), 
-                    $@"{_pathToFile}\{_localFileName}");
+                            await File.WriteAllBytesAsync(
+                                $@"{downloadFileParametersModel.PathToFile}\{downloadFileParametersModel.FileNameLocal}.{downloadFileParametersModel.FileFormat}",
+                                fileBytes, cancellationToken);
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
