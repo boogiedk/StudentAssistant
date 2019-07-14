@@ -10,7 +10,7 @@ namespace StudentAssistant.Backend.Controllers
     /// Контроллер с методами для получения данных о дне недели.
     /// </summary>
     [Produces("application/json")]
-    [Route("api/parity")]
+    [Route("api/v1/parity")]
     public class ParityOfTheWeekController : ControllerBase
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using SQLitePCL;
 using StudentAssistant.Backend.Models.DownloadFileService;
 
 namespace StudentAssistant.Backend.Services.Implementation
@@ -47,10 +45,9 @@ namespace StudentAssistant.Backend.Services.Implementation
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // поправить
-                throw new NotSupportedException(e.Message);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
         }
     }

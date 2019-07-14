@@ -17,27 +17,28 @@ namespace StudentAssistant.Backend.Services.Implementation
     {
         private readonly ICourseScheduleDatabaseService _courseScheduleDatabaseService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
-        private readonly IDownloadFileService _downloadFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
+        private readonly IDownloadFileService _downloadFileService;
         private readonly IMapper _mapper;
 
         public CourseScheduleService(
-            IMapper mapper, ICourseScheduleFileService courseScheduleFileService,
+            ICourseScheduleFileService courseScheduleFileService,
             ICourseScheduleDatabaseService courseScheduleDatabaseService,
+            IParityOfTheWeekService parityOfTheWeekService,
             IDownloadFileService downloadFileService,
-            IParityOfTheWeekService parityOfTheWeekService
-            )
+            IMapper mapper
+        )
         {
             _courseScheduleDatabaseService = courseScheduleDatabaseService ?? throw new ArgumentNullException(nameof(courseScheduleDatabaseService));
             _courseScheduleFileService = courseScheduleFileService ?? throw new ArgumentNullException(nameof(courseScheduleFileService));
-            _downloadFileService = downloadFileService ?? throw new ArgumentNullException(nameof(downloadFileService));
             _parityOfTheWeekService = parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
+            _downloadFileService = downloadFileService ?? throw new ArgumentNullException(nameof(downloadFileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public List<CourseScheduleResultModel> Get(CourseScheduleDtoModel input)
         {
-            if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             try
             {
@@ -62,13 +63,13 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения.\n" + ex);
             }
         }
 
         public CourseScheduleViewModel PrepareViewModel(List<CourseScheduleResultModel> input)
         {
-            if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             try
             {
@@ -108,7 +109,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения.\n" + ex);
             }
         }
 
@@ -121,6 +122,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // проверяем свежесть файла
                 var isNewFile = _downloadFileService.CheckCurrentExcelFile(DateTimeOffset.UtcNow);
 
+                // TODO: вынести в конфиг
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
                     PathToFile = @"Infrastructure\ScheduleFile",
@@ -130,20 +132,20 @@ namespace StudentAssistant.Backend.Services.Implementation
                     FileFormat = "xlsx"
                 };
 
-                // если не свежий => качаем новый (не менее часа)
+                // если не свежий => качаем новый (1 сутки)
                 if (!isNewFile.Result) await _downloadFileService.DownloadAsync(
                     downloadFileParametersModel, cancellationToken);
 
                 // берем лист из excel файла
                 var courseScheduleDatabaseModels = _courseScheduleFileService.GetFromExcel();
 
-                // отправляем запрос на сохранения данных в бд
-                await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
+                // отправляем запрос на сохранения данных в бд (возможно, такого функционала и не появится)
+                //  await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
 
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException(ex.Message);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
         }
     }

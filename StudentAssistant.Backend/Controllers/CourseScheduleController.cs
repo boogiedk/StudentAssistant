@@ -13,7 +13,7 @@ namespace StudentAssistant.Backend.Controllers
     /// Контроллер с методами для работы с расписанием.
     /// </summary>
     [Produces("application/json")]
-    [Route("api/schedule")]
+    [Route("api/v1/schedule")]
     public class CourseScheduleController : ControllerBase
     {
         private readonly ICourseScheduleService _courseScheduleService;

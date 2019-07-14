@@ -60,7 +60,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             catch (Exception ex)
             {
                 //log
-                throw new NotSupportedException($"Ошибка во время выполнения: {ex}");
+                throw new NotSupportedException($"Ошибка во время выполнения: {ex}\n");
             }
         }
 
@@ -171,7 +171,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             catch (Exception ex)
             {
                 //log
-                throw new NotSupportedException($"Ошибка во время выполнения: {ex}");
+                throw new NotSupportedException($"Ошибка во время выполнения: {ex}\n");
             }
         }
 
@@ -199,7 +199,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public ParityOfTheWeekViewModel PrepareViewModel(ParityOfTheWeekModel input)
         {
-            if (input == null) throw new NotSupportedException($"{typeof(ParityOfTheWeekModel)} input равен null");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             var resultViewModel = _mapper.Map<ParityOfTheWeekViewModel>(input);
 

@@ -26,7 +26,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                if (input == null) throw new NullReferenceException("Отсутствуют входные параметры.");
+                if (input == null) throw new ArgumentNullException(nameof(input));
 
                 // все данные из расписания
                 var courseScheduleDatabaseModels = _importDataJsonService.GetCourseScheduleDatabaseModels();
@@ -46,7 +46,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
         }
 
@@ -54,7 +54,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                if (input == null) throw new NullReferenceException("Отсутствуют входные параметры.");
+                if (input == null) throw new ArgumentNullException(nameof(input));
 
                 // маппим модель импорта в модель бд
                 var courseScheduleDatabaseModel =
@@ -78,7 +78,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
         }
 
@@ -94,7 +94,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
 
         }

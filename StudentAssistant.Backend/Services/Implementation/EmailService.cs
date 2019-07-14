@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using StudentAssistant.Backend.Models.Email;
 
 namespace StudentAssistant.Backend.Services.Implementation
@@ -60,7 +61,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 return new EmailResultModel
                 {
                     IsSended = false,
-                    Message = "Произошла ошибка при отправке сообщения: возникло исключение в системе."
+                    Message = "Произошла ошибка при отправке сообщения: возникло исключение в системе." + ex
                 };
             }
         }
