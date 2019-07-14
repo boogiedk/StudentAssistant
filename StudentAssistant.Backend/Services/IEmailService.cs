@@ -12,6 +12,6 @@ namespace StudentAssistant.Backend.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        EmailResultModel SendEmail(EmailRequestModel input);
+        EmailResultModel Send(EmailRequestModel input);
     }
 }

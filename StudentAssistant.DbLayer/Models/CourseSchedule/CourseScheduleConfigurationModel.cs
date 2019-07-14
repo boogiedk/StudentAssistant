@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StudentAssistant.DbLayer.Services
+namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
     /// <summary>
     /// Класс с данными из файла конфигурации.

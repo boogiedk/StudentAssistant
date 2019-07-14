@@ -3,27 +3,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
-    public class CourseScheduleDataService : ICourseScheduleDataService
+    public class CourseScheduleFileService : ICourseScheduleFileService
     {
         private readonly IImportDataExcelService _importDataExcelService;
         private readonly IImportDataJsonService _importDataJsonService;
 
-        public CourseScheduleDataService(IImportDataExcelService importDataExcelService, 
-            IImportDataJsonService importDataJsonService)
+        public CourseScheduleFileService(
+            IImportDataExcelService importDataExcelService, 
+            IImportDataJsonService importDataJsonService
+            )
         {
             _importDataExcelService = importDataExcelService;
             _importDataJsonService = importDataJsonService;
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFile(CourseScheduleParameters input)
+        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFileByParameters(CourseScheduleParameters input)
         {
             try
             {
-                if (input == null) throw new NullReferenceException("Отсутствуют входные параметры.");
+                if (input == null) throw new ArgumentNullException(nameof(input));
 
                 // все данные из расписания
                 var courseScheduleDatabaseModels = _importDataJsonService.GetCourseScheduleDatabaseModels();
@@ -43,15 +46,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFile(CourseScheduleParameters input)
+        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFileByParameters(CourseScheduleParameters input)
         {
             try
             {
-                if (input == null) throw new NullReferenceException("Отсутствуют входные параметры.");
+                if (input == null) throw new ArgumentNullException(nameof(input));
 
                 // маппим модель импорта в модель бд
                 var courseScheduleDatabaseModel =
@@ -75,7 +78,23 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
+            }
+        }
+
+        public List<CourseScheduleDatabaseModel> GetFromExcel()
+        {
+            try
+            {
+                var courseScheduleDatabaseModel =
+                    _importDataExcelService
+                        .GetCourseScheduleDatabaseModels();
+
+                return courseScheduleDatabaseModel.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
 
         }
