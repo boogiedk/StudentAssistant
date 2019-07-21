@@ -1,4 +1,4 @@
-﻿namespace StudentAssistant.DbLayer.Services
+﻿namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
     /// <summary>
     /// Модель для передачи параметров, по которым будет фильтроваться расписание.

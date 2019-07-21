@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Services
 {

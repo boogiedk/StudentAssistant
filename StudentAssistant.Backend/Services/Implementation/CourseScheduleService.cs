@@ -5,27 +5,40 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.DownloadFileService;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
     public class CourseScheduleService : ICourseScheduleService
     {
-        private readonly ICourseScheduleDataService _courseScheduleDataService;
+        private readonly ICourseScheduleDatabaseService _courseScheduleDatabaseService;
+        private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
+        private readonly IDownloadFileService _downloadFileService;
         private readonly IMapper _mapper;
 
-        public CourseScheduleService(IParityOfTheWeekService parityOfTheWeekService,
-            IMapper mapper, ICourseScheduleDataService courseScheduleDataService)
+        public CourseScheduleService(
+            ICourseScheduleFileService courseScheduleFileService,
+            ICourseScheduleDatabaseService courseScheduleDatabaseService,
+            IParityOfTheWeekService parityOfTheWeekService,
+            IDownloadFileService downloadFileService,
+            IMapper mapper
+        )
         {
-            _courseScheduleDataService = courseScheduleDataService;
-            _parityOfTheWeekService = parityOfTheWeekService;
-            _mapper = mapper;
+            _courseScheduleDatabaseService = courseScheduleDatabaseService ?? throw new ArgumentNullException(nameof(courseScheduleDatabaseService));
+            _courseScheduleFileService = courseScheduleFileService ?? throw new ArgumentNullException(nameof(courseScheduleFileService));
+            _parityOfTheWeekService = parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
+            _downloadFileService = downloadFileService ?? throw new ArgumentNullException(nameof(downloadFileService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public List<CourseScheduleResultModel> GetCourseSchedule(CourseScheduleDtoModel input)
+        public List<CourseScheduleResultModel> Get(CourseScheduleDtoModel input)
         {
-            if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             try
             {
@@ -38,11 +51,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 };
 
                 // отправляем запрос на получение расписания по указанным параметрам
-                //   var courseScheduleDatabaseModel = _courseScheduleDataService.GetCourseScheduleFromJsonFile(courseScheduleParameters);
+                //   var courseScheduleDatabaseModel = _courseScheduleFileService.GetCourseScheduleFromJsonFileByParameters(courseScheduleParameters);
 
                 // на данным момент расписание берется из Excel файла.
-                var courseScheduleDatabaseModel = _courseScheduleDataService
-                    .GetCourseScheduleFromExcelFile(courseScheduleParameters);
+                var courseScheduleDatabaseModel = _courseScheduleFileService
+                    .GetCourseScheduleFromExcelFileByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
 
@@ -50,13 +63,13 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения.\n" + ex);
             }
         }
 
-        public CourseScheduleViewModel PrepareCourseScheduleViewModel(List<CourseScheduleResultModel> input)
+        public CourseScheduleViewModel PrepareViewModel(List<CourseScheduleResultModel> input)
         {
-            if (input == null) throw new NullReferenceException("Запрос не содержит данных.");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             try
             {
@@ -87,7 +100,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 // создаем результирующую модель представления
                 var resultCourseScheduleViewModel = new CourseScheduleViewModel
-                {   
+                {
                     CoursesViewModel = sortedCoursesViewModel,
                     NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper()
                 };
@@ -96,7 +109,43 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. " + ex);
+                throw new NotSupportedException("Ошибка во время выполнения.\n" + ex);
+            }
+        }
+
+        public async Task UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // проверяем свежесть файла
+                var isNewFile = _downloadFileService.CheckCurrentExcelFile(DateTimeOffset.UtcNow);
+
+                // TODO: вынести в конфиг
+                var downloadFileParametersModel = new DownloadFileParametersModel
+                {
+                    PathToFile = @"Infrastructure\ScheduleFile",
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/3d4/"),
+                    FileNameLocal = "scheduleFile",
+                    FileNameRemote = "KBiSP-3-kurs-2-sem",
+                    FileFormat = "xlsx"
+                };
+
+                // если не свежий => качаем новый (1 сутки)
+                if (!isNewFile.Result) await _downloadFileService.DownloadAsync(
+                    downloadFileParametersModel, cancellationToken);
+
+                // берем лист из excel файла
+                var courseScheduleDatabaseModels = _courseScheduleFileService.GetFromExcel();
+
+                // отправляем запрос на сохранения данных в бд (возможно, такого функционала и не появится)
+                //  await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
+
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
             }
         }
     }

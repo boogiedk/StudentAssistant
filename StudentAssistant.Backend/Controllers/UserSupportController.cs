@@ -10,7 +10,7 @@ namespace StudentAssistant.Backend.Controllers
     /// Контроллер с методами для работы с обратной связью.
     /// </summary>
     [Produces("application/json")]
-    [Route("api/support")]
+    [Route("api/v1/support")]
     public class UserSupportController : ControllerBase
     {
         private readonly IUserSupportService _userSupportService;

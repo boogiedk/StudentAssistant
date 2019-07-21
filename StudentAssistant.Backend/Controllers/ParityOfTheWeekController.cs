@@ -10,7 +10,7 @@ namespace StudentAssistant.Backend.Controllers
     /// Контроллер с методами для получения данных о дне недели.
     /// </summary>
     [Produces("application/json")]
-    [Route("api/parity")]
+    [Route("api/v1/parity")]
     public class ParityOfTheWeekController : ControllerBase
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
@@ -54,7 +54,7 @@ namespace StudentAssistant.Backend.Controllers
                 var parityOfTheWeekModel = _parityOfTheWeekService.GenerateDataOfTheWeek(dateTimeOffsetRequestUser);
 
                 // подготавливаем модель для отображения (ViewModel)
-                var resultViewModel = _parityOfTheWeekService.PrepareParityOfTheWeekViewModel(parityOfTheWeekModel);
+                var resultViewModel = _parityOfTheWeekService.PrepareViewModel(parityOfTheWeekModel);
 
                 return Ok(resultViewModel);
             }

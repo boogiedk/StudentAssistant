@@ -135,7 +135,7 @@ else
             DateTimeRequest = dateTimeOffset
         };
 
-        _courseScheduleViewModel = await Http.PostJsonAsync<CourseScheduleViewModel>($"{Startup.url}/api/schedule/selected", requestModel);
+        _courseScheduleViewModel = await Http.PostJsonAsync<CourseScheduleViewModel>($"{Startup.url}/api/v1/schedule/selected", requestModel);
 
         Console.WriteLine(_courseScheduleViewModel.NameOfDayWeek
                           + " " + _courseScheduleViewModel.CoursesViewModel.Count);

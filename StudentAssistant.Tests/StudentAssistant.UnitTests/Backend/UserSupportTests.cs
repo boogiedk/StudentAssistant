@@ -65,7 +65,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // new UserSupportService(mapper.Object, emailService.Object, emailServiceConfigurationModel.Object);
             var emailService = fixture.Freeze<Mock<IEmailService>>();
 
-            emailService.Setup(s => s.SendEmail(emailRequestModel))
+            emailService.Setup(s => s.Send(emailRequestModel))
                 .Returns(new EmailResultModel
             {
                 IsSended = true,

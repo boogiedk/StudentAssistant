@@ -130,7 +130,7 @@ else
             SelectedDateTime = dateTimeOffset
         };
 
-        _parityOfTheWeekViewModel = await Http.PostJsonAsync<ParityOfTheWeekViewModel>($"{Startup.url}/api/parity/selected", requestModel);
+        _parityOfTheWeekViewModel = await Http.PostJsonAsync<ParityOfTheWeekViewModel>($"{Startup.url}/api/v1/parity/selected", requestModel);
 
         _parityStyle = $"parity{_parityOfTheWeekViewModel.IsParity}";
 

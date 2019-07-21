@@ -12,8 +12,11 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
 
-        public UserSupportService(IMapper mapper, IEmailService emailService, 
-            IOptions<EmailServiceConfigurationModel> emailServiceConfigurationModel)
+        public UserSupportService(
+            IOptions<EmailServiceConfigurationModel> emailServiceConfigurationModel,
+            IEmailService emailService,
+            IMapper mapper
+        )
         {
             _emailServiceConfigurationModel = emailServiceConfigurationModel.Value;
             _emailService = emailService;
@@ -22,13 +25,13 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input)
         {
-            if (input == null) throw new NotSupportedException($"{typeof(UserFeedbackRequestModel)} input равен null");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             // подготовка модели для отправки фидбека через почтовый сервис
             var emailRequestModel = PrepareUserFeedbackRequestForEmailService(input);
 
             // отправка фидбека через почтовый сервис
-            var resultEmailModel = _emailService.SendEmail(emailRequestModel);
+            var resultEmailModel = _emailService.Send(emailRequestModel);
 
             var feedbackResultModel = _mapper.Map<UserFeedbackResultModel>(resultEmailModel);
 
@@ -42,7 +45,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// <returns></returns>
         public EmailRequestModel PrepareUserFeedbackRequestForEmailService(UserFeedbackRequestModel input)
         {
-            if (input == null) throw new NotSupportedException($"{typeof(UserFeedbackRequestModel)} input равен null");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
             var emailRequestModel = _mapper.Map<EmailRequestModel>(input);
 

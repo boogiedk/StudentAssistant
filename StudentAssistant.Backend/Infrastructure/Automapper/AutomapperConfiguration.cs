@@ -9,6 +9,7 @@ using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Services;
 
 namespace StudentAssistant.Backend.Infrastructure.AutoMapper
