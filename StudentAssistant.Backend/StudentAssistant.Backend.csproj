@@ -46,6 +46,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Infrastructure\Configuration\CourseScheduleDataServiceConfigurationModel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Infrastructure\Configuration\EmailServiceConfigurationModel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Infrastructure\Configuration\ParityOfTheWeekConfigurationModel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Infrastructure\ScheduleFile\output.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

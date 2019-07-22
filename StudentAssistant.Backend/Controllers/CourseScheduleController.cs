@@ -47,7 +47,7 @@ namespace StudentAssistant.Backend.Controllers
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
                 var userAccountRequestData = new UserAccountRequestDataCourseSchedule
                 {
-                    TimeZoneId = "Russian Standard Time"
+                    TimeZoneId = TimeZoneInfo.Local.Id //"Russian Standard Time"
                 };
 
                 // берем utc время
