@@ -42,7 +42,7 @@ namespace StudentAssistant.Backend.Controllers
 
                 var userAccountRequestData = new UserAccountRequestDataParityOfTheWeek
                 {
-                    TimeZoneId = "Russian Standard Time"
+                    TimeZoneId = TimeZoneInfo.Local.Id //"Russian Standard Time"
                 };
 
                 var dateTimeOffsetRequestUtc = requestModel.SelectedDateTime;
