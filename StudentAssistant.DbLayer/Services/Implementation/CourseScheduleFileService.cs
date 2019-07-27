@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using StudentAssistant.Backend.Services;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 
