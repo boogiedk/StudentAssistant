@@ -25,7 +25,7 @@ namespace StudentAssistant.Backend
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-                            .SetBasePath(env.ContentRootPath + "\\Infrastructure\\Configuration")
+                            .SetBasePath(Path.Combine(env.ContentRootPath, "Infrastructure", "Configuration"))
                             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                             .AddJsonFile($"EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)

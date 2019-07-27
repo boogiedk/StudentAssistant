@@ -3,30 +3,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
-using NPOI.HSSF.UserModel;
-using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Models.ImportData;
-using StudentAssistant.DbLayer.Services;
 
-
-namespace StudentAssistant.Backend.Services.Implementation
+namespace StudentAssistant.DbLayer.Services.Implementation
 {
     public class ImportDataExcelService : IImportDataExcelService
     {
         private List<ImportDataExcelModel> LoadExcelFile()
         {
-            string fileName = @"Infrastructure\ScheduleFile\scheduleFile.xlsx";
+            var fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
-            FileInfo file = new FileInfo(fileName);
+            var file = new FileInfo(fileName);
 
             var importDataExcelModels = new List<ImportDataExcelModel>();
 
@@ -144,7 +135,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             var importDataExcelModels = LoadExcelFile();
 
-            var courseScheduleDatabaseModel = 
+            var courseScheduleDatabaseModel =
                 PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
 
             return courseScheduleDatabaseModel;
@@ -156,13 +147,13 @@ namespace StudentAssistant.Backend.Services.Implementation
         /// <param name="importDataExcelModels"></param>
         private void CreateJsonFileForConfig(List<ImportDataExcelModel> importDataExcelModels)
         {
-            string fileName = @"Infrastructure\ScheduleFile\";
+            string fileName = Path.Combine("Infrastructure", "ScheduleFile","output.json");
 
             var result = PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
 
             string jsonData = JsonConvert.SerializeObject(result);
 
-            File.WriteAllText(fileName + "output.json", jsonData);
+            File.WriteAllText(fileName, jsonData);
         }
 
         /// <summary>

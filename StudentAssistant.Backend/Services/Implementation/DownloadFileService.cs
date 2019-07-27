@@ -10,12 +10,13 @@ namespace StudentAssistant.Backend.Services.Implementation
     public class DownloadFileService : IDownloadFileService
     {
         // вынести в конфиг
-        private readonly string _pathToFile = @"Infrastructure\ScheduleFile";
+        private readonly string _pathToFile = Path.Combine("Infrastructure", "ScheduleFile");
         private readonly string _localFileName = "scheduleFile.xlsx";
         //
         public Task<bool> CheckCurrentExcelFile(DateTimeOffset dateTimeOffset) => Task.Run(() =>
         {
-            var lastAccessTimeUtc = File.GetLastAccessTimeUtc($@"{_pathToFile}\{_localFileName}");
+            var lastAccessTimeUtc = File.GetLastAccessTimeUtc(
+                Path.Combine($"{_pathToFile}, {_localFileName}"));
 
             return lastAccessTimeUtc.Date == dateTimeOffset.Date;
         });
@@ -31,7 +32,10 @@ namespace StudentAssistant.Backend.Services.Implementation
                 using (var client = new HttpClient())
                 {
                     using (var result = await client.GetAsync(
-                        $@"{downloadFileParametersModel.RemoteUri}/{downloadFileParametersModel.FileNameRemote}.{downloadFileParametersModel.FileFormat}", 
+                         Path.Combine(
+                             $"{downloadFileParametersModel.RemoteUri}," +
+                                        $"{downloadFileParametersModel.FileNameRemote}.{downloadFileParametersModel.FileFormat}"
+                             ),
                         cancellationToken))
                     {
                         if (result.IsSuccessStatusCode)
@@ -39,15 +43,17 @@ namespace StudentAssistant.Backend.Services.Implementation
                             var fileBytes = await result.Content.ReadAsByteArrayAsync();
 
                             await File.WriteAllBytesAsync(
-                                $@"{downloadFileParametersModel.PathToFile}\{downloadFileParametersModel.FileNameLocal}.{downloadFileParametersModel.FileFormat}",
-                                fileBytes, cancellationToken);
+                                Path.Combine(
+                                    $"{downloadFileParametersModel.PathToFile}",
+                                    $"{downloadFileParametersModel.FileNameLocal}.{downloadFileParametersModel.FileFormat}"),
+                                    fileBytes, cancellationToken);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
     }
