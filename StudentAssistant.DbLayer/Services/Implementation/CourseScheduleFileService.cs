@@ -17,8 +17,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             IImportDataJsonService importDataJsonService
             )
         {
-            _importDataExcelService = importDataExcelService;
-            _importDataJsonService = importDataJsonService;
+            _importDataExcelService = importDataExcelService ?? throw new ArgumentNullException(nameof(importDataExcelService));
+            _importDataJsonService = importDataJsonService ?? throw new ArgumentNullException(nameof(importDataJsonService));
         }
 
         public List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFileByParameters(CourseScheduleParameters input)
@@ -45,7 +45,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
 
@@ -77,7 +77,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
 
@@ -93,7 +93,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
 
         }

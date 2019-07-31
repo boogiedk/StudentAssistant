@@ -63,7 +63,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения.\n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
 
@@ -109,7 +109,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения.\n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
 
@@ -145,7 +145,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("Ошибка во время выполнения. \n" + ex);
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
     }
