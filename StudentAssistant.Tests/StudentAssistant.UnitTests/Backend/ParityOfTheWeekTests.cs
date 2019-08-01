@@ -33,7 +33,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object);
             var result = service.GetPartOfSemester(dateTimeTest);
 
             // Assert
@@ -53,7 +53,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object,mapper.Object);
             var result = service.GetCountParityOfWeek(dateTimeTest);
 
             // Assert
@@ -75,7 +75,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var startLearningDate = 2016;
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object);
             var result = service.GetNumberOfSemester(dateTimeTest, startLearningDate);
 
             // Assert
@@ -95,7 +95,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object);
             var result = service.GetParityOfTheWeekByDateTime(dateTimeTest);
 
             // Assert
@@ -115,7 +115,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var parityOfTheWeekConfigurationModel = fixture.Freeze<Mock<IOptions<ParityOfTheWeekConfigurationModel>>>();
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object); ;
             var result = service.GetWeekNumberOfYear(dateTimeTest);
 
             // Assert
@@ -145,7 +145,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             };
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object);
             var result = service.GenerateDataOfTheWeek(dateTimeTest);
 
             // Assert
@@ -165,7 +165,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object);
             var result = service.GetStatusDay(dateTimeTest);
 
             // Assert
@@ -185,7 +185,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var dateTimeTest = new DateTime(2018, 11, 11);
 
             // Act
-            var service = new ParityOfTheWeekService(mapper.Object, parityOfTheWeekConfigurationModel.Object);
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel.Object, mapper.Object);
             var result = service.IsHoliday(dateTimeTest);
 
             // Assert
