@@ -13,7 +13,13 @@ using StudentAssistant.DbLayer.Services.Implementation;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
+using StudentAssistant.Backend.Infrastructure;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using Swashbuckle.AspNetCore.Swagger;
@@ -22,8 +28,11 @@ namespace StudentAssistant.Backend
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
+            _configuration = configuration;
+
             var builder = new ConfigurationBuilder()
                             .SetBasePath(Path.Combine(env.ContentRootPath, "Infrastructure", "Configuration"))
                             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -38,22 +47,19 @@ namespace StudentAssistant.Backend
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
-            Configuration = builder.Build();
+            _configuration = builder.Build();
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-            });
+            services.AddDbContext<Context>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<Context>()
+                    .AddDefaultTokenProviders()
+                    .AddDefaultTokenProviders();
+
+            #region Scoped
 
             services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
             services.AddScoped<IUserSupportService, UserSupportService>();
@@ -64,15 +70,46 @@ namespace StudentAssistant.Backend
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
             services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
             services.AddScoped<IDownloadFileService, DownloadFileService>();
-            services.AddScoped<ICourseScheduleDatabaseService,CourseScheduleDatabaseService>();
+            services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
+            services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
+
+            #endregion
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    const string key = "q7fs8DDw823hSyaNYCKsa02";
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                        ValidateIssuerSigningKey = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuer = false
+                    };
+                });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
 
             //services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             //services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
             //services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
 
-            services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
-            services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
-            services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
+            services.Configure<EmailServiceConfigurationModel>(options => _configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
+            services.Configure<ParityOfTheWeekConfigurationModel>(options => _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
+            services.Configure<CourseScheduleDataServiceConfigurationModel>(_configuration.GetSection("ListCourseSchedule"));
 
             services.AddSwaggerGen(c =>
             {
@@ -92,54 +129,34 @@ namespace StudentAssistant.Backend
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-             
+
             services.AddAutoMapper();
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                var camelResolver = new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.ContractResolver = camelResolver;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-
-            app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentAssistant API v1");
                 c.RoutePrefix = string.Empty;
             });
 
-            //var option = new RewriteOptions();
-            //option.AddRedirect("^$", "swagger");
-            //app.UseRewriter(option);
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
+            app.UseAuthentication();
+            app.UseMvc();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/parity")]
-    public class ParityOfTheWeekController : ControllerBase
+    public class ParityOfTheWeekController : Controller
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
@@ -29,8 +29,7 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns><see cref="ParityOfTheWeekViewModel"/>Модель представления.</returns>
         /// <param name="requestModel">Модель, содержащая выбранную дату.</param>
-        [HttpPost]
-        [Route("selected")] 
+        [HttpPost("selected")]
         public IActionResult GenerateParityOfTheWeek([FromBody]ParityOfTheWeekRequestModel requestModel)
         {
             try

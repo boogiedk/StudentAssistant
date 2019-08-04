@@ -14,7 +14,7 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/schedule")]
-    public class CourseScheduleController : ControllerBase
+    public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
 
@@ -27,13 +27,13 @@ namespace StudentAssistant.Backend.Controllers
             _courseScheduleService = courseScheduleService;
         }
 
+
         /// <summary>
         /// Метод для получения расписания на выбранный день.
         /// </summary>
         /// <para name="requestModel">Модель запроса для получения расписания.</para>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
-        [HttpPost]
-        [Route("selected")]
+        [HttpPost("selected")]
         public IActionResult GetCourseScheduleSelected(
             [FromBody]CourseScheduleRequestModel requestModel)
         {
@@ -81,8 +81,7 @@ namespace StudentAssistant.Backend.Controllers
         /// Метод для обновления данных о расписании в базе данных.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("update")]
+        [HttpGet("update")]
         public async Task<IActionResult> UpdateAsyncCourseSchedule(
             CancellationToken cancellationToken)
         {
