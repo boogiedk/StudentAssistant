@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
@@ -11,6 +12,7 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/parity")]
+    [AllowAnonymous]
     public class ParityOfTheWeekController : Controller
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;

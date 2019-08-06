@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
@@ -14,6 +15,7 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/schedule")]
+    [AllowAnonymous]
     public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;

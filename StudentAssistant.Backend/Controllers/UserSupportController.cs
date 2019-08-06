@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
@@ -11,6 +12,7 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/support")]
+    [Authorize]
     public class UserSupportController : Controller
     {
         private readonly IUserSupportService _userSupportService;
