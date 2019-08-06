@@ -33,7 +33,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     using (var result = await client.GetAsync(
                          Path.Combine(
-                             $"{downloadFileParametersModel.RemoteUri}," +
+                             $"{downloadFileParametersModel.RemoteUri}" +
                                         $"{downloadFileParametersModel.FileNameRemote}.{downloadFileParametersModel.FileFormat}"
                              ),
                         cancellationToken))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
@@ -14,7 +15,8 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/schedule")]
-    public class CourseScheduleController : ControllerBase
+    [AllowAnonymous]
+    public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
 
@@ -27,13 +29,13 @@ namespace StudentAssistant.Backend.Controllers
             _courseScheduleService = courseScheduleService;
         }
 
+
         /// <summary>
         /// Метод для получения расписания на выбранный день.
         /// </summary>
         /// <para name="requestModel">Модель запроса для получения расписания.</para>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
-        [HttpPost]
-        [Route("selected")]
+        [HttpPost("selected")]
         public IActionResult GetCourseScheduleSelected(
             [FromBody]CourseScheduleRequestModel requestModel)
         {
@@ -81,8 +83,7 @@ namespace StudentAssistant.Backend.Controllers
         /// Метод для обновления данных о расписании в базе данных.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("update")]
+        [HttpGet("update")]
         public async Task<IActionResult> UpdateAsyncCourseSchedule(
             CancellationToken cancellationToken)
         {
