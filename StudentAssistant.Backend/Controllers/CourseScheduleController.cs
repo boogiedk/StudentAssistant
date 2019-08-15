@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
@@ -16,6 +17,7 @@ namespace StudentAssistant.Backend.Controllers
     [Produces("application/json")]
     [Route("api/v1/schedule")]
     [AllowAnonymous]
+    [EnableCors("CorsPolicy")]
     public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
@@ -28,7 +30,6 @@ namespace StudentAssistant.Backend.Controllers
         {
             _courseScheduleService = courseScheduleService;
         }
-
 
         /// <summary>
         /// Метод для получения расписания на выбранный день.

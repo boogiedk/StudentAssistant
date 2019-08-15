@@ -135,6 +135,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             var importDataExcelModels = LoadExcelFile();
 
+            Console.WriteLine($"количество после лоад ексель:{importDataExcelModels.Count}");
+
             var courseScheduleDatabaseModel =
                 PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
 

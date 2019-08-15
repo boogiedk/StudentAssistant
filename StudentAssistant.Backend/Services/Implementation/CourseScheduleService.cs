@@ -4,9 +4,11 @@ using StudentAssistant.DbLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -46,7 +48,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var courseScheduleParameters = new CourseScheduleParameters
                 {
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
-                    NameOfDayWeek = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
+                    NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest)
                 };
 
@@ -80,7 +82,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     var emptyCourseScheduleViewModel = new CourseScheduleViewModel()
                     {
                         NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
-                        CoursesViewModel = new List<CourseViewModel>() { new CourseViewModel() {
+                        CoursesViewModel = new List<CourseViewModel> { new CourseViewModel {
                         CourseName = "Данных не найдено",
                         TeacherFullName = "Данных не найдено",
                         CourseType = "Данных не найдено",
@@ -95,8 +97,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // маппим список предметов из бд в модель представления
                 var coursesViewModel = _mapper.Map<List<CourseViewModel>>(input);
 
-                // сортируем по позиции в раписании
-                var sortedCoursesViewModel = coursesViewModel.OrderBy(o => o.CourseNumber).ToList();
+                // удаляем пустые предметы и сортируем по позиции в раписании
+                var sortedCoursesViewModel = coursesViewModel
+                    .Where(w => !w.CourseName.IsNullOrEmpty())
+                    .OrderBy(o => o.CourseNumber)
+                    .ToList();
 
                 // создаем результирующую модель представления
                 var resultCourseScheduleViewModel = new CourseScheduleViewModel
@@ -125,7 +130,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // TODO: вынести в конфиг
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
-                    PathToFile = @"Infrastructure\ScheduleFile",
+                    PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
                     RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/3d4/"),
                     FileNameLocal = "scheduleFile",
                     FileNameRemote = "KBiSP-3-kurs-2-sem",
@@ -133,11 +138,12 @@ namespace StudentAssistant.Backend.Services.Implementation
                 };
 
                 // если не свежий => качаем новый (1 сутки)
-                if (!isNewFile.Result) await _downloadFileService.DownloadAsync(
+                if (!await isNewFile.ContinueWith(c => c.Result, cancellationToken))
+                    await _downloadFileService.DownloadAsync(
                     downloadFileParametersModel, cancellationToken);
 
                 // берем лист из excel файла
-                var courseScheduleDatabaseModels = _courseScheduleFileService.GetFromExcel();
+               //  var courseScheduleDatabaseModels = _courseScheduleFileService.GetFromExcel();
 
                 // отправляем запрос на сохранения данных в бд (возможно, такого функционала и не появится)
                 //  await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
@@ -13,7 +14,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         private readonly IImportDataJsonService _importDataJsonService;
 
         public CourseScheduleFileService(
-            IImportDataExcelService importDataExcelService, 
+            IImportDataExcelService importDataExcelService,
             IImportDataJsonService importDataJsonService
             )
         {
@@ -32,12 +33,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
                 var courseScheduleModel = courseScheduleDatabaseModels
-                    .Where(w => w.NameOfDayWeek == input.NameOfDayWeek);
+                    .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek, StringComparison.InvariantCultureIgnoreCase));
 
                 // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
                 // или если не указаны номера недель, то фильтруем по четности.
                 courseScheduleModel = courseScheduleModel.Where(w => (w.NumberWeek != null
-                                                                      && w.NumberWeek.Contains(input.NumberWeek)) 
+                                                                      && w.NumberWeek.Contains(input.NumberWeek))
                 || (w.NumberWeek == null) && w.ParityWeek == input.ParityWeek);
 
 
@@ -56,24 +57,23 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 if (input == null) throw new ArgumentNullException(nameof(input));
 
                 // маппим модель импорта в модель бд
-                var courseScheduleDatabaseModel =
+                var courseScheduleDatabaseModels =
                     _importDataExcelService
                         .GetCourseScheduleDatabaseModels();
 
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
-                var courseScheduleModel = courseScheduleDatabaseModel
-                    .Where(w => w.NameOfDayWeek == input.NameOfDayWeek);
+                var scheduleDatabaseModels = courseScheduleDatabaseModels
+                    .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek, StringComparison.InvariantCultureIgnoreCase));
 
                 // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
                 // или если не указаны номера недель, то фильтруем по четности.
-                courseScheduleModel = courseScheduleModel
-                    .Where(w => (w.NumberWeek != null 
+                scheduleDatabaseModels = scheduleDatabaseModels
+                    .Where(w => (w.NumberWeek != null
                                  && w.NumberWeek.Contains(input.NumberWeek))
-                                 || (w.NumberWeek == null || w.NumberWeek.Count==0) 
+                                 || (w.NumberWeek == null || w.NumberWeek.Count == 0)
                                  && w.ParityWeek == input.ParityWeek);
 
-
-                return courseScheduleModel.ToList();
+                return scheduleDatabaseModels.ToList();
             }
             catch (Exception ex)
             {
