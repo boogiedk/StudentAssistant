@@ -42,9 +42,11 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
+
                 if (requestModel == null)
                 {
-                    return BadRequest("Запрос не содержит данных.");
+                    // возможно, нужно возвращать предметы на Datetime().Now();
+                    // return BadRequest();
                 }
 
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
@@ -53,14 +55,14 @@ namespace StudentAssistant.Backend.Controllers
                     TimeZoneId = TimeZoneInfo.Local.Id //"Russian Standard Time"
                 };
 
-                // берем utc время
-                var dateTimeOffsetRequestUtc = requestModel.DateTimeRequest;
+                // если модель пришла пустая, запрашиваем данные по текущему дню
+                var dateTimeOffsetRequestUtc = requestModel?.DateTimeRequest ?? DateTimeOffset.Now;
 
                 // переводим utc время в часовой пояс пользователя
                 var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc,
                     TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
-                var courseScheduleDtoModel = new CourseScheduleDtoModel()
+                var courseScheduleDtoModel = new CourseScheduleDtoModel
                 {
                     DateTimeRequest = dateTimeOffsetRequestUser
                 };
@@ -69,7 +71,7 @@ namespace StudentAssistant.Backend.Controllers
                 var courseScheduleResultModel = _courseScheduleService.Get(courseScheduleDtoModel);
 
                 // подготавливаем ViewModel для отображения
-                var courseScheduleViewModel = _courseScheduleService.PrepareViewModel(courseScheduleResultModel);
+                var courseScheduleViewModel = _courseScheduleService.PrepareViewModel(courseScheduleResultModel, courseScheduleDtoModel.DateTimeRequest);
 
                 return Ok(courseScheduleViewModel);
             }
@@ -94,7 +96,22 @@ namespace StudentAssistant.Backend.Controllers
 
                 return Ok("Данные обновлены!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("lastupdate")]
+        public async Task<IActionResult> GetLastUpdateCourseSchedule(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = _courseScheduleService.GetLastAccessTimeUtc();
+
+                return Ok(await result);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }

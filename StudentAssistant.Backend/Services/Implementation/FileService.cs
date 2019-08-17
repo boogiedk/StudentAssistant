@@ -7,16 +7,16 @@ using StudentAssistant.Backend.Models.DownloadFileService;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
-    public class DownloadFileService : IDownloadFileService
+    public class FileService : IFileService
     {
         // вынести в конфиг
-        private readonly string _pathToFile = Path.Combine("Infrastructure", "ScheduleFile");
-        private readonly string _localFileName = "scheduleFile.xlsx";
+        private readonly string _pathToFile = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
+
         //
         public Task<bool> CheckCurrentExcelFile(DateTimeOffset dateTimeOffset) => Task.Run(() =>
         {
             var lastAccessTimeUtc = File.GetLastAccessTimeUtc(
-                Path.Combine($"{_pathToFile}, {_localFileName}"));
+                Path.Combine($"{_pathToFile}"));
 
             return lastAccessTimeUtc.Date == dateTimeOffset.Date;
         });
@@ -32,10 +32,10 @@ namespace StudentAssistant.Backend.Services.Implementation
                 using (var client = new HttpClient())
                 {
                     using (var result = await client.GetAsync(
-                         Path.Combine(
-                             $"{downloadFileParametersModel.RemoteUri}" +
-                                        $"{downloadFileParametersModel.FileNameRemote}.{downloadFileParametersModel.FileFormat}"
-                             ),
+                        Path.Combine(
+                            $"{downloadFileParametersModel.RemoteUri}" +
+                            $"{downloadFileParametersModel.FileNameRemote}.{downloadFileParametersModel.FileFormat}"
+                        ),
                         cancellationToken))
                     {
                         if (result.IsSuccessStatusCode)
@@ -46,7 +46,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                                 Path.Combine(
                                     $"{downloadFileParametersModel.PathToFile}",
                                     $"{downloadFileParametersModel.FileNameLocal}.{downloadFileParametersModel.FileFormat}"),
-                                    fileBytes, cancellationToken);
+                                fileBytes, cancellationToken);
                         }
                     }
                 }
@@ -56,5 +56,13 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
+
+        public Task<DateTime> GetLastWriteTime() => Task.Run(() =>
+        {
+            var lastAccessTimeUtc = File.GetLastWriteTime (
+                Path.Combine($"{_pathToFile}"));
+
+            return lastAccessTimeUtc;
+        });
     }
 }

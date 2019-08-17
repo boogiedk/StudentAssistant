@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
-import DatePicker,{ registerLocale } from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-import ru from "date-fns/locale/ru"; 
-import 'react-datepicker/dist/react-datepicker.css';
-
-registerLocale("ru", ru);
+import "./courseSchedule.css";
 
 const url = 'http://localhost:18936';
 
@@ -15,22 +10,21 @@ export class courseSchedule extends Component {
         this.state = {
             courseScheduleModel: [],
             dateTimeString: '',
-            selectedDate: new Date(),
-            loading: true
+            selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(), //toLocaleDateString(),
+            loading: true,
+
         };
-
-        this.handleChange = this.handleChange.bind(this);
-
+        this.handleChange = this.handleChange.bind(this);    
+        this.selectedDate = new Date();
         // по дефолту отправляем Date.Now()
         this.getCourseScheduleModel(this.selectedDate);
     }
 
-    handleChange(date) {
+    handleChange(event) {
         this.setState({
-            selectedDate: date
+            selectedDate: event.target.value,
         });
-
-        this.getCourseScheduleModel(date);
+        this.getCourseScheduleModel(event.target.value);
     }
 
     getCourseScheduleModel(selectedDatetime) {
@@ -45,11 +39,10 @@ export class courseSchedule extends Component {
         fetch(path, {
             method: 'POST',
             headers: {
-                'Accept':' application/json',
-                'Content-Type': 'application/json', 
+                'Accept': ' application/json',
+                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': '*',
-
             },
             body: JSON.stringify(requestModel)
         })
@@ -68,11 +61,11 @@ export class courseSchedule extends Component {
                     <tr>
                         <th>№</th>
                         <th>Название</th>
-                        <th>Тип</th>
                         <th>Кабинет</th>
+                        <th>Тип</th>
                         <th>Преподаватель</th>
-                        <th>Четность</th>
                         <th>Номера</th>
+                        <th>Четность</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,38 +73,18 @@ export class courseSchedule extends Component {
                         <tr key={courseViewModel.courseNumber}>
                             <td>{courseViewModel.courseNumber}</td>
                             <td>{courseViewModel.courseName}</td>
-                            <td>{courseViewModel.courseType}</td>
                             <td>{courseViewModel.coursePlace}</td>
+                            <td>{courseViewModel.courseType}</td>
                             <td>{courseViewModel.teacherFullName}</td>
-                            <td>{courseViewModel.parityWeek}</td>
                             <td>{courseViewModel.numberWeek}</td>
+                            <td>{courseViewModel.parityWeek}</td>
                         </tr>
                     )}
                 </tbody>
             </table>
         );
-    }
-
-    componentDidMount() {
-        var that = this;
-        var date = new Date().getDate(); //Current Date
-        var month = new Date().getMonth() + 1; //Current Month
-        var year = new Date().getFullYear(); //Current Year
-        var hours = new Date().getHours(); //Current Hours
-        var min = new Date().getMinutes(); //Current Minutes
-        //  var sec = new Date().getSeconds(); //Current Seconds
-
-        that.setState({
-            //Setting the value of the date time
-            dateTimeString:
-                date + '.' + month + '.' + year + ' ' + hours + ':' + min, // + ':' + sec,
-        });
-
-       
-
 
     }
-    
 
     render() {
         let contents = this.state.loading
@@ -124,18 +97,26 @@ export class courseSchedule extends Component {
             <div>
                 <h1>Расписание</h1>
 
-                <p>На странице отображено расписание на <b>{this.state.courseScheduleModel.nameOfDayWeek}</b></p> 
-                
-                <DatePicker
-                    selected={this.state.selectedDate}
-                    onChange={this.handleChange}
-                    dateFormat="dd.MM.yyyy"
-                    locale = "ru"            
+                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest}, <b>{this.state.courseScheduleModel.nameOfDayWeek}</b></p>
+
+                <p>
+                    <label className="labelChooseDate">Выберите дату: </label>
+                    <input
+                        type="date"
+                        className="inputTextbox"
+                        value={this.state.selectedDate}
+                        onChange={this.handleChange}
+                        required="required"
+                        name="inputTextbox" 
+                        id="inputTextbox"
                     />
+                </p>
 
                 {contents}
 
+                <i>Последнее обновление расписания: {this.state.courseScheduleModel.updateDatetime}</i>
             </div>
         );
     }
+
 }

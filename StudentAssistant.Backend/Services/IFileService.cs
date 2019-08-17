@@ -8,7 +8,7 @@ namespace StudentAssistant.Backend.Services
     /// <summary>
     /// Сервис для скачивания Excel файла.
     /// </summary>
-   public interface IDownloadFileService
+   public interface IFileService
    {
        /// <summary>
        /// Проверяет актуальность Excel файла.
@@ -24,5 +24,11 @@ namespace StudentAssistant.Backend.Services
        Task DownloadAsync(
            DownloadFileParametersModel downloadFileParametersModel,
            CancellationToken cancellationToken);
+
+       /// <summary>
+       /// Возвращает дату последней записи в файл.
+       /// </summary>
+       /// <returns></returns>
+       Task<DateTime> GetLastWriteTime();
    }
 }

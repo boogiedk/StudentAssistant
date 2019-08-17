@@ -11,6 +11,7 @@ using StudentAssistant.Backend.Services.Implementation;
 using StudentAssistant.DbLayer.Services;
 using StudentAssistant.DbLayer.Services.Implementation;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -69,9 +70,19 @@ namespace StudentAssistant.Backend
             services.AddScoped<ICourseScheduleFileService, CourseScheduleFileService>();
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
             services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
-            services.AddScoped<IDownloadFileService, DownloadFileService>();
+            services.AddScoped<IFileService, FileService>();
             services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
+
+            #endregion
+
+            #region Culture
+
+            var cultureInfo = new CultureInfo("ru-RU");
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
 
             #endregion
 

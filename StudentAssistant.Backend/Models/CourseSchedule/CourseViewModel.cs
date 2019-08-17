@@ -7,6 +7,16 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
     /// </summary>
     public class CourseViewModel
     {
+        public CourseViewModel()
+        {
+            CourseName = "Данных не найдено";
+            TeacherFullName = "Данных не найдено";
+            CourseType = "Данных не найдено";
+            CoursePlace = "Данных не найдено";
+            ParityWeek = "Данных не найдено";
+        }
+
+
         /// <summary>
         /// Номер недели.
         /// </summary>
