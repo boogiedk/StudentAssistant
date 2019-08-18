@@ -42,13 +42,6 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-
-                if (requestModel == null)
-                {
-                    // возможно, нужно возвращать предметы на Datetime().Now();
-                    // return BadRequest();
-                }
-
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
                 var userAccountRequestData = new UserAccountRequestDataCourseSchedule
                 {
@@ -102,8 +95,12 @@ namespace StudentAssistant.Backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Метод для получения даты последнего изменения файла с расписанием.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("lastupdate")]
-        public async Task<IActionResult> GetLastUpdateCourseSchedule(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetLastUpdateCourseSchedule()
         {
             try
             {

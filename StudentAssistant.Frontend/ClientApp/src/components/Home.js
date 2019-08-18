@@ -6,20 +6,23 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <h1>Hello, world!</h1>
-        <p>Welcome to your new single-page application, built with:</p>
+        <h1>Добро пожаловать!</h1>
+        <p>Добро пожаловать на сервис, который умеет: </p>
         <ul>
-          <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-          <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
+          <li>Отображать текущее учебное расписание</li>
+          <li>Расчитывать номер и четность недели</li>
+          <li>И еще какая-нибудь интересная строчка</li>
         </ul>
-        <p>To help you get started, we have also set up:</p>
+        <p>Как вы можете сделать сервис лучше: </p>
         <ul>
-          <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-          <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-          <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
+        <li><a href='https://t.me/studyAss' target="_blank">Писать баг-репорты разработчику</a> для оперативного исправления ошибок</li>
+          <li><strong>Давать регулярный feedback</strong>, чтобы мы могли создавать то, чем Вы действительно будете пользоваться с удовольствием!</li>
+          <li>И, наконец, <strong>самим стать разработчиком</strong>. Будь-то вклад как в <a href='https://github.com/boogiedk/StudentAssistant' target="_blank">opensourse</a> проект или же разработка в команде <strong>StudyAssTeam</strong> - любая помощь поможет стать нам лучше!</li>
         </ul>
-        <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
+        <p>У проекта есть свой <a href='https://trello.com/b/TXtoDDO0/student-assistant-kanban' target="_blank">Roadmap</a> разработки в Trello, чтобы пользователи видели, над чем ведется работа, а над чем она закончена. 
+        Так же там публикаются все новинки и релизы. 
+        Не пропустите!</p>
+        <p><strong>Спасибо!</strong></p>
       </div>
     );
   }

@@ -102,7 +102,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
 
             // Создает Json файл с расписанием
-            CreateJsonFileForConfig(importDataExcelModels);
+            // CreateJsonFileForConfig(importDataExcelModels);
 
             return importDataExcelModels;
         }
@@ -134,8 +134,6 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         public List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
         {
             var importDataExcelModels = LoadExcelFile();
-
-            Console.WriteLine($"количество после лоад ексель:{importDataExcelModels.Count}");
 
             var courseScheduleDatabaseModel =
                 PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
