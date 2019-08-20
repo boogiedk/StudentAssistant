@@ -12,9 +12,14 @@ export class courseSchedule extends Component {
             dateTimeString: '',
             selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(), //toLocaleDateString(),
             loading: true,
+            groupName: 'БББО-01-16'
 
         };
-        this.handleChange = this.handleChange.bind(this);    
+        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this);
+
+        this.groupName = 'БББО-01-16';
+
         this.selectedDate = new Date();
         // по дефолту отправляем Date.Now()
         this.getCourseScheduleModel(this.selectedDate);
@@ -27,12 +32,22 @@ export class courseSchedule extends Component {
         this.getCourseScheduleModel(event.target.value);
     }
 
+    handleChangeSelect(event) {
+        this.setState({
+            groupName: event.target.value,
+        });
+    }
+
     getCourseScheduleModel(selectedDatetime) {
         let path = url + '/api/v1/schedule/selected';
 
         let requestModel = {
-            dateTimeRequest: selectedDatetime // '2019-03-13T14:15:56.278Z'
+            dateTimeRequest: selectedDatetime,// '2019-03-13T14:15:56.278Z'
+            groupName: this.state.groupName
         };
+
+        console.log('Перед отправкой: ' + this.state.groupName);
+        console.log('Перед отправкой: ' + selectedDatetime);
 
         console.log(JSON.stringify(requestModel));
 
@@ -60,6 +75,8 @@ export class courseSchedule extends Component {
                 <thead>
                     <tr>
                         <th>№</th>
+                        <th>Начало</th>
+                        <th>Конец</th>
                         <th>Название</th>
                         <th>Кабинет</th>
                         <th>Тип</th>
@@ -72,6 +89,8 @@ export class courseSchedule extends Component {
                     {courseScheduleModel.coursesViewModel.map(courseViewModel =>
                         <tr key={courseViewModel.courseNumber}>
                             <td>{courseViewModel.courseNumber}</td>
+                            <td>{courseViewModel.startOfClasses}</td>
+                            <td>{courseViewModel.endOfClasses}</td>
                             <td>{courseViewModel.courseName}</td>
                             <td>{courseViewModel.coursePlace}</td>
                             <td>{courseViewModel.courseType}</td>
@@ -100,14 +119,23 @@ export class courseSchedule extends Component {
                 <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest}, <b>{this.state.courseScheduleModel.nameOfDayWeek}</b></p>
 
                 <p>
-                    <label className="labelChooseDate">Выберите дату: </label>
+                    <label className="labelChooseGroup">Выберите группу: </label>
+                    <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
+                        <option value="БББО-01-16">БББО-01-16</option>
+                        <option value="БББО-02-16">БББО-02-16</option>
+                        <option value="БББО-03-16">БББО-03-16</option>
+                    </select>
+                </p>
+
+                <p>
+                    <label className="labelChooseDate">Выберите дату:</label>
                     <input
                         type="date"
                         className="inputTextbox"
                         value={this.state.selectedDate}
                         onChange={this.handleChange}
                         required="required"
-                        name="inputTextbox" 
+                        name="inputTextbox"
                         id="inputTextbox"
                     />
                 </p>

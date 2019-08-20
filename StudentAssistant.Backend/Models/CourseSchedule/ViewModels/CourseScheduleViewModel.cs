@@ -31,5 +31,7 @@ namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
         /// Список с данными о днях из расписания.
         /// </summary>
         public List<CourseViewModel> CoursesViewModel { get; set; }
+
+
     }
 }

@@ -54,6 +54,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
+                //TODO: отрефакторить метод
                 if (input == null) throw new ArgumentNullException(nameof(input));
 
                 // маппим модель импорта в модель бд
@@ -61,8 +62,10 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     _importDataExcelService
                         .GetCourseScheduleDatabaseModels();
 
+
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
                 var scheduleDatabaseModels = courseScheduleDatabaseModels
+                    .Where(w=>string.Equals(w.GroupName,input.GroupName)) 
                     .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek, StringComparison.InvariantCultureIgnoreCase));
 
                 // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 

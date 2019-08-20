@@ -57,7 +57,8 @@ namespace StudentAssistant.Backend.Controllers
 
                 var courseScheduleDtoModel = new CourseScheduleDtoModel
                 {
-                    DateTimeRequest = dateTimeOffsetRequestUser
+                    DateTimeRequest = dateTimeOffsetRequestUser,
+                    GroupName = requestModel?.GroupName
                 };
 
                 // отправляем запрос на получение расписания

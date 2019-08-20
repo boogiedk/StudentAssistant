@@ -46,7 +46,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
                     NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
-                    ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest)
+                    ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest),
+                    GroupName = input?.GroupName
                 };
 
                 // отправляем запрос на получение расписания по указанным параметрам

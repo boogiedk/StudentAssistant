@@ -19,5 +19,10 @@
         /// Чётность недели.
         /// </summary>
         public bool ParityWeek { get; set; }
+
+        /// <summary>
+        /// Название группы.
+        /// </summary>
+        public string GroupName { get; set; }
     }
 }

@@ -46,5 +46,20 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// Место проведения.
         /// </summary>
         public string CoursePlace { get; set; }
+
+        /// <summary>
+        /// Название группы.
+        /// </summary>
+        public string GroupName { get; set; }
+
+        /// <summary>
+        /// Нач. Занятий.
+        /// </summary>
+        public string StartOfClasses { get; set; }
+
+        /// <summary>
+        /// Окончание Занятий.
+        /// </summary>
+        public string EndOfClasses { get; set; }
     }
 }
