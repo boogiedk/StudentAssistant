@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using StudentAssistant.Backend.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,10 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadFileService;
+using StudentAssistant.Backend.Services.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -35,7 +35,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public List<CourseScheduleResultModel> Get(CourseScheduleDtoModel input)
+        public CourseScheduleViewModel Get(CourseScheduleDtoModel input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
@@ -47,19 +47,19 @@ namespace StudentAssistant.Backend.Services.Implementation
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
                     NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest),
-                    GroupName = input?.GroupName
+                    GroupName = input.GroupName,
+                    DatetimeRequest = input.DateTimeRequest
                 };
-
-                // отправляем запрос на получение расписания по указанным параметрам
-                //   var courseScheduleDatabaseModel = _courseScheduleFileService.GetCourseScheduleFromJsonFileByParameters(courseScheduleParameters);
 
                 // на данным момент расписание берется из Excel файла.
                 var courseScheduleDatabaseModel = _courseScheduleFileService
-                    .GetCourseScheduleFromExcelFileByParameters(courseScheduleParameters);
+                   .GetFromExcelFileByParameters(courseScheduleParameters);
 
-                var courseScheduleModel = _mapper.Map<List<CourseScheduleResultModel>>(courseScheduleDatabaseModel);
+                var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
-                return courseScheduleModel;
+                var result = PrepareViewModel(courseScheduleModel, courseScheduleParameters);
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -67,10 +67,10 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public CourseScheduleViewModel PrepareViewModel(
-            List<CourseScheduleResultModel> input, DateTimeOffset dateTimeRequest)
+        private CourseScheduleViewModel PrepareViewModel(
+            IEnumerable<CourseScheduleModel> input, CourseScheduleParameters parameters)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input == null || parameters == null) throw new ArgumentNullException(nameof(input));
 
             try
             {
@@ -79,8 +79,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     var emptyCourseScheduleViewModel = new CourseScheduleViewModel
                     {
-                        NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
-                        DatetimeRequest = dateTimeRequest.Date.ToShortDateString(),
+                        NameOfDayWeek = parameters.NameOfDayWeek.ToUpper(), //input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
+                        DatetimeRequest = parameters.DatetimeRequest.Date.ToShortDateString(),
                         UpdateDatetime = _fileService.GetLastWriteTime().Result.ToShortDateString(),
                         CoursesViewModel = new List<CourseViewModel> { new CourseViewModel() }
                     };
@@ -93,7 +93,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 // удаляем пустые предметы и сортируем по позиции в раписании
                 var sortedCoursesViewModel = coursesViewModel
-                    .Where(w => !w.CourseName.IsNullOrEmpty())
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
                     .OrderBy(o => o.CourseNumber)
                     .ToList();
 
@@ -101,9 +101,10 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var resultCourseScheduleViewModel = new CourseScheduleViewModel
                 {
                     CoursesViewModel = sortedCoursesViewModel,
-                    NameOfDayWeek = input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
-                    DatetimeRequest = dateTimeRequest.Date.ToShortDateString(),
-                    UpdateDatetime = _fileService.GetLastWriteTime().Result.Date.ToShortDateString()
+                    NameOfDayWeek = parameters.NameOfDayWeek.ToUpper(),
+                    DatetimeRequest = parameters.DatetimeRequest.Date.ToShortDateString(),
+                    UpdateDatetime = _fileService.GetLastWriteTime().Result.Date.ToShortDateString(),
+                    NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(parameters.DatetimeRequest)
                 };
 
                 return resultCourseScheduleViewModel;
@@ -121,7 +122,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 cancellationToken.ThrowIfCancellationRequested();
 
                 // проверяем свежесть файла
-                var isNewFile = _fileService.CheckCurrentExcelFile(DateTimeOffset.UtcNow);
+                var isNewFile = _fileService.CheckExcelFile(DateTime.UtcNow);
 
                 // TODO: вынести в конфиг
                 var downloadFileParametersModel = new DownloadFileParametersModel
@@ -137,13 +138,6 @@ namespace StudentAssistant.Backend.Services.Implementation
                 if (!isNewFile.Result)
                     await _fileService.DownloadAsync(
                     downloadFileParametersModel, cancellationToken);
-
-                // берем лист из excel файла
-                //  var courseScheduleDatabaseModels = _courseScheduleFileService.GetFromExcel();
-
-                // отправляем запрос на сохранения данных в бд (возможно, такого функционала и не появится)
-                //  await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
-
             }
             catch (Exception ex)
             {
@@ -151,7 +145,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public Task<CourseScheduleUpdateResultModel> GetLastAccessTimeUtc() => Task.Run(() =>
+        public Task<CourseScheduleUpdateResponseModel> GetLastAccessTimeUtc() => Task.Run(() =>
         {
             try
             {
@@ -160,7 +154,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 //https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.getlastwritetime
                 var errorDatetime = new DateTime(1601, 01, 01, 3, 0, 0);
 
-                return new CourseScheduleUpdateResultModel
+                return new CourseScheduleUpdateResponseModel
                 {
                     UpdateDatetime = lastAccessTimeUtc.Result == errorDatetime
                         ? "Неизвестно"

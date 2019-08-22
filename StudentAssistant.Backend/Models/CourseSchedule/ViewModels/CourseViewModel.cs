@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace StudentAssistant.Backend.Models.CourseSchedule
+﻿namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
 {
     /// <summary>
     /// Модель представления с данными о днях из расписания.

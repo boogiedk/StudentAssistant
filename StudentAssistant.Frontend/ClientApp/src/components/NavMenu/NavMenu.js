@@ -3,14 +3,6 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
-/*
-<NavItem>
-<NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-</NavItem>
-<NavItem>
-<NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-</NavItem>
-*/
 
 export class NavMenu extends Component {
   static displayName = 'NavMenu.name';

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Services;
-using StudentAssistant.DbLayer.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -22,10 +22,6 @@ namespace StudentAssistant.Backend.Controllers
     {
         private readonly ICourseScheduleService _courseScheduleService;
 
-        /// <summary>
-        /// Основной конструктор.
-        /// </summary>
-        /// <param name="courseScheduleService"></param>
         public CourseScheduleController(ICourseScheduleService courseScheduleService)
         {
             _courseScheduleService = courseScheduleService;
@@ -49,35 +45,31 @@ namespace StudentAssistant.Backend.Controllers
                 };
 
                 // если модель пришла пустая, запрашиваем данные по текущему дню
-                var dateTimeOffsetRequestUtc = requestModel?.DateTimeRequest ?? DateTimeOffset.Now;
+                var datetimeUtc = requestModel?.DateTimeRequest ?? DateTime.UtcNow;
 
                 // переводим utc время в часовой пояс пользователя
-                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc,
+                var datetimeRequestUser = TimeZoneInfo.ConvertTime(datetimeUtc,
                     TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 var courseScheduleDtoModel = new CourseScheduleDtoModel
                 {
-                    DateTimeRequest = dateTimeOffsetRequestUser,
+                    DateTimeRequest = datetimeRequestUser,
                     GroupName = requestModel?.GroupName
                 };
 
-                // отправляем запрос на получение расписания
-                var courseScheduleResultModel = _courseScheduleService.Get(courseScheduleDtoModel);
-
                 // подготавливаем ViewModel для отображения
-                var courseScheduleViewModel = _courseScheduleService.PrepareViewModel(courseScheduleResultModel, courseScheduleDtoModel.DateTimeRequest);
+                var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
 
                 return Ok(courseScheduleViewModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // log
-                return BadRequest(ex);
+                return BadRequest(new CourseScheduleViewModel());
             }
         }
 
         /// <summary>
-        /// Метод для обновления данных о расписании в базе данных.
+        /// Метод для обновления данных о расписании.
         /// </summary>
         /// <returns></returns>
         [HttpGet("update")]

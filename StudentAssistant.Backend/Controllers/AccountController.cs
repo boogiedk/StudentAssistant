@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Models.Account.Requests;
 using StudentAssistant.Backend.Models.Account.Responses;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
     [Route("api/v1/account")]
     [Produces("application/json")]
     [AllowAnonymous]
+    [EnableCors("CorsPolicy")]
     public class AccountController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;

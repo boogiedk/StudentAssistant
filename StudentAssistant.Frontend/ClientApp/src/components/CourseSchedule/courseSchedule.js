@@ -10,7 +10,7 @@ export class courseSchedule extends Component {
         this.state = {
             courseScheduleModel: [],
             dateTimeString: '',
-            selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(), //toLocaleDateString(),
+            selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(),
             loading: true,
             groupName: 'БББО-01-16'
 
@@ -21,6 +21,7 @@ export class courseSchedule extends Component {
         this.groupName = 'БББО-01-16';
 
         this.selectedDate = new Date();
+
         // по дефолту отправляем Date.Now()
         this.getCourseScheduleModel(this.selectedDate);
     }
@@ -42,14 +43,9 @@ export class courseSchedule extends Component {
         let path = url + '/api/v1/schedule/selected';
 
         let requestModel = {
-            dateTimeRequest: selectedDatetime,// '2019-03-13T14:15:56.278Z'
+            dateTimeRequest: selectedDatetime,
             groupName: this.state.groupName
         };
-
-        console.log('Перед отправкой: ' + this.state.groupName);
-        console.log('Перед отправкой: ' + selectedDatetime);
-
-        console.log(JSON.stringify(requestModel));
 
         fetch(path, {
             method: 'POST',
@@ -82,7 +78,6 @@ export class courseSchedule extends Component {
                         <th>Тип</th>
                         <th>Преподаватель</th>
                         <th>Номера</th>
-                        <th>Четность</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,7 +91,6 @@ export class courseSchedule extends Component {
                             <td>{courseViewModel.courseType}</td>
                             <td>{courseViewModel.teacherFullName}</td>
                             <td>{courseViewModel.numberWeek}</td>
-                            <td>{courseViewModel.parityWeek}</td>
                         </tr>
                     )}
                 </tbody>
@@ -116,7 +110,8 @@ export class courseSchedule extends Component {
             <div>
                 <h1>Расписание</h1>
 
-                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest}, <b>{this.state.courseScheduleModel.nameOfDayWeek}</b></p>
+                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest}, 
+                <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая неделя.</p>
 
                 <p>
                     <label className="labelChooseGroup">Выберите группу: </label>

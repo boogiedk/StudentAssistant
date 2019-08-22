@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
     public class JwtTokenFactory : IJwtTokenFactory
     {
         private const string Key = "q7fs8DDw823hSyaNYCKsa02";
-        private readonly IConfiguration _configuration;
-
-        public JwtTokenFactory(IConfiguration configuration)
-        {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        }
 
         public Task<string> CreateJwtToken(string id) => Task.Run(() =>
         {

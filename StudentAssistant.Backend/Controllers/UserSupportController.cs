@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -13,6 +15,7 @@ namespace StudentAssistant.Backend.Controllers
     [Produces("application/json")]
     [Route("api/v1/support")]
     [Authorize]
+    [EnableCors("CorsPolicy")]
     public class UserSupportController : Controller
     {
         private readonly IUserSupportService _userSupportService;

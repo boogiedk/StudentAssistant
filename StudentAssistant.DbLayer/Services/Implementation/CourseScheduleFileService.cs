@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Services.Interfaces;
 
 
 namespace StudentAssistant.DbLayer.Services.Implementation
@@ -22,7 +21,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             _importDataJsonService = importDataJsonService ?? throw new ArgumentNullException(nameof(importDataJsonService));
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFileByParameters(CourseScheduleParameters input)
+        public IEnumerable<CourseScheduleDatabaseModel> GetFromJsonFileByParameters(CourseScheduleParameters input)
         {
             try
             {
@@ -32,17 +31,21 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 var courseScheduleDatabaseModels = _importDataJsonService.GetCourseScheduleDatabaseModels();
 
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
-                var courseScheduleModel = courseScheduleDatabaseModels
+                var filterByNameOfWeek = courseScheduleDatabaseModels
                     .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek, StringComparison.InvariantCultureIgnoreCase));
 
                 // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
                 // или если не указаны номера недель, то фильтруем по четности.
-                courseScheduleModel = courseScheduleModel.Where(w => (w.NumberWeek != null
-                                                                      && w.NumberWeek.Contains(input.NumberWeek))
-                || (w.NumberWeek == null) && w.ParityWeek == input.ParityWeek);
+                var filterByParameters = filterByNameOfWeek
+                    .Where(w => (w.NumberWeek != null
+                                 && w.NumberWeek.Contains(input.NumberWeek))
+                                || (w.NumberWeek == null || w.NumberWeek.Count == 0)
+                                && w.ParityWeek == input.ParityWeek).ToArray();
 
+                // фильтруем по группе
+                var filterByGroup = filterByParameters.Where(w => string.Equals(w.GroupName, input.GroupName));
 
-                return courseScheduleModel.ToList();
+                return filterByGroup;
             }
             catch (Exception ex)
             {
@@ -50,55 +53,37 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFileByParameters(CourseScheduleParameters input)
+        public IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input)
         {
             try
             {
-                //TODO: отрефакторить метод
                 if (input == null) throw new ArgumentNullException(nameof(input));
 
-                // маппим модель импорта в модель бд
                 var courseScheduleDatabaseModels =
                     _importDataExcelService
                         .GetCourseScheduleDatabaseModels();
 
-
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
-                var scheduleDatabaseModels = courseScheduleDatabaseModels
-                    .Where(w=>string.Equals(w.GroupName,input.GroupName)) 
+                var filterByNameOfWeek = courseScheduleDatabaseModels
                     .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek, StringComparison.InvariantCultureIgnoreCase));
 
                 // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
                 // или если не указаны номера недель, то фильтруем по четности.
-                scheduleDatabaseModels = scheduleDatabaseModels
+                var filterByParameters = filterByNameOfWeek
                     .Where(w => (w.NumberWeek != null
                                  && w.NumberWeek.Contains(input.NumberWeek))
                                  || (w.NumberWeek == null || w.NumberWeek.Count == 0)
-                                 && w.ParityWeek == input.ParityWeek);
+                                 && w.ParityWeek == input.ParityWeek).ToArray();
 
-                return scheduleDatabaseModels.ToList();
+                // фильтруем по группе
+               var filterByGroup = filterByParameters.Where(w => string.Equals(w.GroupName, input.GroupName));
+
+                return filterByGroup;
             }
             catch (Exception ex)
             {
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
-        }
-
-        public List<CourseScheduleDatabaseModel> GetFromExcel()
-        {
-            try
-            {
-                var courseScheduleDatabaseModel =
-                    _importDataExcelService
-                        .GetCourseScheduleDatabaseModels();
-
-                return courseScheduleDatabaseModel.ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new NotSupportedException("Ошибка во время выполнения." + ex);
-            }
-
         }
     }
 }

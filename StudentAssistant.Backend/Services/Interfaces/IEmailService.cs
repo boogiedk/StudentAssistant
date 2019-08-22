@@ -1,6 +1,6 @@
 ﻿using StudentAssistant.Backend.Models.Email;
 
-namespace StudentAssistant.Backend.Services
+namespace StudentAssistant.Backend.Services.Interfaces
 {
     /// <summary>
     /// E-mail сервис.

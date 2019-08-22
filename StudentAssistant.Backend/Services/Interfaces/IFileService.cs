@@ -3,19 +3,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.DownloadFileService;
 
-namespace StudentAssistant.Backend.Services
+namespace StudentAssistant.Backend.Services.Interfaces
 {
     /// <summary>
     /// Сервис для скачивания Excel файла.
     /// </summary>
    public interface IFileService
    {
-       /// <summary>
-       /// Проверяет актуальность Excel файла.
-       /// </summary>
-       /// <param name="dateTimeOffset"></param>
-       /// <returns></returns>
-       Task<bool> CheckCurrentExcelFile(DateTimeOffset dateTimeOffset);
+        /// <summary>
+        /// Проверяет актуальность Excel файла.
+        /// </summary>
+        /// <param name="datetimeUtc"></param>
+        /// <returns></returns>
+        Task<bool> CheckExcelFile(DateTime datetimeUtc);
 
        /// <summary>
        /// Скачивает Excel файл с URL университета.

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Models.ImportData;
 
-namespace StudentAssistant.DbLayer.Services
+namespace StudentAssistant.DbLayer.Services.Interfaces
 {
     /// <summary>
     /// Сервис для импорта данных из Excel.
@@ -10,9 +9,9 @@ namespace StudentAssistant.DbLayer.Services
     public interface IImportDataExcelService
     {
         /// <summary>
-        /// Возвращает список с данными для расписания.
+        /// Импортирует данные из Excel файла.
         /// </summary>
         /// <returns></returns>
-        List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels();
+        IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels();
     }
 }

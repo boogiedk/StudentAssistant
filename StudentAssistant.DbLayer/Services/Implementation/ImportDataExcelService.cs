@@ -8,12 +8,15 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Models.ImportData;
+using StudentAssistant.DbLayer.Services.Interfaces;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
     public class ImportDataExcelService : IImportDataExcelService
     {
-        private List<ImportDataExcelModel> LoadExcelFile()
+
+/*
+        private IEnumerable<ImportDataExcelModel> LoadExcelFile()
         {
             var fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
@@ -122,9 +125,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
             return importDataExcelModels;
         }
+*/
 
-
-        private List<ImportDataExcelModel> LoadExcelFileThreeGroup()
+        private IEnumerable<ImportDataExcelModel> ParseExcelFileForThreeGroup()
         {
             var fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
@@ -232,8 +235,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             return importDataExcelModels;
         }
 
-
-        private List<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(List<ImportDataExcelModel> importDataExcelModels)
+        private IEnumerable<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(IEnumerable<ImportDataExcelModel> importDataExcelModels)
         {
             var resultList = new List<CourseScheduleDatabaseModel>();
 
@@ -260,21 +262,21 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             return resultList;
         }
 
-        private string ParseGroupName(string groupName) // БББО-01-16 (КБ-1)10.03.01
+        private string ParseGroupName(string groupName) 
         {
-            if (groupName == null)
+            if (groupName == null) // БББО-01-16 (КБ-1)10.03.01
             {
                 return string.Empty;
             }
 
             var groupNameResult = groupName.Split(' ')[0];
 
-            return groupNameResult;
+            return groupNameResult; // БББО-01-16
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
+        public IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
         {
-            var importDataExcelModels = LoadExcelFileThreeGroup(); //LoadExcelFile();
+            var importDataExcelModels = ParseExcelFileForThreeGroup();
 
             var courseScheduleDatabaseModel =
                 PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
@@ -282,11 +284,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             return courseScheduleDatabaseModel;
         }
 
+/*
         /// <summary>
         /// Создает Json файл с данными из Excel.
         /// </summary>
         /// <param name="importDataExcelModels"></param>
-        private void CreateJsonFileForConfig(List<ImportDataExcelModel> importDataExcelModels)
+        private void CreateJsonFileForConfig(IEnumerable<ImportDataExcelModel> importDataExcelModels)
         {
             string fileName = Path.Combine("Infrastructure", "ScheduleFile", "output.json");
 
@@ -296,6 +299,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
             File.WriteAllText(fileName, jsonData);
         }
+*/
 
         /// <summary>
         /// Парсит строку с четностью и возвращает true или false в зависимости от результата.

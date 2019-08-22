@@ -2,7 +2,7 @@
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 
-namespace StudentAssistant.Backend.Services
+namespace StudentAssistant.Backend.Services.Interfaces
 {
     /// <summary>
     /// Интерфейс для работы с сервисом, связанного с формированием данных о заданном <see cref="DateTimeOffset"/> параметре.

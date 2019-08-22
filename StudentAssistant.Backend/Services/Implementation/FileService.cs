@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.DownloadFileService;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -11,14 +12,14 @@ namespace StudentAssistant.Backend.Services.Implementation
     {
         // вынести в конфиг
         private readonly string _pathToFile = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
-
         //
-        public Task<bool> CheckCurrentExcelFile(DateTimeOffset dateTimeOffset) => Task.Run(() =>
+
+        public Task<bool> CheckExcelFile(DateTime datetimeUfc) => Task.Run(() =>
         {
             var lastAccessTimeUtc = File.GetLastAccessTimeUtc(
                 Path.Combine($"{_pathToFile}"));
 
-            return lastAccessTimeUtc.Date == dateTimeOffset.Date;
+            return lastAccessTimeUtc.Date == datetimeUfc.Date;
         });
 
         public async Task DownloadAsync(

@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

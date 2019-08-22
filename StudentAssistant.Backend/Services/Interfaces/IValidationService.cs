@@ -1,9 +1,9 @@
-﻿using StudentAssistant.Backend.Models.UserSupport;
-using StudentAssistant.Backend.Models.Validation;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using StudentAssistant.Backend.Models.UserSupport;
+using StudentAssistant.Backend.Models.Validation;
 
-namespace StudentAssistant.Backend.Services
+namespace StudentAssistant.Backend.Services.Interfaces
 {
     /// <summary>
     /// Сервис для валидации входных запросов.

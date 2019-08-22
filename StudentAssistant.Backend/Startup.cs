@@ -4,25 +4,25 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Implementation;
 using StudentAssistant.DbLayer.Services;
 using StudentAssistant.DbLayer.Services.Implementation;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using StudentAssistant.Backend.Infrastructure;
+using StudentAssistant.Backend.Infrastructure.AutoMapper;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using StudentAssistant.Backend.Services.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace StudentAssistant.Backend
@@ -38,9 +38,9 @@ namespace StudentAssistant.Backend
                             .SetBasePath(Path.Combine(env.ContentRootPath, "Infrastructure", "Configuration"))
                             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                            .AddJsonFile($"EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile($"ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile($"CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile("EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile("ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile("CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
                             .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
@@ -60,6 +60,18 @@ namespace StudentAssistant.Backend
                     .AddDefaultTokenProviders()
                     .AddDefaultTokenProviders();
 
+
+            #region Mapper
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperConfiguration());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+
+            #endregion
+
             #region Scoped
 
             services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
@@ -71,8 +83,9 @@ namespace StudentAssistant.Backend
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
             services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
+
+            services.AddSingleton(mapper);
 
             #endregion
 
@@ -82,7 +95,6 @@ namespace StudentAssistant.Backend
 
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-
 
             #endregion
 
@@ -114,10 +126,6 @@ namespace StudentAssistant.Backend
                         .AllowCredentials());
             });
 
-            //services.Configure<EmailServiceConfigurationModel>(options => Configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
-            //services.Configure<ParityOfTheWeekConfigurationModel>(options => Configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
-            //services.Configure<CourseScheduleDataServiceConfigurationModel>(Configuration.GetSection("ListCourseSchedule"));
-
             services.Configure<EmailServiceConfigurationModel>(options => _configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             services.Configure<ParityOfTheWeekConfigurationModel>(options => _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
             services.Configure<CourseScheduleDataServiceConfigurationModel>(_configuration.GetSection("ListCourseSchedule"));
@@ -141,7 +149,6 @@ namespace StudentAssistant.Backend
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddAutoMapper();
             services.AddMvc().AddJsonOptions(options =>
             {
                 var camelResolver = new CamelCasePropertyNamesContractResolver();

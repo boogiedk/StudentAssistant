@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
-namespace StudentAssistant.DbLayer.Services
+namespace StudentAssistant.DbLayer.Services.Interfaces
 {
     /// <summary>
     /// Сервис для работы с базой данных и сервисом для расписания.
@@ -13,19 +13,13 @@ namespace StudentAssistant.DbLayer.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<CourseScheduleDatabaseModel> GetCourseScheduleFromJsonFileByParameters(CourseScheduleParameters input);
+        IEnumerable<CourseScheduleDatabaseModel> GetFromJsonFileByParameters(CourseScheduleParameters input);
 
         /// <summary>
         /// Возвращает расписание, взятое из Excel файла и отфильтрованное по заданным параметрам.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<CourseScheduleDatabaseModel> GetCourseScheduleFromExcelFileByParameters(CourseScheduleParameters input);
-
-        /// <summary>
-        /// Возвращает все расписание из Excel файла.
-        /// </summary>
-        /// <returns></returns>
-        List<CourseScheduleDatabaseModel> GetFromExcel();
+        IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input);
     }
 }

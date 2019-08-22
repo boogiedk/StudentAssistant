@@ -28,6 +28,11 @@ namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
         public string UpdateDatetime { get; set; }
 
         /// <summary>
+        /// Номер недели.
+        /// </summary>
+        public int NumberWeek { get; set; }
+
+        /// <summary>
         /// Список с данными о днях из расписания.
         /// </summary>
         public List<CourseViewModel> CoursesViewModel { get; set; }

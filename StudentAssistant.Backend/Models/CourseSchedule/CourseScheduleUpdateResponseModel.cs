@@ -3,7 +3,7 @@
     /// <summary>
     /// Модель с датой последнего изменения файла с расписанием.
     /// </summary>
-    public class CourseScheduleUpdateResultModel
+    public class CourseScheduleUpdateResponseModel
     {
         /// <summary>
         /// Дата последнего изменения файла с расписанием.

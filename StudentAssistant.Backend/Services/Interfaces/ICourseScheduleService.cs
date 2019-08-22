@@ -1,11 +1,9 @@
-﻿using System;
-using StudentAssistant.Backend.Models.CourseSchedule;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 
-namespace StudentAssistant.Backend.Services
+namespace StudentAssistant.Backend.Services.Interfaces
 {
     /// <summary>
     /// Сервис для работы с расписанием.
@@ -17,15 +15,7 @@ namespace StudentAssistant.Backend.Services
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        List<CourseScheduleResultModel> Get(CourseScheduleDtoModel input);
-
-        /// <summary>
-        /// Подготавливает модель представления.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="dateTimeRequest"></param>
-        /// <returns></returns>
-        CourseScheduleViewModel PrepareViewModel(List<CourseScheduleResultModel> input, DateTimeOffset dateTimeRequest);
+       CourseScheduleViewModel Get(CourseScheduleDtoModel input);
 
         /// <summary>
         /// Отправляет запрос на обновление расписания в базе данных.
@@ -37,6 +27,6 @@ namespace StudentAssistant.Backend.Services
         /// Возвращает дату последнего изменения файла с расписанием.
         /// </summary>
         /// <returns></returns>
-        Task<CourseScheduleUpdateResultModel> GetLastAccessTimeUtc();
+        Task<CourseScheduleUpdateResponseModel> GetLastAccessTimeUtc();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
-namespace StudentAssistant.DbLayer.Services
+namespace StudentAssistant.DbLayer.Services.Interfaces
 {
     /// <summary>
     /// Сервис для импорта данных из Json.
@@ -12,6 +12,6 @@ namespace StudentAssistant.DbLayer.Services
         /// Импортирует данные из json файла.
         /// </summary>
         /// <returns></returns>
-        List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels();
+        IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels();
     }
 }

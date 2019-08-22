@@ -1,4 +1,6 @@
-﻿namespace StudentAssistant.DbLayer.Models.CourseSchedule
+﻿using System;
+
+namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
     /// <summary>
     /// Модель для передачи параметров, по которым будет фильтроваться расписание.
@@ -24,5 +26,10 @@
         /// Название группы.
         /// </summary>
         public string GroupName { get; set; }
+
+        /// <summary>
+        /// Время запроса.
+        /// </summary>
+        public DateTimeOffset DatetimeRequest { get; set; }
     }
 }
