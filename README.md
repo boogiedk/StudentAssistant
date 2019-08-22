@@ -14,14 +14,18 @@ Student Assistant - this is a web service with an open source project. The creat
 
 ### Schedule
 
-Student Assistant provide service education schedule for students. With help calendar widget user can choose need date time for getting schedule on day. It looks like this:
+Student Assistant provide service education schedule for students. With help calendar widget user can choose need date time for getting schedule on day.
 
 The schedule tab looks like this:
- <img width="900" height="500"  align="center" src="https://pp.userapi.com/c855420/v855420888/c6bab/-p8gIBa0Qq8.jpg">
+<p align="center">
+ <img width="900" height="500" align="center" src="https://pp.userapi.com/c855420/v855420888/c6bab/-p8gIBa0Qq8.jpg">
+</p>
 
 So, thanks tag `<input />` you can use native implementation calendar in browser or mobile. For example, calendar look like this on IOS mobile:
 
- <img width="400" height="700"  align="center" src="https://pp.userapi.com/c850720/v850720007/198b4f/W4HhyGUJ98s.jpg">
+<p align="center">
+ <img width="450" height="800" align="center" src="https://pp.userapi.com/c850720/v850720007/198b4f/W4HhyGUJ98s.jpg">
+</p>
 
 Supports all browsers, including an Internet Explorer (not without problems, but it works).
 
