@@ -1,16 +1,13 @@
 ﻿using System.Globalization;
 using AutoMapper;
 using Humanizer;
-using StudentAssistant.Backend.Models;
 using StudentAssistant.Backend.Models.CourseSchedule;
+using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Models.UserSupport;
-using StudentAssistant.Backend.Services;
-using StudentAssistant.Backend.Services.Implementation;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Services;
 
 namespace StudentAssistant.Backend.Infrastructure.AutoMapper
 {
@@ -26,9 +23,11 @@ namespace StudentAssistant.Backend.Infrastructure.AutoMapper
 
             CreateMap<EmailResultModel, UserSupportResultModel>();
 
-            CreateMap<CourseScheduleResultModel, CourseScheduleDatabaseModel>();
+            CreateMap<CourseScheduleModel, CourseScheduleDatabaseModel>();
 
-            CreateMap<CourseScheduleResultModel, CourseViewModel>()
+            CreateMap<CourseScheduleDatabaseModel, CourseScheduleModel>();
+
+            CreateMap<CourseScheduleModel, CourseViewModel>()
                 .ForMember(destination => destination.CourseType, opts => opts.MapFrom(src => src.CourseType.Humanize()))
                 .ForMember(destination => destination.ParityWeek, opts => opts.MapFrom(src => src.ParityWeek ? "Чётная" : "Нечётная"))
                 .ForMember(destination => destination.NumberWeek, opts => opts.MapFrom(src => string.Join(", ", src.NumberWeek)));

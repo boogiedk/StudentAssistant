@@ -1,4 +1,5 @@
 ﻿using StudentAssistant.Backend.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Models.Email
 {

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.AutoMoq;
-using AutoMapper;
 using Microsoft.Extensions.Options;
 using Moq;
 using StudentAssistant.Backend.Models.Email;
-using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
-using StudentAssistant.Backend.Services.Implementation;
+using StudentAssistant.Backend.Services.Interfaces;
 using Xunit;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 

@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -13,14 +15,11 @@ namespace StudentAssistant.Backend.Controllers
     [Produces("application/json")]
     [Route("api/v1/parity")]
     [AllowAnonymous]
+    [EnableCors("CorsPolicy")]
     public class ParityOfTheWeekController : Controller
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
-        /// <summary>
-        /// Основной конструктор.
-        /// </summary>
-        /// <param name="parityOfTheWeekService"></param>
         public ParityOfTheWeekController(IParityOfTheWeekService parityOfTheWeekService)
         {
             _parityOfTheWeekService = parityOfTheWeekService;
