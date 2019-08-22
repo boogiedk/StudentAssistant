@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.Extensions.Options;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -18,9 +19,9 @@ namespace StudentAssistant.Backend.Services.Implementation
             IMapper mapper
         )
         {
-            _emailServiceConfigurationModel = emailServiceConfigurationModel.Value;
-            _emailService = emailService;
-            _mapper = mapper;
+            _emailServiceConfigurationModel = emailServiceConfigurationModel.Value ?? throw new ArgumentNullException(nameof(emailServiceConfigurationModel));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public UserFeedbackResultModel SendFeedback(UserFeedbackRequestModel input)

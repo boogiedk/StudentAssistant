@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -11,7 +14,9 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/support")]
-    public class UserSupportController : ControllerBase
+    [Authorize]
+    [EnableCors("CorsPolicy")]
+    public class UserSupportController : Controller
     {
         private readonly IUserSupportService _userSupportService;
         private readonly IValidationService _validationService;
@@ -21,7 +26,9 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <param name="userSupportService"></param>
         /// <param name="validationService"></param>
-        public UserSupportController(IUserSupportService userSupportService, IValidationService validationService)
+        public UserSupportController(
+            IUserSupportService userSupportService, 
+            IValidationService validationService)
         {
             _userSupportService = userSupportService;
             _validationService = validationService;
@@ -32,8 +39,7 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <param name="userFeedbackRequestModel">Модель, содержащая данные для отправки отзыва пользователя.</param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("sendfeedback")]
+        [HttpPost("sendfeedback")]
         public IActionResult SendFeedback([FromBody]UserFeedbackRequestModel userFeedbackRequestModel)
         {
             try

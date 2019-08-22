@@ -6,6 +6,7 @@ using Humanizer;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using Microsoft.Extensions.Options;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -15,12 +16,12 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IMapper _mapper;
 
         public ParityOfTheWeekService(
-            IMapper mapper, 
-            IOptions<ParityOfTheWeekConfigurationModel> 
-                parityOfTheWeekConfigurationModel)
+            IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel,
+            IMapper mapper
+            )
         {
-            _parityOfTheWeekConfigurationModel = parityOfTheWeekConfigurationModel.Value;
-            _mapper = mapper;
+            _parityOfTheWeekConfigurationModel = parityOfTheWeekConfigurationModel.Value ?? throw new ArgumentNullException(nameof(parityOfTheWeekConfigurationModel));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public bool GetParityOfTheWeekByDateTime(DateTimeOffset dateTimeOffsetParam)
@@ -60,7 +61,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             catch (Exception ex)
             {
                 //log
-                throw new NotSupportedException($"Ошибка во время выполнения: {ex}\n");
+                throw new NotSupportedException($"Ошибка во время выполнения. {ex}");
             }
         }
 
@@ -171,7 +172,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             catch (Exception ex)
             {
                 //log
-                throw new NotSupportedException($"Ошибка во время выполнения: {ex}\n");
+                throw new NotSupportedException($"Ошибка во время выполнения.{ex}");
             }
         }
 

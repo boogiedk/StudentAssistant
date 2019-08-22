@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Services;
-using StudentAssistant.DbLayer.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -14,14 +16,12 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/schedule")]
-    public class CourseScheduleController : ControllerBase
+    [AllowAnonymous]
+    [EnableCors("CorsPolicy")]
+    public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
 
-        /// <summary>
-        /// Основной конструктор.
-        /// </summary>
-        /// <param name="courseScheduleService"></param>
         public CourseScheduleController(ICourseScheduleService courseScheduleService)
         {
             _courseScheduleService = courseScheduleService;
@@ -32,57 +32,47 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <para name="requestModel">Модель запроса для получения расписания.</para>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
-        [HttpPost]
-        [Route("selected")]
+        [HttpPost("selected")]
         public IActionResult GetCourseScheduleSelected(
             [FromBody]CourseScheduleRequestModel requestModel)
         {
             try
             {
-                if (requestModel == null)
-                {
-                    return BadRequest("Запрос не содержит данных.");
-                }
-
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
                 var userAccountRequestData = new UserAccountRequestDataCourseSchedule
                 {
                     TimeZoneId = TimeZoneInfo.Local.Id //"Russian Standard Time"
                 };
 
-                // берем utc время
-                var dateTimeOffsetRequestUtc = requestModel.DateTimeRequest;
+                // если модель пришла пустая, запрашиваем данные по текущему дню
+                var datetimeUtc = requestModel?.DateTimeRequest ?? DateTime.UtcNow;
 
                 // переводим utc время в часовой пояс пользователя
-                var dateTimeOffsetRequestUser = TimeZoneInfo.ConvertTime(dateTimeOffsetRequestUtc,
+                var datetimeRequestUser = TimeZoneInfo.ConvertTime(datetimeUtc,
                     TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
-                var courseScheduleDtoModel = new CourseScheduleDtoModel()
+                var courseScheduleDtoModel = new CourseScheduleDtoModel
                 {
-                    DateTimeRequest = dateTimeOffsetRequestUser
+                    DateTimeRequest = datetimeRequestUser,
+                    GroupName = requestModel?.GroupName
                 };
 
-                // отправляем запрос на получение расписания
-                var courseScheduleResultModel = _courseScheduleService.Get(courseScheduleDtoModel);
-
                 // подготавливаем ViewModel для отображения
-                var courseScheduleViewModel = _courseScheduleService.PrepareViewModel(courseScheduleResultModel);
+                var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
 
                 return Ok(courseScheduleViewModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // log
-                return BadRequest(ex);
+                return BadRequest(new CourseScheduleViewModel());
             }
         }
 
         /// <summary>
-        /// Метод для обновления данных о расписании в базе данных.
+        /// Метод для обновления данных о расписании.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        [Route("update")]
+        [HttpGet("update")]
         public async Task<IActionResult> UpdateAsyncCourseSchedule(
             CancellationToken cancellationToken)
         {
@@ -92,7 +82,26 @@ namespace StudentAssistant.Backend.Controllers
 
                 return Ok("Данные обновлены!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для получения даты последнего изменения файла с расписанием.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lastupdate")]
+        public async Task<IActionResult> GetLastUpdateCourseSchedule()
+        {
+            try
+            {
+                var result = _courseScheduleService.GetLastAccessTimeUtc();
+
+                return Ok(await result);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }

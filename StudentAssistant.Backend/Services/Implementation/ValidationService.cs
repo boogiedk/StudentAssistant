@@ -2,6 +2,7 @@
 using StudentAssistant.Backend.Models.Validation;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -24,7 +25,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public ValidationResultModel PrepareErrorResult(UserFeedbackResultModel input)
         {
-            var errorModel = new ValidationResultModel();
+            ValidationResultModel errorModel;
 
             if (input == null)
             {

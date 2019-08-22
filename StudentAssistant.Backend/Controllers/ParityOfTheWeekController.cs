@@ -1,8 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services;
+using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -11,14 +14,12 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/parity")]
-    public class ParityOfTheWeekController : ControllerBase
+    [AllowAnonymous]
+    [EnableCors("CorsPolicy")]
+    public class ParityOfTheWeekController : Controller
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
-        /// <summary>
-        /// Основной конструктор.
-        /// </summary>
-        /// <param name="parityOfTheWeekService"></param>
         public ParityOfTheWeekController(IParityOfTheWeekService parityOfTheWeekService)
         {
             _parityOfTheWeekService = parityOfTheWeekService;
@@ -29,8 +30,7 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns><see cref="ParityOfTheWeekViewModel"/>Модель представления.</returns>
         /// <param name="requestModel">Модель, содержащая выбранную дату.</param>
-        [HttpPost]
-        [Route("selected")] 
+        [HttpPost("selected")]
         public IActionResult GenerateParityOfTheWeek([FromBody]ParityOfTheWeekRequestModel requestModel)
         {
             try

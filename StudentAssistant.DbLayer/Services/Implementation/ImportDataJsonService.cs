@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Services.Interfaces;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
@@ -11,12 +9,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
     {
         private readonly CourseScheduleDataServiceConfigurationModel _courseScheduleDataServiceConfigurationModel;
 
-        public ImportDataJsonService(IOptions<CourseScheduleDataServiceConfigurationModel> courseScheduleDataServiceConfigurationModel, IImportDataExcelService importDataExcelService)
+        public ImportDataJsonService(IOptions<CourseScheduleDataServiceConfigurationModel> courseScheduleDataServiceConfigurationModel)
         {
             _courseScheduleDataServiceConfigurationModel = courseScheduleDataServiceConfigurationModel.Value;
         }
 
-        public List<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
+        public IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
         {
             return _courseScheduleDataServiceConfigurationModel?.ListCourseScheduleDatabaseModel;
         }
