@@ -10,6 +10,8 @@
 
 Student Assistant - this is a web service with an open source project. The created for a convenient and flexible way to monitor the study schedule. 
 
+You can try use it here: http://studyass.site
+
 ## Overview
 
 ### Schedule
