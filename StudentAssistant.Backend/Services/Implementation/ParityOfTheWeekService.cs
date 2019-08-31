@@ -26,10 +26,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public bool GetParityOfTheWeekByDateTime(DateTimeOffset dateTimeOffsetParam)
         {
-            var timeNow = dateTimeOffsetParam;
-
-            int firstDayOfStudy = (int)new DateTime(timeNow.Year, 9, 1).DayOfWeek;
-            int weekNumber = (timeNow.DayOfYear + firstDayOfStudy) / 7 + 1;
+            var weekNumber = GetNumberOfSemester(dateTimeOffsetParam, _parityOfTheWeekConfigurationModel.StartLearningYear);
 
             if (weekNumber % 2 == 0)
             {
@@ -209,7 +206,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             resultViewModel.StatusDay = input.StatusDay.Humanize();
             resultViewModel.IsParity = input.ParityOfWeekToday;
             // тестовый вариант
-            resultViewModel.SelectedDateStringValue = input.DateTimeRequest.Date 
+            resultViewModel.SelectedDateStringValue = input.DateTimeRequest.Date
                                                       == DateTimeOffset.UtcNow.Date ? "Сегодня" : "Выбрано";
             //
 
