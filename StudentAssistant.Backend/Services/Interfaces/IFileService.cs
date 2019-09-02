@@ -26,9 +26,17 @@ namespace StudentAssistant.Backend.Services.Interfaces
            CancellationToken cancellationToken);
 
        /// <summary>
-       /// Возвращает дату последней записи в файл.
+       /// Скачивает Excel файл с URL университета.
        /// </summary>
        /// <returns></returns>
-       Task<DateTime> GetLastWriteTime();
+       Task DownloadByLinkAsync(
+           Uri uri,
+           CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Возвращает дату последней записи в файл.
+        /// </summary>
+        /// <returns></returns>
+        Task<DateTime> GetLastWriteTime();
    }
 }

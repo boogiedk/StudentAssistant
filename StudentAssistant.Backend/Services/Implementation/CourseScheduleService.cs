@@ -145,6 +145,25 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
+        public async Task UpdateByLinkAsync(
+            CourseScheduleUpdateByLinkAsyncModel request,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if(request == null) return;
+
+                    await _fileService.DownloadByLinkAsync(request.Uri,
+                        cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
+            }
+        }
+
         public Task<CourseScheduleUpdateResponseModel> GetLastAccessTimeUtc() => Task.Run(() =>
         {
             try

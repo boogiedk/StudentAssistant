@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services;
 using StudentAssistant.Backend.Services.Interfaces;
 
@@ -79,6 +80,27 @@ namespace StudentAssistant.Backend.Controllers
             try
             {
                 await _courseScheduleService.UpdateAsync(cancellationToken);
+
+                return Ok("Данные обновлены!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для обновления данных о расписании.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("updatebylink")]
+        public async Task<IActionResult> UpdateAsyncCourseScheduleByLink(
+            CourseScheduleUpdateByLinkAsyncModel request,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _courseScheduleService.UpdateByLinkAsync(request, cancellationToken);
 
                 return Ok("Данные обновлены!");
             }
