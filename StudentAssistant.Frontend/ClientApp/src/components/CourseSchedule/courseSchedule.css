@@ -34,3 +34,18 @@ input[type="email"],
 input[type="date"] {
 	height: 2.375rem;
 }
+
+  .courseNameStyle {
+    font-weight: 600; /* bold */
+  }
+ .coursePlaceStyle {
+   font-style: italic;
+ }
+ .courseTypeStyle {
+ }
+ .teacherFullNameStyle {
+   font-style: italic;
+ }
+ .numberWeekStyle {
+   
+ }

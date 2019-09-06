@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import "./courseSchedule.css";
 
 const url = 'http://localhost:18936';
@@ -59,59 +59,90 @@ export class courseSchedule extends Component {
         })
             .then(res => res.json())
             .then(data => {
-                this.setState({ courseScheduleModel: data, loading: false });
+                this.setState({courseScheduleModel: data, loading: false});
             })
             .then(response => JSON.stringify(response))
             .catch(error => console.error('Error:', error));
     }
 
-    static renderCourseSchedule(courseScheduleModel) {
+    static renderCourseScheduleOld(courseScheduleModel) {
         return (
             <table className='table table-striped'>
                 <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Начало</th>
-                        <th>Конец</th>
-                        <th>Название</th>
-                        <th>Кабинет</th>
-                        <th>Тип</th>
-                        <th>Преподаватель</th>
-                        <th>Номера</th>
-                    </tr>
+                <tr>
+                    <th>№</th>
+                    <th>Начало</th>
+                    <th>Конец</th>
+                    <th>Название</th>
+                    <th>Кабинет</th>
+                    <th>Тип</th>
+                    <th>Преподаватель</th>
+                    <th>Номера</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {courseScheduleModel.coursesViewModel.map(courseViewModel =>
-                        <tr key={courseViewModel.courseNumber}>
-                            <td>{courseViewModel.courseNumber}</td>
-                            <td>{courseViewModel.startOfClasses}</td>
-                            <td>{courseViewModel.endOfClasses}</td>
-                            <td>{courseViewModel.courseName}</td>
-                            <td>{courseViewModel.coursePlace}</td>
-                            <td>{courseViewModel.courseType}</td>
-                            <td>{courseViewModel.teacherFullName}</td>
-                            <td>{courseViewModel.numberWeek}</td>
-                        </tr>
-                    )}
+                {courseScheduleModel.coursesViewModel.map(courseViewModel =>
+                    <tr key={courseViewModel.courseNumber}>
+                        <td>{courseViewModel.courseNumber}</td>
+                        <td>{courseViewModel.startOfClasses}</td>
+                        <td>{courseViewModel.endOfClasses}</td>
+                        <td>{courseViewModel.courseName}</td>
+                        <td>{courseViewModel.coursePlace}</td>
+                        <td>{courseViewModel.courseType}</td>
+                        <td>{courseViewModel.teacherFullName}</td>
+                        <td>{courseViewModel.numberWeek}</td>
+                    </tr>
+                )}
                 </tbody>
             </table>
         );
 
     }
 
+    static renderCourseSchedule(courseScheduleModel) {
+        return (
+            <table className='table table-striped'>
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Начало</th>
+                    <th>Конец</th>
+                    <th>Название</th>
+                </tr>
+                </thead>
+                <tbody>
+                {courseScheduleModel.coursesViewModel.map(courseViewModel =>
+                    <tr key={courseViewModel.courseNumber}>
+                        <td>{courseViewModel.courseNumber}</td>
+                        <td>{courseViewModel.startOfClasses}</td>
+                        <td>{courseViewModel.endOfClasses}</td>
+                        <td>
+                            <div className="courseNameStyle"> {courseViewModel.courseName} </div>
+                            <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
+                            <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
+                            <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
+                            <div className="numberWeekStyle"> {courseViewModel.numberWeek}</div>
+                        </td>
+                    </tr>
+                )}
+                </tbody>
+            </table>
+        );
+
+    }
+
+
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : courseSchedule.renderCourseSchedule(
-                this.state.courseScheduleModel
-            );
-
+            : courseSchedule.renderCourseSchedule(this.state.courseScheduleModel);
         return (
             <div>
                 <h1>Расписание</h1>
 
-                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest}, 
-                <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая неделя.</p>
+                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
+                    <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая
+                    неделя.</p>
 
                 <p>
                     <label className="labelChooseGroup">Выберите группу: </label>

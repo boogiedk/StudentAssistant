@@ -70,6 +70,45 @@ namespace StudentAssistant.Backend.Controllers
         }
 
         /// <summary>
+        /// Метод для получения расписания на сегодня.
+        /// </summary>
+        /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
+        [HttpPost("today")]
+        public IActionResult GetToday()
+        {
+            try
+            {
+                // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
+                var userAccountRequestData = new UserAccountRequestDataCourseSchedule
+                {
+                    TimeZoneId = TimeZoneInfo.Local.Id, //"Russian Standard Time"
+                    GroupName = "БББО-01-16"
+                };
+
+                var datetimeUtc = DateTime.UtcNow;
+
+                // переводим utc время в часовой пояс пользователя
+                var datetimeRequestUser = TimeZoneInfo.ConvertTime(datetimeUtc,
+                    TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
+
+                var courseScheduleDtoModel = new CourseScheduleDtoModel
+                {
+                    DateTimeRequest = datetimeRequestUser,
+                    GroupName = userAccountRequestData.GroupName
+                };
+
+                // подготавливаем ViewModel для отображения
+                var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
+
+                return Ok(courseScheduleViewModel);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new CourseScheduleViewModel());
+            }
+        }
+
+        /// <summary>
         /// Метод для обновления данных о расписании.
         /// </summary>
         /// <returns></returns>
@@ -89,11 +128,12 @@ namespace StudentAssistant.Backend.Controllers
             }
         }
 
+
         /// <summary>
-        /// Метод для обновления данных о расписании.
+        /// Метод для обновления данных о расписании по ссылке.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("updatebylink")]
+        [HttpPost("update")]
         public async Task<IActionResult> UpdateAsyncCourseScheduleByLink(
             CourseScheduleUpdateByLinkAsyncModel request,
             CancellationToken cancellationToken)
@@ -119,9 +159,9 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                var result = _courseScheduleService.GetLastAccessTimeUtc();
+                var result = await _courseScheduleService.GetLastAccessTimeUtc();
 
-                return Ok(await result);
+                return Ok(result);
             }
             catch (Exception ex)
             {
