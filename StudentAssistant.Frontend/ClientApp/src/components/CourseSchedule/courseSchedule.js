@@ -1,7 +1,19 @@
 import React, {Component} from 'react';
 import "./courseSchedule.css";
 
-const url = 'http://localhost:18936';
+import DatePicker, {registerLocale} from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import ru from "date-fns/locale/ru";
+
+registerLocale("ru", ru);
+
+const url = 'http://localhost:18935';
+
+const CalendarCustomInput = (
+    {onClick}) => (
+    <button className="btn" onClick={onClick} id="calendarIcon"/>
+);
 
 export class courseSchedule extends Component {
 
@@ -13,13 +25,13 @@ export class courseSchedule extends Component {
             selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(),
             loading: true,
             groupName: 'БББО-01-16'
-
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeCalendar = this.handleChangeCalendar.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
 
+        // default values
         this.groupName = 'БББО-01-16';
-
         this.selectedDate = new Date();
 
         // по дефолту отправляем Date.Now()
@@ -28,9 +40,16 @@ export class courseSchedule extends Component {
 
     handleChange(event) {
         this.setState({
-            selectedDate: event.target.value,
+            selectedDate: event.target.value || new Date(),
         });
         this.getCourseScheduleModel(event.target.value);
+    }
+
+    handleChangeCalendar(date) {
+        this.setState({
+            selectedDate: date
+        });
+        this.getCourseScheduleModel(date);
     }
 
     handleChangeSelect(event) {
@@ -38,6 +57,7 @@ export class courseSchedule extends Component {
             groupName: event.target.value,
         });
     }
+
 
     getCourseScheduleModel(selectedDatetime) {
         let path = url + '/api/v1/schedule/selected';
@@ -136,6 +156,7 @@ export class courseSchedule extends Component {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : courseSchedule.renderCourseSchedule(this.state.courseScheduleModel);
+
         return (
             <div>
                 <h1>Расписание</h1>
@@ -154,7 +175,7 @@ export class courseSchedule extends Component {
                 </p>
 
                 <p>
-                    <label className="labelChooseDate">Выберите дату:</label>
+                    <label className="labelChooseDate">Выберите дату: </label>
                     <input
                         type="date"
                         className="inputTextbox"
@@ -163,6 +184,15 @@ export class courseSchedule extends Component {
                         required="required"
                         name="inputTextbox"
                         id="inputTextbox"
+                    />
+                    <DatePicker
+                        className="imageBackground"
+                        value={this.state.selectedDate}
+                        onChange={this.handleChangeCalendar}
+                        locale="ru"
+                        customInput={<CalendarCustomInput/>}
+                        disabledKeyboardNavigation
+                        popperPlacement="bottom-end"
                     />
                 </p>
 
