@@ -18,11 +18,16 @@
     <None Remove="$(SpaRoot)**" />
     <None Remove="Pages\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-    <None Include="ClientApp\src\components\CalendarCustomInput.js" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\public\favicon.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

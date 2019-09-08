@@ -6,14 +6,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import ru from "date-fns/locale/ru";
 
+import moment from 'moment';
+
 registerLocale("ru", ru);
 
-const url = 'http://localhost:18935';
-
-const CalendarCustomInput = (
-    {onClick}) => (
-    <button className="btn" onClick={onClick} id="calendarIcon"/>
-);
+const url = 'http://localhost:18936';
 
 export class courseSchedule extends Component {
 
@@ -40,15 +37,17 @@ export class courseSchedule extends Component {
 
     handleChange(event) {
         this.setState({
-            selectedDate: event.target.value || new Date(),
+            selectedDate: event.target.value,
         });
+
         this.getCourseScheduleModel(event.target.value);
     }
 
     handleChangeCalendar(date) {
         this.setState({
-            selectedDate: date
+            selectedDate: moment(date).format('YYYY-MM-DD')
         });
+        
         this.getCourseScheduleModel(date);
     }
 
@@ -57,7 +56,6 @@ export class courseSchedule extends Component {
             groupName: event.target.value,
         });
     }
-
 
     getCourseScheduleModel(selectedDatetime) {
         let path = url + '/api/v1/schedule/selected';
@@ -174,7 +172,7 @@ export class courseSchedule extends Component {
                     </select>
                 </p>
 
-                <p>
+                <span>
                     <label className="labelChooseDate">Выберите дату: </label>
                     <input
                         type="date"
@@ -185,16 +183,19 @@ export class courseSchedule extends Component {
                         name="inputTextbox"
                         id="inputTextbox"
                     />
-                    <DatePicker
-                        className="imageBackground"
-                        value={this.state.selectedDate}
-                        onChange={this.handleChangeCalendar}
-                        locale="ru"
-                        customInput={<CalendarCustomInput/>}
-                        disabledKeyboardNavigation
-                        popperPlacement="bottom-end"
-                    />
-                </p>
+                     <DatePicker
+                         className="calendarIcon"
+                         value={this.state.selectedDate}
+                         onChange={this.handleChangeCalendar}
+                         locale="ru"
+                         customInput={
+                             <button className="btn" id="calendarIcon"/>
+                         }
+                         disabledKeyboardNavigation
+                         dateFormat="YYYY-MM-DD"
+                         popperPlacement="bottom-end"
+                     />
+                </span>
 
                 {contents}
 
