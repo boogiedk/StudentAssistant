@@ -9,5 +9,10 @@
         /// Идентификатор часового пояса пользователя.
         /// </summary>
         public string TimeZoneId { get; set; }
+
+        /// <summary>
+        /// Группа.
+        /// </summary>
+        public string GroupName { get; set; }
     }
 }

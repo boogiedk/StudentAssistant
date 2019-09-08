@@ -28,5 +28,15 @@ namespace StudentAssistant.Backend.Services.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<CourseScheduleUpdateResponseModel> GetLastAccessTimeUtc();
+
+        /// <summary>
+        /// Обновить расписание по ссылке.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task UpdateByLinkAsync(
+            CourseScheduleUpdateByLinkAsyncModel request,
+            CancellationToken cancellationToken);
     }
 }

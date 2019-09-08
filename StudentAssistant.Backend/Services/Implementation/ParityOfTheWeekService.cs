@@ -26,7 +26,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public bool GetParityOfTheWeekByDateTime(DateTimeOffset dateTimeOffsetParam)
         {
-            var weekNumber = GetNumberOfSemester(dateTimeOffsetParam, _parityOfTheWeekConfigurationModel.StartLearningYear);
+            var weekNumber = GetCountParityOfWeek(dateTimeOffsetParam);
 
             if (weekNumber % 2 == 0)
             {

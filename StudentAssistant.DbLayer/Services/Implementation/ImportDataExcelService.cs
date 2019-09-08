@@ -240,9 +240,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 return importDataExcelModels;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
                 throw new NotSupportedException();
             }
         }
@@ -357,8 +356,11 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     return CourseType.Practicte;
                 case "лр":
                     return CourseType.LaboratoryWork;
+                case "лб":
+                    return CourseType.LaboratoryWork;
                 case "лек":
                     return CourseType.Lecture;
+                
                 default:
                     return CourseType.Other;
             }

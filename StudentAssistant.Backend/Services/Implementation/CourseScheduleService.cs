@@ -127,10 +127,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // TODO: вынести в конфиг
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
+                    //https://www.mirea.ru/upload/medialibrary/a72/KBiSP-4-kurs-1-sem.xlsx
                     PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
-                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/3d4/"),
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/a72/"),
                     FileNameLocal = "scheduleFile",
-                    FileNameRemote = "KBiSP-3-kurs-2-sem",
+                    FileNameRemote = "KBiSP-4-kurs-1-sem",
                     FileFormat = "xlsx"
                 };
 
@@ -138,6 +139,25 @@ namespace StudentAssistant.Backend.Services.Implementation
                 if (!isNewFile.Result)
                     await _fileService.DownloadAsync(
                     downloadFileParametersModel, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
+            }
+        }
+
+        public async Task UpdateByLinkAsync(
+            CourseScheduleUpdateByLinkAsyncModel request,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if(request == null) return;
+
+                    await _fileService.DownloadByLinkAsync(request.Uri,
+                        cancellationToken);
             }
             catch (Exception ex)
             {
