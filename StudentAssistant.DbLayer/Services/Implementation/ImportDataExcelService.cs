@@ -399,7 +399,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 return numbers;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //exception handler
             }

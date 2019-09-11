@@ -19,9 +19,10 @@ export class courseSchedule extends Component {
         this.state = {
             courseScheduleModel: [],
             dateTimeString: '',
-            selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(),
+            selectedDate: moment(new Date()).format('YYYY-MM-DD'),
             loading: true,
-            groupName: 'БББО-01-16'
+            groupName: 'БББО-01-16',
+            isWeekday: true
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeCalendar = this.handleChangeCalendar.bind(this);
@@ -29,7 +30,7 @@ export class courseSchedule extends Component {
 
         // default values
         this.groupName = 'БББО-01-16';
-        this.selectedDate = new Date();
+        this.selectedDate = moment(new Date()).format('YYYY-MM-DD');
 
         // по дефолту отправляем Date.Now()
         this.getCourseScheduleModel(this.selectedDate);
@@ -47,7 +48,7 @@ export class courseSchedule extends Component {
         this.setState({
             selectedDate: moment(date).format('YYYY-MM-DD')
         });
-        
+
         this.getCourseScheduleModel(date);
     }
 
@@ -55,6 +56,11 @@ export class courseSchedule extends Component {
         this.setState({
             groupName: event.target.value,
         });
+    }
+
+    isWeekday(date) {
+        const day = date.getDay();
+        return day !== 0 //&& day !== 6 // воскресение заблокировано
     }
 
     getCourseScheduleModel(selectedDatetime) {
@@ -149,30 +155,30 @@ export class courseSchedule extends Component {
 
     }
 
-
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : courseSchedule.renderCourseSchedule(this.state.courseScheduleModel);
 
-        return (
-            <div>
-                <h1>Расписание</h1>
+        {
+            return (
+                <div>
+                    <h1>Расписание</h1>
 
-                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
-                    <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая
-                    неделя.</p>
+                    <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
+                        <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая
+                        неделя.</p>
 
-                <p>
-                    <label className="labelChooseGroup">Выберите группу: </label>
-                    <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
-                        <option value="БББО-01-16">БББО-01-16</option>
-                        <option value="БББО-02-16">БББО-02-16</option>
-                        <option value="БББО-03-16">БББО-03-16</option>
-                    </select>
-                </p>
+                    <p>
+                        <label className="labelChooseGroup">Выберите группу: </label>
+                        <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
+                            <option value="БББО-01-16">БББО-01-16</option>
+                            <option value="БББО-02-16">БББО-02-16</option>
+                            <option value="БББО-03-16">БББО-03-16</option>
+                        </select>
+                    </p>
 
-                <span>
+                    <span>
                     <label className="labelChooseDate">Выберите дату: </label>
                     <input
                         type="date"
@@ -194,14 +200,15 @@ export class courseSchedule extends Component {
                          disabledKeyboardNavigation
                          dateFormat="YYYY-MM-DD"
                          popperPlacement="bottom-end"
+                         filterDate={this.isWeekday}
                      />
                 </span>
 
-                {contents}
+                    {contents}
 
-                <i>Последнее обновление расписания: {this.state.courseScheduleModel.updateDatetime}</i>
-            </div>
-        );
+                    <i>Последнее обновление расписания: {this.state.courseScheduleModel.updateDatetime}</i>
+                </div>
+            );
+        }
     }
-
 }
