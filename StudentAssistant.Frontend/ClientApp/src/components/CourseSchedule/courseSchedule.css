@@ -74,4 +74,9 @@ input[type="date"] {
       margin-top: 25px;
   }
   
+  .infoMessage {
+      margin-top: 20px;
+      text-align: center;
+  }
+  
  
