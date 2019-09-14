@@ -58,6 +58,34 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
+        public async Task DownloadByLinkAsync(Uri uri, CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using (var client = new HttpClient())
+                {
+                    using (var result = await client.GetAsync(uri,
+                        cancellationToken))
+                    {
+                        if (result.IsSuccessStatusCode)
+                        {
+                            var fileBytes = await result.Content.ReadAsByteArrayAsync();
+
+                            await File.WriteAllBytesAsync(
+                             _pathToFile,
+                                fileBytes, cancellationToken);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("Ошибка во время выполнения." + ex);
+            }
+        }
+
         public Task<DateTime> GetLastWriteTime() => Task.Run(() =>
         {
             var lastAccessTimeUtc = File.GetLastWriteTime (

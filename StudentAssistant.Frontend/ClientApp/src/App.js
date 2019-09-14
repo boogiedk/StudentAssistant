@@ -4,9 +4,6 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home/Home';
 import {courseSchedule} from './components/CourseSchedule/courseSchedule'
 
-//<Route path='/counter' component={Counter} />
-//<Route path='/fetch-data' component={FetchData} />
-
 export default class App extends Component {
   static displayName = 'App.name';
 

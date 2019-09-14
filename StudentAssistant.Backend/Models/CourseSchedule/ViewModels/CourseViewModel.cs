@@ -1,4 +1,7 @@
-﻿namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
+﻿using System;
+using System.Collections.Generic;
+
+namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
 {
     /// <summary>
     /// Модель представления с данными о днях из расписания.
@@ -7,11 +10,11 @@
     {
         public CourseViewModel()
         {
-            CourseName = "Данных не найдено";
-            TeacherFullName = "Данных не найдено";
-            CourseType = "Данных не найдено";
-            CoursePlace = "Данных не найдено";
-            ParityWeek = "Данных не найдено";
+            CourseName = String.Empty;
+            TeacherFullName = String.Empty;
+            CourseType = String.Empty;
+            CoursePlace = String.Empty;
+            ParityWeek = String.Empty;
         }
 
 
@@ -59,5 +62,10 @@
         /// Окончание Занятий.
         /// </summary>
         public string EndOfClasses { get; set; }
+        
+        /// <summary>
+        /// Группы, с которыми объединенные пары.
+        /// </summary>
+        public string CombinedGroup { get; set; }
     }
 }
