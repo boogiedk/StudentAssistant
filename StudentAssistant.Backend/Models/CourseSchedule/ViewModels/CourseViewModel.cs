@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
 {
@@ -61,5 +62,10 @@ namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
         /// Окончание Занятий.
         /// </summary>
         public string EndOfClasses { get; set; }
+        
+        /// <summary>
+        /// Группы, с которыми объединенные пары.
+        /// </summary>
+        public string CombinedGroup { get; set; }
     }
 }

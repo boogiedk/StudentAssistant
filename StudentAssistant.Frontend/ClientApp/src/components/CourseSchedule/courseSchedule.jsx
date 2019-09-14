@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import "./courseSchedule.css";
 
+
+import Popup from "reactjs-popup";
+
 import DatePicker, {registerLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import ru from "date-fns/locale/ru";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import moment from 'moment';
 import {TitleComponent} from "../TitleComponent/TitleComponent";
@@ -60,6 +65,7 @@ export class courseSchedule extends Component {
         this.setState({
             groupName: event.target.value,
         });
+        this.getCourseScheduleModel(this.selectedDate);
     }
 
     isWeekday(date) {
@@ -129,7 +135,8 @@ export class courseSchedule extends Component {
 
     static renderCourseSchedule(courseScheduleModel) {
 
-        if (courseScheduleModel.coursesViewModel.length === 1 &
+        if (courseScheduleModel !== undefined &
+            courseScheduleModel.coursesViewModel.length === 1 &
             courseScheduleModel.coursesViewModel[0].courseName === "") {
             return (
                 // если кол-во моделей 1 - значит есть вероятность, что модель пустая
@@ -158,7 +165,15 @@ export class courseSchedule extends Component {
                             <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
                             <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
                             <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
-                            <div className="numberWeekStyle"> {courseViewModel.numberWeek}</div>
+
+                            <Popup trigger={<button className="icon"></button>} position="top center">
+                                <div>
+                                    <div
+                                        className="combinedGroupStyle"> {courseViewModel.combinedGroup !== "" ? "Совмещено с " + courseViewModel.combinedGroup : "Несовмещенная пара"}</div>
+                                    Пара повторяется на <div
+                                    className="numberWeekStyle"> {courseViewModel.numberWeek !== "" ? "" + courseViewModel.numberWeek : "каждой " + courseViewModel.parityWeek}</div> неделе.
+                                </div>
+                            </Popup>
                         </td>
                     </tr>
                 )}
@@ -192,11 +207,13 @@ export class courseSchedule extends Component {
                     </React.Fragment>
 
                     <h1>Расписание</h1>
-
-                    <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
-                        <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая
-                        неделя.</p>
-
+                    {
+                        this.state.courseScheduleModel.length!==0 ?
+                        <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
+                            <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek===3 
+                                ? this.state.courseScheduleModel.numberWeek + "-я" 
+                                : this.state.courseScheduleModel.numberWeek + "-ая " } неделя.
+                        </p> : <p className="infoMessage"><em>Идет загрузка данных...</em></p>}
                     <p>
                         <label className="labelChooseGroup">Выберите группу: </label>
                         <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
