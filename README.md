@@ -20,13 +20,13 @@ Student Assistant provide service education schedule for students. With help cal
 
 The schedule tab looks like this:
 <p align="center">
- <img width="900" height="500" align="center" src="https://pp.userapi.com/c855420/v855420888/c6bab/-p8gIBa0Qq8.jpg">
+ <img width="900" height="500" align="center" src="https://sun9-20.userapi.com/c851532/v851532849/1b0fa3/CQ77BSThUcE.jpg">
 </p>
 
-So, thanks tag `<input />` you can use native implementation calendar in browser or mobile. For example, calendar look like this on IOS mobile:
+So in the screenshot below you can see what can Student Asssitant application. For example, thanks tag `<input />` you can use native implementation calendar in browser or mobile or thanks other npm packages you can use popup window and calendar widget.
 
 <p align="center">
- <img width="450" height="800" align="center" src="https://pp.userapi.com/c850720/v850720007/198b4f/W4HhyGUJ98s.jpg">
+ <img align="center" src="https://sun9-27.userapi.com/c857736/v857736849/7557c/wUWPWA9ZD4s.jpg">
 </p>
 
 Supports all browsers, including an Internet Explorer (not without problems, but it works).
