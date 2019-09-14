@@ -82,7 +82,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                         NameOfDayWeek = parameters.NameOfDayWeek.ToUpper(), //input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
                         DatetimeRequest = parameters.DatetimeRequest.Date.ToShortDateString(),
                         UpdateDatetime = _fileService.GetLastWriteTime().Result.ToShortDateString(),
-                        CoursesViewModel = new List<CourseViewModel> { new CourseViewModel() }
+                        CoursesViewModel = new List<CourseViewModel> { new CourseViewModel() },
+                        NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(parameters.DatetimeRequest.Date)
                     };
 
                     return emptyCourseScheduleViewModel;

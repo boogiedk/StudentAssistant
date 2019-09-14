@@ -1,77 +1,112 @@
 
-  label {
-      margin-right: 10px;
-      width: 130px;
-  }
+label {
+    margin-right: 10px;
+    width: 130px;
+}
 
-  /*[type="date"] {
-    background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
-  }*/
-  
-  [type="date"]::-webkit-inner-spin-button {
+/*[type="date"] {
+  background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+}*/
+
+[type="date"]::-webkit-inner-spin-button {
     display: none;
-  }
+}
 
-  [type="date"]::-webkit-calendar-picker-indicator {
+[type="date"]::-webkit-calendar-picker-indicator {
     opacity: 0;
-  }
-  
-  input, select {
+}
+
+input, select {
     border: 1px solid #c4c4c4;
     border-radius: 5px;
     background-color: #fff;
     padding: 3px 5px;
-    box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
     width: 180px;
-  }
-  
-  .inputDate {
-      border: 1px solid #c4c4c4;
-      border-radius: 5px;
-      background-color: #fff;
-      padding: 3px 5px;
-      box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
-      width: 180px;
-  }
+}
 
-  select {
+.inputDate {
+    border: 1px solid #c4c4c4;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 3px 5px;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    width: 180px;
+}
+
+select {
     height: 2.375rem;
-  }
+}
 
 input[type="text"],
 input[type="email"],
 input[type="date"] {
-	height: 2.375rem;
+    height: 2.375rem;
 }
 
-  .courseNameStyle {
+.courseNameStyle {
     font-weight: 600; /* bold */
-  }
- .coursePlaceStyle {
-   font-style: italic;
- }
- .courseTypeStyle {
- }
- .teacherFullNameStyle {
-   font-style: italic;
- }
- .numberWeekStyle {
- }
+}
 
-  button {
-      display: inline-block;
-      padding: 0;
-      margin: 0;
-      vertical-align: top;
-  }
+.coursePlaceStyle {
+    font-style: italic;
+}
 
-  .calendarIcon {
-      background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat
-  }
+.courseTypeStyle {
+}
 
-  .table, .table-striped
-  {
-      margin-top: 25px;
-  }
+.teacherFullNameStyle {
+    font-style: italic;
+}
+
+.numberWeekStyle {
+}
+
+button {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+}
+
+.calendarIcon {
+    background: #fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png) 97% 50% no-repeat
+}
+
+.table, .table-striped {
+    margin-top: 25px;
+}
+
+.infoMessage {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.combinedGroupStyle {
+    /*    font-weight: 600; 
+    font-size: 10px;
+    */
+}
+
+.popup {
+    height: 20px;
+}
+
+.button {
+
+}
+
+.icon {
+    background: url(https://image.flaticon.com/icons/svg/1/1176.svg) no-repeat;
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
   
  

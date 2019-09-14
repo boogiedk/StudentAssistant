@@ -56,5 +56,10 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
         /// Окончание Занятий.
         /// </summary>
         public string EndOfClasses { get; set; }
+        
+        /// <summary>
+        /// Группы, с которыми объединенные пары.
+        /// </summary>
+        public List<string> CombinedGroup { get; set; }
     }
 }

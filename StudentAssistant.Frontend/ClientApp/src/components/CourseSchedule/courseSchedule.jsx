@@ -1,27 +1,37 @@
 import React, {Component} from 'react';
 import "./courseSchedule.css";
 
+
+import Popup from "reactjs-popup";
+
 import DatePicker, {registerLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import ru from "date-fns/locale/ru";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import moment from 'moment';
+import {TitleComponent} from "../TitleComponent/TitleComponent";
 
 registerLocale("ru", ru);
 
 const url = 'http://localhost:18936';
 
+const title = "Расписание - Student Assistant";
+
 export class courseSchedule extends Component {
+
 
     constructor(props) {
         super(props);
         this.state = {
             courseScheduleModel: [],
             dateTimeString: '',
-            selectedDate: new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate(),
+            selectedDate: moment(new Date()).format('YYYY-MM-DD'),
             loading: true,
-            groupName: 'БББО-01-16'
+            groupName: 'БББО-01-16',
+            isWeekday: true
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeCalendar = this.handleChangeCalendar.bind(this);
@@ -29,7 +39,7 @@ export class courseSchedule extends Component {
 
         // default values
         this.groupName = 'БББО-01-16';
-        this.selectedDate = new Date();
+        this.selectedDate = moment(new Date()).format('YYYY-MM-DD');
 
         // по дефолту отправляем Date.Now()
         this.getCourseScheduleModel(this.selectedDate);
@@ -47,7 +57,7 @@ export class courseSchedule extends Component {
         this.setState({
             selectedDate: moment(date).format('YYYY-MM-DD')
         });
-        
+
         this.getCourseScheduleModel(date);
     }
 
@@ -55,6 +65,12 @@ export class courseSchedule extends Component {
         this.setState({
             groupName: event.target.value,
         });
+        this.getCourseScheduleModel(this.selectedDate);
+    }
+
+    isWeekday(date) {
+        const day = date.getDay();
+        return day !== 0 //&& day !== 6 // воскресение заблокировано
     }
 
     getCourseScheduleModel(selectedDatetime) {
@@ -118,6 +134,16 @@ export class courseSchedule extends Component {
     }
 
     static renderCourseSchedule(courseScheduleModel) {
+
+        if (courseScheduleModel !== undefined &
+            courseScheduleModel.coursesViewModel.length === 1 &
+            courseScheduleModel.coursesViewModel[0].courseName === "") {
+            return (
+                // если кол-во моделей 1 - значит есть вероятность, что модель пустая
+                // далее проверяем имя первой пары и убеждаемся в этом
+                <p className="infoMessage"><em>Пар не найдено. Попробуйте выбрать другой день</em></p>)
+        }
+
         return (
             <table className='table table-striped'>
                 <thead>
@@ -139,7 +165,15 @@ export class courseSchedule extends Component {
                             <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
                             <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
                             <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
-                            <div className="numberWeekStyle"> {courseViewModel.numberWeek}</div>
+
+                            <Popup trigger={<button className="icon"></button>} position="top center">
+                                <div>
+                                    <div
+                                        className="combinedGroupStyle"> {courseViewModel.combinedGroup !== "" ? "Совмещено с " + courseViewModel.combinedGroup : "Несовмещенная пара"}</div>
+                                    Пара повторяется на <div
+                                    className="numberWeekStyle"> {courseViewModel.numberWeek !== "" ? "" + courseViewModel.numberWeek : "каждой " + courseViewModel.parityWeek}</div> неделе.
+                                </div>
+                            </Popup>
                         </td>
                     </tr>
                 )}
@@ -149,30 +183,47 @@ export class courseSchedule extends Component {
 
     }
 
+    static getTitle() {
+        return (
+            <React.Fragment>
+                <TitleComponent title={title}/>
+            </React.Fragment>
+        );
+    }
 
     render() {
+
         let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
+            ? <p className="infoMessage"><em>Идет загрузка расписания...</em></p>
             : courseSchedule.renderCourseSchedule(this.state.courseScheduleModel);
 
-        return (
-            <div>
-                <h1>Расписание</h1>
+        courseSchedule.getTitle();
 
-                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
-                    <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek}-ая
-                    неделя.</p>
+        if (contents != null) {
+            return (
+                <div>
+                    <React.Fragment>
+                        <TitleComponent title={title}/>
+                    </React.Fragment>
 
-                <p>
-                    <label className="labelChooseGroup">Выберите группу: </label>
-                    <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
-                        <option value="БББО-01-16">БББО-01-16</option>
-                        <option value="БББО-02-16">БББО-02-16</option>
-                        <option value="БББО-03-16">БББО-03-16</option>
-                    </select>
-                </p>
+                    <h1>Расписание</h1>
+                    {
+                        this.state.courseScheduleModel.length!==0 ?
+                        <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
+                            <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek===3 
+                                ? this.state.courseScheduleModel.numberWeek + "-я" 
+                                : this.state.courseScheduleModel.numberWeek + "-ая " } неделя.
+                        </p> : <p className="infoMessage"><em>Идет загрузка данных...</em></p>}
+                    <p>
+                        <label className="labelChooseGroup">Выберите группу: </label>
+                        <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
+                            <option value="БББО-01-16">БББО-01-16</option>
+                            <option value="БББО-02-16">БББО-02-16</option>
+                            <option value="БББО-03-16">БББО-03-16</option>
+                        </select>
+                    </p>
 
-                <span>
+                    <span>
                     <label className="labelChooseDate">Выберите дату: </label>
                     <input
                         type="date"
@@ -194,14 +245,20 @@ export class courseSchedule extends Component {
                          disabledKeyboardNavigation
                          dateFormat="YYYY-MM-DD"
                          popperPlacement="bottom-end"
+                         filterDate={this.isWeekday}
                      />
                 </span>
 
-                {contents}
+                    {contents}
 
-                <i>Последнее обновление расписания: {this.state.courseScheduleModel.updateDatetime}</i>
-            </div>
-        );
+                    <i>Последнее обновление расписания: {this.state.courseScheduleModel.updateDatetime}.</i>
+                </div>
+            );
+        } else {
+            return (
+                <p className="infoMessage"><em>Идет загрузка расписания...</em></p>
+            );
+        }
+
     }
-
 }
