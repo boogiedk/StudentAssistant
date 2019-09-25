@@ -134,10 +134,10 @@ export class courseSchedule extends Component {
     }
 
     static renderCourseSchedule(courseScheduleModel) {
-
-        if (courseScheduleModel !== undefined &
+        
+        if ((typeof courseScheduleModel == "undefined") || (
             courseScheduleModel.coursesViewModel.length === 1 &
-            courseScheduleModel.coursesViewModel[0].courseName === "") {
+            courseScheduleModel.coursesViewModel[0].courseName === "")) {
             return (
                 // если кол-во моделей 1 - значит есть вероятность, что модель пустая
                 // далее проверяем имя первой пары и убеждаемся в этом

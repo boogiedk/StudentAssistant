@@ -75,7 +75,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 // если отсутствуют данные о расписании, возвращаем пустую модель
-                if (!input.Any())
+                if (IsEmptyCourseSchedule(input))
                 {
                     var emptyCourseScheduleViewModel = new CourseScheduleViewModel
                     {
@@ -114,6 +114,30 @@ namespace StudentAssistant.Backend.Services.Implementation
             {
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
+        }
+
+        private bool IsEmptyCourseSchedule(IEnumerable<CourseScheduleModel> input)
+        {
+            if (input == null) throw new ArgumentNullException(nameof(input));
+
+            if (!input.Any())
+            {
+                return true;
+            }
+
+            var counterEmpty = 0;
+
+            foreach (var courseScheduleModel in input)
+            {
+                if (string.Equals(courseScheduleModel.CourseName, string.Empty)
+                    && string.Equals(courseScheduleModel.CoursePlace,string.Empty))
+                {
+                    counterEmpty++;
+                }
+            }
+
+            return counterEmpty == input.Count();
+
         }
 
         public async Task UpdateAsync(CancellationToken cancellationToken)
