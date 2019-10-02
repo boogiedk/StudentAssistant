@@ -73,7 +73,7 @@ namespace StudentAssistant.Backend.Controllers
         /// Метод для получения расписания на сегодня.
         /// </summary>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
-        [HttpPost("today")]
+        [HttpGet("today")]
         public IActionResult GetToday()
         {
             try
