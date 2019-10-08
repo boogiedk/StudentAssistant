@@ -21,7 +21,7 @@ const url = 'http://localhost:18936';
 const title = "Расписание - Student Assistant";
 
 export class courseSchedule extends Component {
-
+    counter = 0;
 
     constructor(props) {
         super(props);
@@ -31,11 +31,14 @@ export class courseSchedule extends Component {
             selectedDate: moment(new Date()).format('YYYY-MM-DD'),
             loading: true,
             groupName: 'БББО-01-16',
-            isWeekday: true
+            isWeekday: true,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeCalendar = this.handleChangeCalendar.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
+        this.handleChangeNextDay = this.handleChangeNextDay.bind(this);
+        this.handleChangeLastDay = this.handleChangeLastDay.bind(this);
+
 
         // default values
         this.groupName = 'БББО-01-16';
@@ -53,6 +56,34 @@ export class courseSchedule extends Component {
         this.getCourseScheduleModel(event.target.value);
     }
 
+    handleChangeNextDay() {
+
+        this.counter = this.counter + 1;
+
+        var myDate = new Date();
+        myDate.setDate(myDate.getDate() + this.counter);
+
+        this.setState({
+            selectedDate: moment(myDate).format('YYYY-MM-DD'),
+        });
+
+        this.getCourseScheduleModel(myDate);
+    }
+
+    handleChangeLastDay() {
+
+        this.counter = this.counter - 1;
+
+        var myDate = new Date();
+        myDate.setDate(myDate.getDate() + this.counter);
+
+        this.setState({
+            selectedDate: moment(myDate).format('YYYY-MM-DD'),
+        });
+
+        this.getCourseScheduleModel(myDate);
+    }
+
     handleChangeCalendar(date) {
         this.setState({
             selectedDate: moment(date).format('YYYY-MM-DD')
@@ -65,7 +96,8 @@ export class courseSchedule extends Component {
         this.setState({
             groupName: event.target.value,
         });
-        this.getCourseScheduleModel(this.selectedDate);
+        
+        this.getCourseScheduleModelByGroup(event.target.value);
     }
 
     isWeekday(date) {
@@ -75,7 +107,7 @@ export class courseSchedule extends Component {
 
     getCourseScheduleModel(selectedDatetime) {
         let path = url + '/api/v1/schedule/selected';
-
+        
         let requestModel = {
             dateTimeRequest: selectedDatetime,
             groupName: this.state.groupName
@@ -99,42 +131,34 @@ export class courseSchedule extends Component {
             .catch(error => console.error('Error:', error));
     }
 
-    static renderCourseScheduleOld(courseScheduleModel) {
-        return (
-            <table className='table table-striped'>
-                <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Начало</th>
-                    <th>Конец</th>
-                    <th>Название</th>
-                    <th>Кабинет</th>
-                    <th>Тип</th>
-                    <th>Преподаватель</th>
-                    <th>Номера</th>
-                </tr>
-                </thead>
-                <tbody>
-                {courseScheduleModel.coursesViewModel.map(courseViewModel =>
-                    <tr key={courseViewModel.courseNumber}>
-                        <td>{courseViewModel.courseNumber}</td>
-                        <td>{courseViewModel.startOfClasses}</td>
-                        <td>{courseViewModel.endOfClasses}</td>
-                        <td>{courseViewModel.courseName}</td>
-                        <td>{courseViewModel.coursePlace}</td>
-                        <td>{courseViewModel.courseType}</td>
-                        <td>{courseViewModel.teacherFullName}</td>
-                        <td>{courseViewModel.numberWeek}</td>
-                    </tr>
-                )}
-                </tbody>
-            </table>
-        );
+    getCourseScheduleModelByGroup(groupName) {
+        let path = url + '/api/v1/schedule/selected';
 
+        let requestModel = {
+            dateTimeRequest: this.selectedDate,
+            groupName: groupName
+        };
+
+        fetch(path, {
+            method: 'POST',
+            headers: {
+                'Accept': ' application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+            },
+            body: JSON.stringify(requestModel)
+        })
+            .then(res => res.json())
+            .then(data => {
+                this.setState({courseScheduleModel: data, loading: false});
+            })
+            .then(response => JSON.stringify(response))
+            .catch(error => console.error('Error:', error));
     }
 
     static renderCourseSchedule(courseScheduleModel) {
-        
+
         if ((typeof courseScheduleModel == "undefined") || (
             courseScheduleModel.coursesViewModel.length === 1 &
             courseScheduleModel.coursesViewModel[0].courseName === "")) {
@@ -208,12 +232,12 @@ export class courseSchedule extends Component {
 
                     <h1>Расписание</h1>
                     {
-                        this.state.courseScheduleModel.length!==0 ?
-                        <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
-                            <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek===3 
-                                ? this.state.courseScheduleModel.numberWeek + "-я" 
-                                : this.state.courseScheduleModel.numberWeek + "-ая " } неделя.
-                        </p> : <p className="infoMessage"><em>Идет загрузка данных...</em></p>}
+                        this.state.courseScheduleModel.length !== 0 ?
+                            <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
+                                <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek === 3
+                                    ? this.state.courseScheduleModel.numberWeek + "-я"
+                                    : this.state.courseScheduleModel.numberWeek + "-ая "} неделя.
+                            </p> : <p className="infoMessage"><em>Идет загрузка данных...</em></p>}
                     <p>
                         <label className="labelChooseGroup">Выберите группу: </label>
                         <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
@@ -234,19 +258,34 @@ export class courseSchedule extends Component {
                         name="inputTextbox"
                         id="inputTextbox"
                     />
-                     <DatePicker
-                         className="calendarIcon"
-                         value={this.state.selectedDate}
-                         onChange={this.handleChangeCalendar}
-                         locale="ru"
-                         customInput={
-                             <button className="btn" id="calendarIcon"/>
-                         }
-                         disabledKeyboardNavigation
-                         dateFormat="YYYY-MM-DD"
-                         popperPlacement="bottom-end"
-                         filterDate={this.isWeekday}
-                     />
+                    
+                    <img
+                        src="https://image.flaticon.com/icons/svg/271/271220.svg"
+                        onClick={this.handleChangeLastDay}
+                        className="leftArrow"
+                        alt="left"
+                    />
+                     
+                    <DatePicker
+                        className="calendarIcon"
+                        value={this.state.selectedDate}
+                        onChange={this.handleChangeCalendar}
+                        locale="ru"
+                        customInput={
+                            <button className="btn" id="calendarIcon"/>
+                        }
+                        disabledKeyboardNavigation
+                        dateFormat="YYYY-MM-DD"
+                        popperPlacement="bottom-end"
+                        filterDate={this.isWeekday}
+                    />
+                    
+                       <img
+                           src="https://image.flaticon.com/icons/svg/271/271228.svg"
+                           onClick={this.handleChangeNextDay}
+                           className="rightArrow"
+                        alt="right"/> 
+                        
                 </span>
 
                     {contents}
