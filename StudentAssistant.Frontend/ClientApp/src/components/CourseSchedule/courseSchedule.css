@@ -22,7 +22,7 @@ input, select {
     background-color: #fff;
     padding: 3px 5px;
     box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
-    width: 180px;
+    width: 150px;
 }
 
 .inputDate {
@@ -96,6 +96,18 @@ button {
 
 }
 
+.rightArrow {
+    margin-left: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+.leftArrow {
+    margin-right: 4px;
+    width: 20px;
+    height: 20px;
+}
+
 .icon {
     background: url(https://image.flaticon.com/icons/svg/1/1176.svg) no-repeat;
     float: left;
@@ -107,6 +119,3 @@ button {
     overflow: hidden;
     outline: none;
 }
-
-  
- 
