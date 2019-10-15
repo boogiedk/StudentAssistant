@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.Email;
-using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 
-namespace StudentAssistant.Backend.Services.Interfaces
+namespace StudentAssistant.Backend.Interfaces
 {
     /// <summary>
     /// Сервис для работы с расписанием.

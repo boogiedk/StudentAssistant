@@ -1,7 +1,7 @@
 ﻿using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
 
-namespace StudentAssistant.Backend.Services.Interfaces
+namespace StudentAssistant.Backend.Interfaces
 {
     /// <summary>
     /// Сервис для поддержки пользователей.

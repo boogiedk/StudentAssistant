@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
-namespace StudentAssistant.DbLayer.Services.Interfaces
+namespace StudentAssistant.DbLayer.Interfaces
 {
     /// <summary>
     /// Интерфейс для работы с базой данных в MongoDb. 

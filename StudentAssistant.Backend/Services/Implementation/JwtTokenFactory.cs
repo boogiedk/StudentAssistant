@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using StudentAssistant.Backend.Services.Interfaces;
+using StudentAssistant.Backend.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

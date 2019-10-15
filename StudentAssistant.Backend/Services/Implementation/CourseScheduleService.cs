@@ -7,11 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadFileService;
-using StudentAssistant.Backend.Services.Interfaces;
+using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
-namespace StudentAssistant.DbLayer.Services.Interfaces
+namespace StudentAssistant.DbLayer.Interfaces
 {
     /// <summary>
     /// Сервис для импорта данных из Excel.

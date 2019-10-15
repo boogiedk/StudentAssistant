@@ -16,7 +16,7 @@ import {TitleComponent} from "../TitleComponent/TitleComponent";
 
 registerLocale("ru", ru);
 
-const url = 'http://localhost:18936';
+const url = 'http://localhost:18935';
 
 const title = "Расписание - Student Assistant";
 
