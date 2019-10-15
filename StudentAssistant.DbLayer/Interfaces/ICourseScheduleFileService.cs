@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Services.Interfaces
@@ -20,6 +21,6 @@ namespace StudentAssistant.DbLayer.Services.Interfaces
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input);
+       Task<IEnumerable<CourseScheduleDatabaseModel>> GetFromExcelFileByParameters(CourseScheduleParameters input);
     }
 }
