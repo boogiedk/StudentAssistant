@@ -17,20 +17,25 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class CourseScheduleService : ICourseScheduleService
     {
+        private readonly ICourseScheduleMongoDbService _courseScheduleMongoDbService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
         public CourseScheduleService(
+            ICourseScheduleMongoDbService courseScheduleMongoDbService,
             ICourseScheduleFileService courseScheduleFileService,
             IParityOfTheWeekService parityOfTheWeekService,
             IFileService fileService,
-            IMapper mapper
-        )
+            IMapper mapper)
         {
-            _courseScheduleFileService = courseScheduleFileService ?? throw new ArgumentNullException(nameof(courseScheduleFileService));
-            _parityOfTheWeekService = parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
+            _courseScheduleMongoDbService = courseScheduleMongoDbService ??
+                                            throw new ArgumentNullException(nameof(courseScheduleMongoDbService));
+            _courseScheduleFileService = courseScheduleFileService ??
+                                         throw new ArgumentNullException(nameof(courseScheduleFileService));
+            _parityOfTheWeekService =
+                parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -45,7 +50,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var courseScheduleParameters = new CourseScheduleParameters
                 {
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
-                    NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat.GetDayName(input.DateTimeRequest.DayOfWeek),
+                    NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat
+                        .GetDayName(input.DateTimeRequest.DayOfWeek),
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest),
                     GroupName = input.GroupName,
                     DatetimeRequest = input.DateTimeRequest
@@ -53,7 +59,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 // на данным момент расписание берется из Excel файла.
                 var courseScheduleDatabaseModel = _courseScheduleFileService
-                   .GetFromExcelFileByParameters(courseScheduleParameters);
+                    .GetFromExcelFileByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
@@ -68,7 +74,8 @@ namespace StudentAssistant.Backend.Services.Implementation
         }
 
         private CourseScheduleViewModel PrepareViewModel(
-            IEnumerable<CourseScheduleModel> input, CourseScheduleParameters parameters)
+            List<CourseScheduleModel> input,
+            CourseScheduleParameters parameters)
         {
             if (input == null || parameters == null) throw new ArgumentNullException(nameof(input));
 
@@ -79,10 +86,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     var emptyCourseScheduleViewModel = new CourseScheduleViewModel
                     {
-                        NameOfDayWeek = parameters.NameOfDayWeek.ToUpper(), //input.FirstOrDefault()?.NameOfDayWeek?.ToUpper(),
+                        NameOfDayWeek =
+                            parameters.NameOfDayWeek.ToUpper(),
                         DatetimeRequest = parameters.DatetimeRequest.Date.ToShortDateString(),
                         UpdateDatetime = _fileService.GetLastWriteTime().Result.ToShortDateString(),
-                        CoursesViewModel = new List<CourseViewModel> { new CourseViewModel() },
+                        CoursesViewModel = new List<CourseViewModel> {new CourseViewModel()},
                         NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(parameters.DatetimeRequest.Date)
                     };
 
@@ -116,7 +124,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        private bool IsEmptyCourseSchedule(IEnumerable<CourseScheduleModel> input)
+        private bool IsEmptyCourseSchedule(List<CourseScheduleModel> input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
@@ -125,22 +133,14 @@ namespace StudentAssistant.Backend.Services.Implementation
                 return true;
             }
 
-            var counterEmpty = 0;
+            var counterEmpty = input.Count(courseScheduleModel => 
+                string.Equals(courseScheduleModel.CourseName, string.Empty) 
+                && string.Equals(courseScheduleModel.CoursePlace, string.Empty));
 
-            foreach (var courseScheduleModel in input)
-            {
-                if (string.Equals(courseScheduleModel.CourseName, string.Empty)
-                    && string.Equals(courseScheduleModel.CoursePlace,string.Empty))
-                {
-                    counterEmpty++;
-                }
-            }
-
-            return counterEmpty == input.Count();
-
+            return counterEmpty == input.Count;
         }
 
-        public async Task UpdateAsync(CancellationToken cancellationToken)
+        public async Task DownloadAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // если не свежий => качаем новый (1 сутки)
                 if (!isNewFile.Result)
                     await _fileService.DownloadAsync(
-                    downloadFileParametersModel, cancellationToken);
+                        downloadFileParametersModel, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -171,7 +171,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public async Task UpdateByLinkAsync(
+        public async Task DownloadByLinkAsync(
             CourseScheduleUpdateByLinkAsyncModel request,
             CancellationToken cancellationToken)
         {
@@ -179,14 +179,30 @@ namespace StudentAssistant.Backend.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if(request == null) return;
+                if (request == null) return;
 
-                    await _fileService.DownloadByLinkAsync(request.Uri,
-                        cancellationToken);
+                await _fileService.DownloadByLinkAsync(request.Uri,
+                    cancellationToken);
             }
             catch (Exception ex)
             {
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
+            }
+        }
+
+        public async Task UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile();
+
+                await _courseScheduleMongoDbService.UpdateAsync(courseScheduleList, cancellationToken);
+            }
+            catch (Exception)
+            {
+                throw new NotSupportedException();
             }
         }
 

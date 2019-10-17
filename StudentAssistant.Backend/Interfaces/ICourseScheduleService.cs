@@ -21,7 +21,7 @@ namespace StudentAssistant.Backend.Interfaces
         /// Отправляет запрос на обновление расписания в базе данных.
         /// </summary>
         /// <returns></returns>
-        Task UpdateAsync(CancellationToken cancellationToken);
+        Task DownloadAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает дату последнего изменения файла с расписанием.
@@ -35,8 +35,15 @@ namespace StudentAssistant.Backend.Interfaces
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task UpdateByLinkAsync(
+        Task DownloadByLinkAsync(
             CourseScheduleUpdateByLinkAsyncModel request,
             CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Обновляет данные о расписании в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task UpdateAsync(CancellationToken cancellationToken);
     }
 }

@@ -10,10 +10,16 @@ namespace StudentAssistant.DbLayer.Interfaces
     public interface ICourseScheduleFileService
     {
         /// <summary>
+        /// Вовзращает все раписание из Excel файла.
+        /// </summary>
+        /// <returns></returns>
+        Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile();
+        
+        /// <summary>
         /// Возвращает расписание, взятое из Excel файла и отфильтрованное по заданным параметрам.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-       Task<IEnumerable<CourseScheduleDatabaseModel>> GetFromExcelFileByParameters(CourseScheduleParameters input);
+       IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input);
     }
 }

@@ -12,34 +12,35 @@ namespace StudentAssistant.DbLayer.Services.Implementation
     {
         private readonly IImportDataExcelService _importDataExcelService;
 
-        private readonly ICourseScheduleMongoDbService _courseScheduleMongo;
-
         public CourseScheduleFileService(
-            IImportDataExcelService importDataExcelService,
-                ICourseScheduleMongoDbService courseScheduleMongo)
+            IImportDataExcelService importDataExcelService)
         {
             _importDataExcelService =
                 importDataExcelService ?? throw new ArgumentNullException(nameof(importDataExcelService));
-            _courseScheduleMongo = courseScheduleMongo;
         }
 
-        public async Task<IEnumerable<CourseScheduleDatabaseModel>> GetFromExcelFileByParameters(CourseScheduleParameters input)
+        public async Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile()
+        {
+            var result = Task.Run(() =>
+            {
+                var courseScheduleDatabaseModels = _importDataExcelService
+                    .GetCourseScheduleDatabaseModels().ToList();
+
+                return courseScheduleDatabaseModels;
+            });
+
+            return await result;
+        }
+
+        public IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input)
         {
             try
             {
                 if (input == null) throw new ArgumentNullException(nameof(input));
-                
-                _courseScheduleMongo.RemoveAllAsync();
 
-                var z = _importDataExcelService
-                    .GetCourseScheduleDatabaseModels().ToList();
-                
-                _courseScheduleMongo.InsertAsync(z);
+                var courseScheduleDatabaseModels = _importDataExcelService
+                    .GetCourseScheduleDatabaseModels();
 
-                var courseScheduleDatabaseModels = await _courseScheduleMongo.GetByParameters(input);
-                   // _importDataExcelService
-                    //    .GetCourseScheduleDatabaseModels();
-                
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
                 var filterByNameOfWeek = courseScheduleDatabaseModels
                     .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek,

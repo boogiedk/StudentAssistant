@@ -109,16 +109,16 @@ namespace StudentAssistant.Backend.Controllers
         }
 
         /// <summary>
-        /// Метод для обновления данных о расписании.
+        /// Метод для скачивания файла с расписанием.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("update")]
-        public async Task<IActionResult> UpdateAsyncCourseSchedule(
+        [HttpGet("download")]
+        public async Task<IActionResult> DownloadCourseScheduleFileAsync(
             CancellationToken cancellationToken)
         {
             try
             {
-                await _courseScheduleService.UpdateAsync(cancellationToken);
+                await _courseScheduleService.DownloadAsync(cancellationToken);
 
                 return Ok("Данные обновлены!");
             }
@@ -127,26 +127,45 @@ namespace StudentAssistant.Backend.Controllers
                 return BadRequest(ex);
             }
         }
-
-
+        
         /// <summary>
-        /// Метод для обновления данных о расписании по ссылке.
+        /// Метод для скачивания файла с расписанием по ссылке.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("update")]
-        public async Task<IActionResult> UpdateAsyncCourseScheduleByLink(
+        [HttpPost("download")]
+        public async Task<IActionResult> DownloadCourseScheduleFileAsync(
             CourseScheduleUpdateByLinkAsyncModel request,
             CancellationToken cancellationToken)
         {
             try
             {
-                await _courseScheduleService.UpdateByLinkAsync(request, cancellationToken);
+                await _courseScheduleService.DownloadByLinkAsync(request, cancellationToken);
 
                 return Ok("Данные обновлены!");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+        
+        /// <summary>
+        /// Метод для обновления расписания в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("update")]
+        public async Task<IActionResult> UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _courseScheduleService.UpdateAsync(cancellationToken);
+
+                return Ok("Данные обновлены!");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
             }
         }
 
