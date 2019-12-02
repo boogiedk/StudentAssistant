@@ -16,12 +16,11 @@ import {TitleComponent} from "../TitleComponent/TitleComponent";
 
 registerLocale("ru", ru);
 
-const url = 'http://localhost:18936';
+const url = 'http://localhost:18935';
 
 const title = "Расписание - Student Assistant";
 
 export class courseSchedule extends Component {
-    counter = 0;
 
     constructor(props) {
         super(props);
@@ -32,13 +31,13 @@ export class courseSchedule extends Component {
             loading: true,
             groupName: 'БББО-01-16',
             isWeekday: true,
+            counter: 0
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeCalendar = this.handleChangeCalendar.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleChangeNextDay = this.handleChangeNextDay.bind(this);
         this.handleChangeLastDay = this.handleChangeLastDay.bind(this);
-
 
         // default values
         this.groupName = 'БББО-01-16';
@@ -48,37 +47,36 @@ export class courseSchedule extends Component {
         this.getCourseScheduleModel(this.selectedDate);
     }
 
+    //текст бокс с датой
     handleChange(event) {
         this.setState({
-            selectedDate: event.target.value,
+            selectedDate: event.target.value
         });
 
         this.getCourseScheduleModel(event.target.value);
     }
 
+    //следующий день
     handleChangeNextDay() {
-
-        this.counter = this.counter + 1;
-
-        var myDate = new Date();
-        myDate.setDate(myDate.getDate() + this.counter);
+        let myDate = new Date(this.state.selectedDate);
+        
+        myDate.setDate(myDate.getDate() + 1);
 
         this.setState({
             selectedDate: moment(myDate).format('YYYY-MM-DD'),
         });
-
+        
         this.getCourseScheduleModel(myDate);
     }
 
+    //предыдущий день
     handleChangeLastDay() {
-
-        this.counter = this.counter - 1;
-
-        var myDate = new Date();
-        myDate.setDate(myDate.getDate() + this.counter);
+        let myDate = new Date();
+        
+        myDate.setDate(myDate.getDate() -1);
 
         this.setState({
-            selectedDate: moment(myDate).format('YYYY-MM-DD'),
+            selectedDate: moment(myDate).format('YYYY-MM-DD')
         });
 
         this.getCourseScheduleModel(myDate);
@@ -96,7 +94,7 @@ export class courseSchedule extends Component {
         this.setState({
             groupName: event.target.value,
         });
-        
+
         this.getCourseScheduleModelByGroup(event.target.value);
     }
 
@@ -107,7 +105,7 @@ export class courseSchedule extends Component {
 
     getCourseScheduleModel(selectedDatetime) {
         let path = url + '/api/v1/schedule/selected';
-        
+
         let requestModel = {
             dateTimeRequest: selectedDatetime,
             groupName: this.state.groupName
@@ -159,7 +157,7 @@ export class courseSchedule extends Component {
 
     static renderCourseSchedule(courseScheduleModel) {
 
-        if ((typeof courseScheduleModel == "undefined") || (
+        if ((typeof courseScheduleModel === "undefined") || (
             courseScheduleModel.coursesViewModel.length === 1 &
             courseScheduleModel.coursesViewModel[0].courseName === "")) {
             return (
@@ -279,13 +277,11 @@ export class courseSchedule extends Component {
                         popperPlacement="bottom-end"
                         filterDate={this.isWeekday}
                     />
-                    
                        <img
                            src="https://image.flaticon.com/icons/svg/271/271228.svg"
                            onClick={this.handleChangeNextDay}
                            className="rightArrow"
-                        alt="right"/> 
-                        
+                           alt="right"/>
                 </span>
 
                     {contents}

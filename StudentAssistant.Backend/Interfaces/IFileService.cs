@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.DownloadFileService;
 
-namespace StudentAssistant.Backend.Services.Interfaces
+namespace StudentAssistant.Backend.Interfaces
 {
     /// <summary>
     /// Сервис для скачивания Excel файла.

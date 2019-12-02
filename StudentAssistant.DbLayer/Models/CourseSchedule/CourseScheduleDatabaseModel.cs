@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
@@ -7,6 +8,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
     /// </summary>
     public class CourseScheduleDatabaseModel
     {
+        public ObjectId Id;
         /// <summary>
         /// Номер недели.
         /// </summary>

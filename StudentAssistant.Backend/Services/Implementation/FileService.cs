@@ -3,8 +3,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.DownloadFileService;
-using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

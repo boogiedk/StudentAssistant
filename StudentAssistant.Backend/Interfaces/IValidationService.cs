@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Models.Validation;
 
-namespace StudentAssistant.Backend.Services.Interfaces
+namespace StudentAssistant.Backend.Interfaces
 {
     /// <summary>
     /// Сервис для валидации входных запросов.

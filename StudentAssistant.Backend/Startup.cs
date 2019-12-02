@@ -15,14 +15,16 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using StudentAssistant.Backend.Infrastructure;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
+using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
-using StudentAssistant.Backend.Services.Interfaces;
+using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace StudentAssistant.Backend
@@ -41,7 +43,10 @@ namespace StudentAssistant.Backend
                             .AddJsonFile("EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
                             .AddJsonFile("ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
                             .AddJsonFile("CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile("MongoDbSettings.json", optional: true, reloadOnChange: true)
                             .AddEnvironmentVariables();
+
+
 
             if (env.IsDevelopment())
             {
@@ -59,6 +64,7 @@ namespace StudentAssistant.Backend
                     .AddEntityFrameworkStores<Context>()
                     .AddDefaultTokenProviders()
                     .AddDefaultTokenProviders();
+
 
 
             #region Mapper
@@ -81,9 +87,9 @@ namespace StudentAssistant.Backend
             services.AddScoped<ICourseScheduleService, CourseScheduleService>();
             services.AddScoped<ICourseScheduleFileService, CourseScheduleFileService>();
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
-            services.AddScoped<IImportDataJsonService, ImportDataJsonService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
+            services.AddScoped<ICourseScheduleMongoDbService, CourseScheduleMongoDbService>();
 
             services.AddSingleton(mapper);
 
@@ -126,9 +132,22 @@ namespace StudentAssistant.Backend
                         .AllowCredentials());
             });
 
+            #region Configure
+            
             services.Configure<EmailServiceConfigurationModel>(options => _configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             services.Configure<ParityOfTheWeekConfigurationModel>(options => _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
             services.Configure<CourseScheduleDataServiceConfigurationModel>(_configuration.GetSection("ListCourseSchedule"));
+            services.Configure<MongoDbSettings>(options => _configuration.GetSection("MongoConnectionTest").Bind(options));
+
+//            services.Configure<MongoDbSettings>(options =>
+//            {
+//                options.ConnectionString = _configuration.GetSection("MongoConnectionTest:ConnectionString").Value;
+//                options.Database = _configuration.GetSection("MongoConnectionTest:Database").Value;
+//                options.CourseScheduleCollectionName =
+//                    _configuration.GetSection("MongoConnectionTest:CourseScheduleCollectionName").Value;
+//            });
+            
+            #endregion
 
             services.AddSwaggerGen(c =>
             {

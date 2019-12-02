@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 
-namespace StudentAssistant.Backend.Services.Interfaces
+namespace StudentAssistant.Backend.Interfaces
 {
     /// <summary>
     /// Сервис для работы с расписанием.
@@ -21,7 +21,7 @@ namespace StudentAssistant.Backend.Services.Interfaces
         /// Отправляет запрос на обновление расписания в базе данных.
         /// </summary>
         /// <returns></returns>
-        Task UpdateAsync(CancellationToken cancellationToken);
+        Task DownloadAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает дату последнего изменения файла с расписанием.
@@ -35,8 +35,15 @@ namespace StudentAssistant.Backend.Services.Interfaces
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task UpdateByLinkAsync(
+        Task DownloadByLinkAsync(
             CourseScheduleUpdateByLinkAsyncModel request,
             CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Обновляет данные о расписании в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task UpdateAsync(CancellationToken cancellationToken);
     }
 }

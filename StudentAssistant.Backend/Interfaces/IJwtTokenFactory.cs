@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace StudentAssistant.Backend.Services.Interfaces
+namespace StudentAssistant.Backend.Interfaces
 {
     public interface IJwtTokenFactory
     {
