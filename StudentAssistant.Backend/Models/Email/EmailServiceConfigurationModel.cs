@@ -1,5 +1,5 @@
-﻿using StudentAssistant.Backend.Services;
-using StudentAssistant.Backend.Services.Interfaces;
+﻿using StudentAssistant.Backend.Interfaces;
+using StudentAssistant.Backend.Services;
 
 namespace StudentAssistant.Backend.Models.Email
 {

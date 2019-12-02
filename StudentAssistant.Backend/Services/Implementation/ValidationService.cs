@@ -2,7 +2,7 @@
 using StudentAssistant.Backend.Models.Validation;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using StudentAssistant.Backend.Services.Interfaces;
+using StudentAssistant.Backend.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

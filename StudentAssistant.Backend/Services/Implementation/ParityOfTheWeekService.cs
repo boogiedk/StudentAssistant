@@ -5,8 +5,8 @@ using AutoMapper;
 using Humanizer;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using Microsoft.Extensions.Options;
+using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
-using StudentAssistant.Backend.Services.Interfaces;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

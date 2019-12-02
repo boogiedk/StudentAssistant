@@ -1,0 +1,9 @@
+﻿{
+  "MongoConnectionTest": {
+    "ConnectionString": "mongodb://localhost:27017",
+    "Database": "StudentAssistantDb",
+    "CourseScheduleCollectionName": "CourseSchedule"
+  }
+}
+
+// mongodb://localhost:27017/StudentAssistantDb

@@ -2,10 +2,10 @@
 using AutoFixture.AutoMoq;
 using Microsoft.Extensions.Options;
 using Moq;
+using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.Email;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.Backend.Services;
-using StudentAssistant.Backend.Services.Interfaces;
 using Xunit;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
