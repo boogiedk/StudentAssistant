@@ -154,7 +154,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     //https://www.mirea.ru/upload/medialibrary/a72/KBiSP-4-kurs-1-sem.xlsx
                     PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
-                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/a72/"),
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/0b8/"),
                     FileNameLocal = "scheduleFile",
                     FileNameRemote = "KBiSP-4-kurs-1-sem",
                     FileFormat = "xlsx"
