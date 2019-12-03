@@ -1,7 +1,7 @@
 
 label {
     margin-right: 15px;
-    width: 120px;
+    width: 130px;
 }
 
 /*[type="date"] {
@@ -22,7 +22,7 @@ input, select {
     background-color: #fff;
     padding: 3px 5px;
     box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
-    width: 120px;
+    width: 130px;
 }
 
 .inputDate {
@@ -103,12 +103,12 @@ button {
 }
 
 .leftArrow {
-    margin-right: 6px;
+    margin-right: 4px;
     width: 20px;
     height: 20px;
 }
 
-.icon {
+.infoIcon {
     background: url(https://image.flaticon.com/icons/svg/1/1176.svg) no-repeat;
     float: left;
     width: 20px;
@@ -118,4 +118,30 @@ button {
     cursor: pointer;
     overflow: hidden;
     outline: none;
+}
+
+.iconDownload {
+  /*  background: url(https://image.flaticon.com/icons/svg/152/152555.svg) no-repeat; */
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-left: 8px;
+    display: inline;
+    vertical-align: baseline;
+}
+
+.iconLoad {
+   /* background: url(https://image.flaticon.com/icons/svg/60/60961.svg) no-repeat; */
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-left: 8px;
+    display: inline;
+    vertical-align: baseline;
+}
+
+
+.bottom
+{
+    margin-top: 20px;
 }

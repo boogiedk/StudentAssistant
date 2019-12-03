@@ -39,6 +39,8 @@ export class courseSchedule extends Component {
         this.handleChangeNextDay = this.handleChangeNextDay.bind(this);
         this.handleChangeLastDay = this.handleChangeLastDay.bind(this);
 
+        this.updateCourseSchedule = this.updateCourseSchedule.bind(this);
+
         // default values
         this.groupName = 'БББО-01-16';
         this.selectedDate = moment(new Date()).format('YYYY-MM-DD');
@@ -59,21 +61,21 @@ export class courseSchedule extends Component {
     //следующий день
     handleChangeNextDay() {
         let myDate = new Date(this.state.selectedDate);
-        
+
         myDate.setDate(myDate.getDate() + 1);
 
         this.setState({
             selectedDate: moment(myDate).format('YYYY-MM-DD'),
         });
-        
+
         this.getCourseScheduleModel(myDate);
     }
 
     //предыдущий день
     handleChangeLastDay() {
-        let myDate = new Date();
-        
-        myDate.setDate(myDate.getDate() -1);
+        let myDate = new Date(this.state.selectedDate);
+
+        myDate.setDate(myDate.getDate() - 1);
 
         this.setState({
             selectedDate: moment(myDate).format('YYYY-MM-DD')
@@ -82,6 +84,7 @@ export class courseSchedule extends Component {
         this.getCourseScheduleModel(myDate);
     }
 
+    //изменение календаря
     handleChangeCalendar(date) {
         this.setState({
             selectedDate: moment(date).format('YYYY-MM-DD')
@@ -90,6 +93,7 @@ export class courseSchedule extends Component {
         this.getCourseScheduleModel(date);
     }
 
+    //изменение селектора групп
     handleChangeSelect(event) {
         this.setState({
             groupName: event.target.value,
@@ -98,6 +102,16 @@ export class courseSchedule extends Component {
         this.getCourseScheduleModelByGroup(event.target.value);
     }
 
+    updateCourseSchedule() {
+        let path = url + '/api/v1/schedule/download';
+
+        fetch(path)
+            .then(response => response.json())
+            .then(json => console.log(json));
+
+        this.getCourseScheduleModel(this.state.selectedDate);
+    }
+    
     isWeekday(date) {
         const day = date.getDay();
         return day !== 0 //&& day !== 6 // воскресение заблокировано
@@ -133,7 +147,7 @@ export class courseSchedule extends Component {
         let path = url + '/api/v1/schedule/selected';
 
         let requestModel = {
-            dateTimeRequest: this.selectedDate,
+            dateTimeRequest: this.state.selectedDate,
             groupName: groupName
         };
 
@@ -188,7 +202,7 @@ export class courseSchedule extends Component {
                             <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
                             <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
 
-                            <Popup trigger={<button className="icon"></button>} position="top center">
+                            <Popup trigger={<button className="infoIcon"></button>} position="top center">
                                 <div>
                                     <div
                                         className="combinedGroupStyle"> {courseViewModel.combinedGroup !== "" ? "Совмещено с " + courseViewModel.combinedGroup : "Несовмещенная пара"}</div>
@@ -286,12 +300,31 @@ export class courseSchedule extends Component {
 
                     {contents}
 
-                    <i>Последнее обновление расписания: {this.state.courseScheduleModel.updateDatetime}.</i>
+                    <i className="bottom">Последнее обновление
+                        расписания: {this.state.courseScheduleModel.updateDatetime}.</i>
+
+                    <img
+                        src="https://image.flaticon.com/icons/svg/60/60961.svg"
+                        title="Обновить расписание"
+                        onClick={this.updateCourseSchedule}
+                        className="iconLoad"
+                        alt="iconUpdate"/>
+
+
+                    <a href="https://www.mirea.ru/upload/medialibrary/0b8/KBiSP-4-kurs-1-sem.xlsx">
+                        <img
+                            src="https://image.flaticon.com/icons/svg/152/152555.svg"
+                            title="Скачать расписание"
+                            onClick={this.downloadCourseSchedule}
+                            className="iconDownload"
+                            alt="Download"
+                        /></a>
                 </div>
             );
         } else {
             return (
-                <p className="infoMessage"><em>Идет загрузка расписания...</em></p>
+                <p className="infoMessage"><em>Идет загрузка расписания...</em>
+                </p>
             );
         }
 
