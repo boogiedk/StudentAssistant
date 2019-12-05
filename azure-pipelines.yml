@@ -32,3 +32,8 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'XUnit'
+    testResultsFiles: '**/TEST-*.xml'
