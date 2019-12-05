@@ -1,7 +1,6 @@
 # [StudentAssistant](https://trello.com/b/TXtoDDO0/student-assistant-kanban)
 
-
-[![Build status](https://ci.appveyor.com/api/projects/status/qw8j6ojtbj4myiun?svg=true)](https://ci.appveyor.com/project/boogiedk/studentassistant) 
+[![Build Status](https://dev.azure.com/boogiedkcore/StudentAssistant/_apis/build/status/boogiedk.StudentAssistant?branchName=master)](https://dev.azure.com/boogiedkcore/StudentAssistant/_build/latest?definitionId=2&branchName=master)
 [![Pull Requests](https://img.shields.io/github/issues-pr/boogiedk/studentassistant.svg)](https://github.com/boogiedk/studentassistant/pulls) 
 [![Issues](https://img.shields.io/github/issues/boogiedk/studentassistant.svg)](https://github.com/boogiedk/studentassistant/issues) 
 ![License](https://img.shields.io/github/license/boogiedk/studentassistant.svg) ![Size](https://img.shields.io/github/repo-size/boogiedk/studentassistant.svg) 
