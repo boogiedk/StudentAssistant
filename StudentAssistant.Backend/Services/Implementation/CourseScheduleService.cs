@@ -161,7 +161,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 };
 
                 // если не свежий => качаем новый (1 сутки)
-                if (!isNewFile.Result)
+                if (!(await isNewFile))
                     await _fileService.DownloadAsync(
                         downloadFileParametersModel, cancellationToken);
             }
