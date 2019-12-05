@@ -16,12 +16,9 @@ before_build:
 build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
   - cmd: dotnet publish ./StudentAssistant.Backend/StudentAssistant.Backend.csproj 
-after_build:
-  # For once the build has completed
 artifacts:
- - path: '\StudentAssistant.Backend\bin\Debug\netcoreapp1.1\publish'
+ - path: '\StudentAssistant.Backend\bin\Debug\netcoreapp2.2\publish'
    name: StudentAssistant.Backend
-   type: WebDeployPackage
 clone_depth: 1
 test_script:
   # restore packages for our unit tests
