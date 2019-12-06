@@ -1,0 +1,26 @@
+
+jobs:
+- job: Linux
+  pool:
+    vmImage: 'ubuntu 16.04'
+  variables:
+    buildConfiguration: 'Release'
+  steps:
+  - task: DotNetCoreInstaller@0
+    inputs:
+      version: '2.2.203'
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'Linux Build'
+  - task: PublishTestResults@2
+
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    buildConfiguration: 'Release'
+  steps:
+  - task: DotNetCoreInstaller@0
+    inputs:
+      version: '2.2.203'
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'Windows Full Build'
