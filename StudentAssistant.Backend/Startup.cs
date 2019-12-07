@@ -15,9 +15,13 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
+using NLog;
+using NLog.Extensions.Logging;
+using NLog.Web;
 using StudentAssistant.Backend.Infrastructure;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
 using StudentAssistant.Backend.Interfaces;
@@ -46,14 +50,20 @@ namespace StudentAssistant.Backend
                             .AddJsonFile("MongoDbSettings.json", optional: true, reloadOnChange: true)
                             .AddEnvironmentVariables();
 
-
-
             if (env.IsDevelopment())
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
             _configuration = builder.Build();
+            
+            #region Logger
+
+            env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));    
+
+            LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog");
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -64,9 +74,8 @@ namespace StudentAssistant.Backend
                     .AddEntityFrameworkStores<Context>()
                     .AddDefaultTokenProviders()
                     .AddDefaultTokenProviders();
-
-
-
+            
+            
             #region Mapper
 
             var mappingConfig = new MapperConfiguration(mc =>
@@ -133,20 +142,20 @@ namespace StudentAssistant.Backend
             });
 
             #region Configure
-            
+
             services.Configure<EmailServiceConfigurationModel>(options => _configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
             services.Configure<ParityOfTheWeekConfigurationModel>(options => _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
             services.Configure<CourseScheduleDataServiceConfigurationModel>(_configuration.GetSection("ListCourseSchedule"));
             services.Configure<MongoDbSettings>(options => _configuration.GetSection("MongoConnectionTest").Bind(options));
 
-//            services.Configure<MongoDbSettings>(options =>
-//            {
-//                options.ConnectionString = _configuration.GetSection("MongoConnectionTest:ConnectionString").Value;
-//                options.Database = _configuration.GetSection("MongoConnectionTest:Database").Value;
-//                options.CourseScheduleCollectionName =
-//                    _configuration.GetSection("MongoConnectionTest:CourseScheduleCollectionName").Value;
-//            });
-            
+            //            services.Configure<MongoDbSettings>(options =>
+            //            {
+            //                options.ConnectionString = _configuration.GetSection("MongoConnectionTest:ConnectionString").Value;
+            //                options.Database = _configuration.GetSection("MongoConnectionTest:Database").Value;
+            //                options.CourseScheduleCollectionName =
+            //                    _configuration.GetSection("MongoConnectionTest:CourseScheduleCollectionName").Value;
+            //            });
+
             #endregion
 
             services.AddSwaggerGen(c =>
@@ -178,7 +187,8 @@ namespace StudentAssistant.Backend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env)
+            IHostingEnvironment env
+        )
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();

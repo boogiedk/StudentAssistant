@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule
 {
@@ -15,6 +16,12 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
         /// <summary>
         /// Название группы.
         /// </summary>
+        [Required]
         public string GroupName { get; set; }
+
+        public override string ToString()
+        {
+            return $"DateTimeRequest: {DateTimeRequest}. GroupName: {GroupName}";
+        }
     }
 }
