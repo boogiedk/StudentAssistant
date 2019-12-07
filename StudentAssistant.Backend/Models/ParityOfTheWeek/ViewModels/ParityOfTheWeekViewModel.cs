@@ -51,5 +51,10 @@ namespace StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels
         /// Хранит <see cref="string"/> с значением "Сегодня" или "Выбрано".
         /// </summary>
         public string SelectedDateStringValue { get; set; }
+
+        public override string ToString()
+        {
+            return $"DateTimeRequest: {DateTimeRequest} DayOfName: {DayOfName} NumberOfSemester: {NumberOfSemester} StatusDay: {StatusDay}";
+        }
     }
 }

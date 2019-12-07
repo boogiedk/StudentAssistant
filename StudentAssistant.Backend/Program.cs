@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.IO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace StudentAssistant.Backend
 {
@@ -7,9 +11,18 @@ namespace StudentAssistant.Backend
     {
         public static void Main(string[] args) => BuildWebHost(args).Run();
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        private static IWebHost BuildWebHost(string[] args)
+        {
+
+            return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                })
+                .UseNLog()
                 .Build();
+        }
     }
 }
