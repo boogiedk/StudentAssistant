@@ -21,6 +21,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly ICourseScheduleMongoDbService _courseScheduleMongoDbService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
+        private readonly ILogger<CourseScheduleService> _logger;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
@@ -28,6 +29,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             ICourseScheduleMongoDbService courseScheduleMongoDbService,
             ICourseScheduleFileService courseScheduleFileService,
             IParityOfTheWeekService parityOfTheWeekService,
+            ILogger<CourseScheduleService> logger,
             IFileService fileService,
             IMapper mapper)
         {
@@ -39,11 +41,16 @@ namespace StudentAssistant.Backend.Services.Implementation
                 parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public CourseScheduleViewModel Get(CourseScheduleDtoModel input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
+
+            _logger.LogInformation("Get: " +
+                                   "DatetimeRequest: " + input.DateTimeRequest + " " +
+                                   "GroupName: " + input.GroupName);
 
             try
             {
@@ -66,10 +73,12 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var result = PrepareViewModel(courseScheduleModel, courseScheduleParameters);
 
+                _logger.LogInformation("Get: " + result);
                 return result;
             }
             catch (Exception ex)
             {
+                _logger.LogError("Get Exception: " + ex);
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
@@ -82,6 +91,12 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             try
             {
+                _logger.LogInformation("PrepareViewModel: " +
+                                       "CourseScheduleModel" + input.Count + " " +
+                                       "CourseScheduleParameters" + parameters.DatetimeRequest + " " +
+                                       "GroupName" + parameters.GroupName
+                );
+
                 // если отсутствуют данные о расписании, возвращаем пустую модель
                 if (IsEmptyCourseSchedule(input))
                 {
@@ -117,10 +132,17 @@ namespace StudentAssistant.Backend.Services.Implementation
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(parameters.DatetimeRequest)
                 };
 
+                _logger.LogInformation("PrepareViewModel: "
+                                       + "CoursesViewModel: " + "DatetimeRequest: " +
+                                       resultCourseScheduleViewModel.DatetimeRequest + " " +
+                                       "CoursesViewModel.Count: " + resultCourseScheduleViewModel.CoursesViewModel.Count
+                );
+
                 return resultCourseScheduleViewModel;
             }
             catch (Exception ex)
             {
+                _logger.LogInformation("PrepareViewModel Exception: " + ex);
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
@@ -134,8 +156,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                 return true;
             }
 
-            var counterEmpty = input.Count(courseScheduleModel => 
-                string.Equals(courseScheduleModel.CourseName, string.Empty) 
+            var counterEmpty = input.Count(courseScheduleModel =>
+                string.Equals(courseScheduleModel.CourseName, string.Empty)
                 && string.Equals(courseScheduleModel.CoursePlace, string.Empty));
 
             return counterEmpty == input.Count;
@@ -146,6 +168,8 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                
+                _logger.LogInformation("DownloadAsync: " + "Start");
 
                 // проверяем свежесть файла
                 var isNewFile = _fileService.CheckExcelFile(DateTime.UtcNow);
@@ -160,6 +184,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                     FileNameRemote = "KBiSP-4-kurs-1-sem",
                     FileFormat = "xlsx"
                 };
+                
+                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
                 // если не свежий => качаем новый (1 сутки)
                 if (!(await isNewFile))
@@ -168,6 +194,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
+                _logger.LogError("Exception DownloadAsync: " + ex);
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
@@ -182,11 +209,14 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 if (request == null) return;
 
+                _logger.LogInformation("DownloadByLinkAsync: " + "Uri: " + request.Uri);
+
                 await _fileService.DownloadByLinkAsync(request.Uri,
                     cancellationToken);
             }
             catch (Exception ex)
             {
+                _logger.LogError("DownloadByLinkAsync Exception : " + ex);
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
@@ -196,13 +226,16 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                
+                _logger.LogInformation("UpdateAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile();
 
                 await _courseScheduleMongoDbService.UpdateAsync(courseScheduleList, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("UpdateAsync Exception: " + ex);
                 throw new NotSupportedException();
             }
         }
@@ -211,6 +244,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         {
             try
             {
+                _logger.LogInformation("GetLastAccessTimeUtc: " + "Start");
                 var lastAccessTimeUtc = _fileService.GetLastWriteTime();
 
                 //https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.getlastwritetime
@@ -225,6 +259,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
             catch (Exception ex)
             {
+                _logger.LogError("GetLastAccessTimeUtc Exception: " + ex);
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         });

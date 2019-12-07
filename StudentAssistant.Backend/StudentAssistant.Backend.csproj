@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\ScheduleFile\" />
+    <Folder Include="Storages\NLog" />
   </ItemGroup>
 
   <ItemGroup>

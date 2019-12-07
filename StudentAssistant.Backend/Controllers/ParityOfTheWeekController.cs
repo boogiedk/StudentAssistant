@@ -20,10 +20,14 @@ namespace StudentAssistant.Backend.Controllers
     public class ParityOfTheWeekController : Controller
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
+        private readonly ILogger<ParityOfTheWeekController> _logger;
 
-        public ParityOfTheWeekController(IParityOfTheWeekService parityOfTheWeekService, ILogger logger)
+        public ParityOfTheWeekController(
+            IParityOfTheWeekService parityOfTheWeekService,
+            ILogger<ParityOfTheWeekController> logger)
         {
             _parityOfTheWeekService = parityOfTheWeekService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -32,14 +36,17 @@ namespace StudentAssistant.Backend.Controllers
         /// <returns><see cref="ParityOfTheWeekViewModel"/>Модель представления.</returns>
         /// <param name="requestModel">Модель, содержащая выбранную дату.</param>
         [HttpPost("selected")]
-        public IActionResult GenerateParityOfTheWeek([FromBody]ParityOfTheWeekRequestModel requestModel)
+        public IActionResult GenerateParityOfTheWeek([FromBody] ParityOfTheWeekRequestModel requestModel)
         {
             try
             {
                 if (requestModel == null)
                 {
+                    _logger.LogInformation("Request model is null");
                     return BadRequest("Запрос не содержит данных.");
                 }
+
+                _logger.LogInformation("Request: ", requestModel.SelectedDateTime);
 
                 var userAccountRequestData = new UserAccountRequestDataParityOfTheWeek
                 {
@@ -57,11 +64,12 @@ namespace StudentAssistant.Backend.Controllers
                 // подготавливаем модель для отображения (ViewModel)
                 var resultViewModel = _parityOfTheWeekService.PrepareViewModel(parityOfTheWeekModel);
 
+                _logger.LogInformation("Response: ", resultViewModel.ToString());
                 return Ok(resultViewModel);
             }
             catch (Exception ex)
             {
-                //log
+                _logger.LogError("Exception: ", ex);
                 return BadRequest(ex);
             }
         }

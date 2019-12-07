@@ -18,14 +18,16 @@ namespace StudentAssistant.Backend.Controllers
     /// </summary>
     [Produces("application/json")]
     [Route("api/v1/schedule")]
-    [AllowAnonymous]
     [EnableCors("CorsPolicy")]
+    [AllowAnonymous]
     public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
         private readonly ILogger<CourseScheduleController> _logger;
 
-        public CourseScheduleController(ICourseScheduleService courseScheduleService, ILogger<CourseScheduleController> logger)
+        public CourseScheduleController(
+            ICourseScheduleService courseScheduleService,
+            ILogger<CourseScheduleController> logger)
         {
             _courseScheduleService = courseScheduleService;
             _logger = logger;
@@ -38,11 +40,11 @@ namespace StudentAssistant.Backend.Controllers
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
         [HttpPost("selected")]
         public IActionResult GetCourseScheduleSelected(
-            [FromBody]CourseScheduleRequestModel requestModel)
+            [FromBody] CourseScheduleRequestModel requestModel)
         {
             try
             {
-                _logger.Log(LogLevel.Information,"Request is here",requestModel.DateTimeRequest);
+                _logger.LogInformation("Request: " + requestModel);
 
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
                 var userAccountRequestData = new UserAccountRequestDataCourseSchedule
@@ -50,26 +52,25 @@ namespace StudentAssistant.Backend.Controllers
                     TimeZoneId = TimeZoneInfo.Local.Id //"Russian Standard Time"
                 };
 
-                // если модель пришла пустая, запрашиваем данные по текущему дню
-                var datetimeUtc = requestModel?.DateTimeRequest ?? DateTime.UtcNow;
-
                 // переводим utc время в часовой пояс пользователя
-                var datetimeRequestUser = TimeZoneInfo.ConvertTime(datetimeUtc,
+                var datetimeRequestUser = TimeZoneInfo.ConvertTime(requestModel.DateTimeRequest,
                     TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
 
                 var courseScheduleDtoModel = new CourseScheduleDtoModel
                 {
                     DateTimeRequest = datetimeRequestUser,
-                    GroupName = requestModel?.GroupName
+                    GroupName = requestModel.GroupName
                 };
 
                 // подготавливаем ViewModel для отображения
                 var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
 
+                _logger.LogInformation("Response: " + courseScheduleViewModel);
                 return Ok(courseScheduleViewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("Exception: " + ex);
                 return BadRequest(new CourseScheduleViewModel());
             }
         }
@@ -92,6 +93,10 @@ namespace StudentAssistant.Backend.Controllers
 
                 var datetimeUtc = DateTime.UtcNow;
 
+                _logger.LogInformation("Request: ",
+                    "DateTimeRequest: " + datetimeUtc, " ",
+                    "GroupName " + userAccountRequestData.GroupName);
+
                 // переводим utc время в часовой пояс пользователя
                 var datetimeRequestUser = TimeZoneInfo.ConvertTime(datetimeUtc,
                     TimeZoneInfo.FindSystemTimeZoneById(userAccountRequestData.TimeZoneId));
@@ -105,10 +110,12 @@ namespace StudentAssistant.Backend.Controllers
                 // подготавливаем ViewModel для отображения
                 var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
 
+                _logger.LogInformation("Response: " + courseScheduleViewModel);
                 return Ok(courseScheduleViewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError($"Exception: " + ex);
                 return BadRequest(new CourseScheduleViewModel());
             }
         }
@@ -125,14 +132,16 @@ namespace StudentAssistant.Backend.Controllers
             {
                 await _courseScheduleService.DownloadAsync(cancellationToken);
 
+                _logger.LogInformation($"Response: " + "Данные обновлены!");
                 return Ok("Данные обновлены!");
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Exception: " + ex);
                 return BadRequest(ex);
             }
         }
-        
+
         /// <summary>
         /// Метод для скачивания файла с расписанием по ссылке.
         /// </summary>
@@ -144,16 +153,19 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
+                _logger.LogInformation("Request: " + request.Uri);
                 await _courseScheduleService.DownloadByLinkAsync(request, cancellationToken);
 
+                _logger.LogInformation("Response: " + "Данные обновлены!");
                 return Ok("Данные обновлены!");
             }
             catch (Exception ex)
             {
+                _logger.LogError($"Exception: " + ex);
                 return BadRequest(ex);
             }
         }
-        
+
         /// <summary>
         /// Метод для обновления расписания в базе данных.
         /// </summary>
@@ -166,11 +178,13 @@ namespace StudentAssistant.Backend.Controllers
             {
                 await _courseScheduleService.UpdateAsync(cancellationToken);
 
+                _logger.LogInformation("Response: " + "Данные обновлены!");
                 return Ok("Данные обновлены!");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return BadRequest(e);
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
             }
         }
 
@@ -185,10 +199,12 @@ namespace StudentAssistant.Backend.Controllers
             {
                 var result = await _courseScheduleService.GetLastAccessTimeUtc();
 
+                _logger.LogInformation("Response: " + result.UpdateDatetime);
                 return Ok(result);
             }
             catch (Exception ex)
             {
+                _logger.LogError("Exception: " + ex);
                 return BadRequest(ex);
             }
         }
