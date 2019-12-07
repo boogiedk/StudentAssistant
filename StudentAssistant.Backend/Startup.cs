@@ -15,9 +15,11 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
+using NLog.Extensions.Logging;
 using StudentAssistant.Backend.Infrastructure;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
 using StudentAssistant.Backend.Interfaces;
@@ -178,11 +180,12 @@ namespace StudentAssistant.Backend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env)
+            IHostingEnvironment env
+        )
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-
+            
             app.UseCors("CorsPolicy");
 
             app.UseSwagger();

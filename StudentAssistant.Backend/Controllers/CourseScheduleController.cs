@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
@@ -22,10 +23,12 @@ namespace StudentAssistant.Backend.Controllers
     public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
+        private readonly ILogger<CourseScheduleController> _logger;
 
-        public CourseScheduleController(ICourseScheduleService courseScheduleService)
+        public CourseScheduleController(ICourseScheduleService courseScheduleService, ILogger<CourseScheduleController> logger)
         {
             _courseScheduleService = courseScheduleService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -39,6 +42,8 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
+                _logger.Log(LogLevel.Information,"Request is here",requestModel.DateTimeRequest);
+
                 // часовой пояс пользователя (по умолчанию - Москва, +3 часа к UTC)
                 var userAccountRequestData = new UserAccountRequestDataCourseSchedule
                 {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
@@ -20,7 +21,7 @@ namespace StudentAssistant.Backend.Controllers
     {
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
 
-        public ParityOfTheWeekController(IParityOfTheWeekService parityOfTheWeekService)
+        public ParityOfTheWeekController(IParityOfTheWeekService parityOfTheWeekService, ILogger logger)
         {
             _parityOfTheWeekService = parityOfTheWeekService;
         }
