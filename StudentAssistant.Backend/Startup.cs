@@ -36,32 +36,35 @@ namespace StudentAssistant.Backend
     public class Startup
     {
         private readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             _configuration = configuration;
 
             var builder = new ConfigurationBuilder()
-                            .SetBasePath(Path.Combine(env.ContentRootPath, "Infrastructure", "Configuration"))
-                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                            .AddJsonFile("EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile("ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile("CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile("MongoDbSettings.json", optional: true, reloadOnChange: true)
-                            .AddEnvironmentVariables();
+                .SetBasePath(Path.Combine(env.ContentRootPath, "Infrastructure", "Configuration"))
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("MongoDbSettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
+
             _configuration = builder.Build();
-            
+
             #region Logger
 
-            env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));    
+            env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
-            LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog");
+            LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog",
+                DateTime.UtcNow.ToString("yyyy-MM-dd"));
 
             #endregion
         }
@@ -71,17 +74,14 @@ namespace StudentAssistant.Backend
         {
             services.AddDbContext<Context>();
             services.AddIdentity<IdentityUser, IdentityRole>()
-                    .AddEntityFrameworkStores<Context>()
-                    .AddDefaultTokenProviders()
-                    .AddDefaultTokenProviders();
-            
-            
+                .AddEntityFrameworkStores<Context>()
+                .AddDefaultTokenProviders()
+                .AddDefaultTokenProviders();
+
+
             #region Mapper
 
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapperConfiguration());
-            });
+            var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new AutoMapperConfiguration()); });
 
             IMapper mapper = mappingConfig.CreateMapper();
 
@@ -143,10 +143,14 @@ namespace StudentAssistant.Backend
 
             #region Configure
 
-            services.Configure<EmailServiceConfigurationModel>(options => _configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
-            services.Configure<ParityOfTheWeekConfigurationModel>(options => _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
-            services.Configure<CourseScheduleDataServiceConfigurationModel>(_configuration.GetSection("ListCourseSchedule"));
-            services.Configure<MongoDbSettings>(options => _configuration.GetSection("MongoConnectionTest").Bind(options));
+            services.Configure<EmailServiceConfigurationModel>(options =>
+                _configuration.GetSection("EmailServiceConfigurationModel").Bind(options));
+            services.Configure<ParityOfTheWeekConfigurationModel>(options =>
+                _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
+            services.Configure<CourseScheduleDataServiceConfigurationModel>(
+                _configuration.GetSection("ListCourseSchedule"));
+            services.Configure<MongoDbSettings>(options =>
+                _configuration.GetSection("MongoConnectionTest").Bind(options));
 
             //            services.Configure<MongoDbSettings>(options =>
             //            {
