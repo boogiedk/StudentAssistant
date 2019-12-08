@@ -92,9 +92,9 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 _logger.LogInformation("PrepareViewModel: " +
-                                       "CourseScheduleModel" + input.Count + " " +
-                                       "CourseScheduleParameters" + parameters.DatetimeRequest + " " +
-                                       "GroupName" + parameters.GroupName
+                                       "CourseScheduleModel: " + input.Count + " " +
+                                       "CourseScheduleParameters: " + parameters.DatetimeRequest + " " +
+                                       "GroupName: " + parameters.GroupName
                 );
 
                 // если отсутствуют данные о расписании, возвращаем пустую модель
