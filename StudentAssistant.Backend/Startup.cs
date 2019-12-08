@@ -64,7 +64,7 @@ namespace StudentAssistant.Backend
             env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
             LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog",
-                DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                DateTime.UtcNow.ToString("yyyy-MM-dd")," "); // add empty path for create dir linux/windows
 
             #endregion
         }
