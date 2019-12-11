@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -14,7 +15,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 {
     public class ImportDataExcelService : IImportDataExcelService
     {
+        private readonly ILogger<ImportDataExcelService> _logger;
 
+        public ImportDataExcelService(ILogger<ImportDataExcelService> logger)
+        {
+            _logger = logger;
+        }
         /*
                 private IEnumerable<ImportDataExcelModel> LoadExcelFile()
                 {
@@ -131,6 +137,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
+                _logger.LogInformation("ParseExcelFileForThreeGroup: Start parse Excel file.");
                 var fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
                 var file = new FileInfo(fileName);
@@ -178,7 +185,6 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                                 };
 
 
-
                                 if (firstIterator == 2)
                                 {
                                     model.CourseNumber = sheet.GetRow(i).GetCell(1).NumericCellValue;
@@ -207,13 +213,10 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                                 model.CoursePlace =
                                     sheet.GetRow(secondIterator).GetCell(8 + sixIterator).CellType ==
                                     CellType.Numeric // проверяем тип ячейки
-
                                         ? sheet.GetRow(secondIterator).GetCell(8 + sixIterator).NumericCellValue
                                             .ToString(CultureInfo.InvariantCulture) // если нумерик, то достаем double
-
                                         : sheet.GetRow(secondIterator).GetCell(8 + sixIterator)
                                               ?.StringCellValue // если строковая, то достаем string
-
                                           ?? ""; // если ячейка null, присваиваем ""
 
                                 importDataExcelModels.Add(model);
@@ -238,40 +241,44 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 // Создает Json файл с расписанием
                 // CreateJsonFileForConfig(importDataExcelModels);
 
+                _logger.LogInformation("ParseExcelFileForThreeGroup: End parse Excel file. Object count: " +
+                                       importDataExcelModels.Count);
                 return importDataExcelModels;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError("ParseExcelFileForThreeGroup: Exception when parse excel file. " + ex);
                 throw new NotSupportedException();
             }
         }
 
 
-        private IEnumerable<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(IEnumerable<ImportDataExcelModel> importDataExcelModels)
+        private IEnumerable<CourseScheduleDatabaseModel> PrepareImportDataExcelModelToDatabaseModel(
+            IEnumerable<ImportDataExcelModel> importDataExcelModels)
         {
-            var resultList = new List<CourseScheduleDatabaseModel>();
-
-            foreach (var importDataExcelModel in importDataExcelModels)
+            try
             {
-                var model = new CourseScheduleDatabaseModel
-                {
-                    CoursePlace = importDataExcelModel.CoursePlace,
-                    CourseName = PrepareCourseName(importDataExcelModel.CourseName),
-                    CourseNumber = (int)importDataExcelModel.CourseNumber,
-                    CourseType = ParseCourseType(importDataExcelModel.CourseType),
-                    NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
-                    NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
-                    ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
-                    TeacherFullName = importDataExcelModel.TeacherFullName,
-                    GroupName = ParseGroupName(importDataExcelModel.GroupName),
-                    StartOfClasses = importDataExcelModel.StartOfClasses,
-                    EndOfClasses = importDataExcelModel.EndOfClasses
-                };
-
-                resultList.Add(model);
+                return importDataExcelModels.Select(importDataExcelModel => new CourseScheduleDatabaseModel
+                    {
+                        CoursePlace = importDataExcelModel.CoursePlace,
+                        CourseName = PrepareCourseName(importDataExcelModel.CourseName),
+                        CourseNumber = (int) importDataExcelModel.CourseNumber,
+                        CourseType = ParseCourseType(importDataExcelModel.CourseType),
+                        NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
+                        NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
+                        ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
+                        TeacherFullName = importDataExcelModel.TeacherFullName,
+                        GroupName = ParseGroupName(importDataExcelModel.GroupName),
+                        StartOfClasses = importDataExcelModel.StartOfClasses,
+                        EndOfClasses = importDataExcelModel.EndOfClasses
+                    })
+                    .ToList();
             }
-
-            return resultList;
+            catch (Exception ex)
+            {
+                _logger.LogError("PrepareImportDataExcelModelToDatabaseModel: Exception when prepare excel file. " + ex);
+                throw new NotSupportedException();
+            }
         }
 
         private string ParseGroupName(string groupName)
@@ -360,7 +367,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     return CourseType.LaboratoryWork;
                 case "лек":
                     return CourseType.Lecture;
-                
+
                 default:
                     return CourseType.Other;
             }
@@ -445,4 +452,3 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         }
     }
 }
-
