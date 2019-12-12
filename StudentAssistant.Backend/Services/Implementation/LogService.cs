@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
-using StudentAssistant.Backend.Models.Log;
+using StudentAssistant.Backend.Models.LogProvider;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {

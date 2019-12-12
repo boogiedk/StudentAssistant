@@ -4,6 +4,7 @@ using Humanizer;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.Email;
+using StudentAssistant.Backend.Models.LogProvider;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Models.UserSupport;
@@ -34,6 +35,8 @@ namespace StudentAssistant.Backend.Infrastructure.AutoMapper
                 .ForMember(destination => destination.CombinedGroup, opts => opts.MapFrom(src => string.Join(", ", src.CombinedGroup)));
             //.ForMember(dest => dest.BookTitle,
             //    opts => opts.MapFrom(src => src.Title));
+
+            CreateMap<LogDtoResponseModel, LogResponseModel>();
 
         }
     }

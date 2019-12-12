@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using StudentAssistant.Backend.Models.Log;
+using StudentAssistant.Backend.Models.LogProvider;
 
 namespace StudentAssistant.Backend.Interfaces
 {

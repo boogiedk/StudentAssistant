@@ -5,7 +5,6 @@
     <UserSecretsId>aa42be8f-675a-4702-a2ca-bf69ffdb6c0a</UserSecretsId>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <ApplicationIcon></ApplicationIcon>
     <Win32Resource />
     <Version>1.0.0</Version>
   </PropertyGroup>
@@ -24,12 +23,6 @@
     <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="Infrastructure\DI\**" />
     <None Remove="wwwroot\**" />
-    <None Update="Storages\Nlog\2019-12-11\ nlog-all-2019-12-11.log">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Storages\Nlog\2019-12-11\ nlog-info-2019-12-11.log">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
