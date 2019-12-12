@@ -24,6 +24,12 @@
     <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="Infrastructure\DI\**" />
     <None Remove="wwwroot\**" />
+    <None Update="Storages\Nlog\2019-12-11\ nlog-all-2019-12-11.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Storages\Nlog\2019-12-11\ nlog-info-2019-12-11.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

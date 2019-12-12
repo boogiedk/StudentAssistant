@@ -19,6 +19,7 @@
     <None Remove="$(SpaRoot)**" />
     <None Remove="Pages\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <None Include="ClientApp\src\components\Logs\Logs.jsx" />
   </ItemGroup>
 
   <ItemGroup>
