@@ -9,9 +9,6 @@ using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
-using StudentAssistant.Backend.Models.Log;
-using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
-using StudentAssistant.Backend.Services;
 
 namespace StudentAssistant.Backend.Controllers
 {

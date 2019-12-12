@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
-using StudentAssistant.Backend.Models.Log;
+using StudentAssistant.Backend.Models.LogProvider;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -39,7 +39,7 @@ namespace StudentAssistant.Backend.Controllers
             {
                 var logDtoModel = await _logService.Get();
 
-                var logResponseModel = _mapper.Map<LogDtoResponseModel>(logDtoModel);
+                var logResponseModel = _mapper.Map<LogResponseModel>(logDtoModel);
                 
                 _logger.LogInformation("Response: response is " + string.IsNullOrEmpty(logResponseModel.Logs));
 
@@ -66,7 +66,7 @@ namespace StudentAssistant.Backend.Controllers
 
                 var logDtoModel = await _logService.GetByType(request.LogType);
 
-                var logResponseModel = _mapper.Map<LogDtoResponseModel>(logDtoModel);
+                var logResponseModel = _mapper.Map<LogResponseModel>(logDtoModel);
                 
                 _logger.LogInformation("Response: response is " + string.IsNullOrEmpty(logResponseModel.Logs));
 
