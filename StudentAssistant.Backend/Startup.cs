@@ -63,8 +63,7 @@ namespace StudentAssistant.Backend
 
             env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
-            LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog",
-                DateTime.UtcNow.ToString("yyyy-MM-dd")," "); // add empty path for create dir linux/windows
+            LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog"," "); // add empty path for create dir linux/windows
 
             #endregion
         }
@@ -99,6 +98,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
             services.AddScoped<ICourseScheduleMongoDbService, CourseScheduleMongoDbService>();
+            services.AddScoped<ILogService, LogService>();
 
             services.AddSingleton(mapper);
 

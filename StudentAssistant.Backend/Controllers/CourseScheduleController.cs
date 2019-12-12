@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.Log;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services;
 
