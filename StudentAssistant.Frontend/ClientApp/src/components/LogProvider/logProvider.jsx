@@ -5,7 +5,7 @@ const title = "Логи - Student Assistant";
 
 const url = 'http://localhost:18935';
 
-export class Logs extends Component {
+export class logProvider extends Component {
 
     constructor(props) {
         super(props);
@@ -16,7 +16,7 @@ export class Logs extends Component {
         this.getLogs();
     }
 
-    static displayName = Logs.name;
+    static displayName = logProvider.name;
 
     getLogs() {
         let path = url + '/api/v1/log/get';
@@ -54,11 +54,11 @@ export class Logs extends Component {
 
     render() {
 
-        let contents = Logs.renderCourseSchedule(this.state.logs);
+        let contents = logProvider.renderCourseSchedule(this.state.logs);
 
         return (
             <div>
-                {Logs.getTitle()}
+                {logProvider.getTitle()}
                 <h1>Логи за сегодняшний день.</h1>
                 {contents}
             </div>

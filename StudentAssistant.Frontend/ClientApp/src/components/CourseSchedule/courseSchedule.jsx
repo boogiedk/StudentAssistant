@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import "./courseSchedule.css";
 
-
 import Popup from "reactjs-popup";
 
 import DatePicker, {registerLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import ru from "date-fns/locale/ru";
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
