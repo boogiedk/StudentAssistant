@@ -3,7 +3,7 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home/Home';
 import {courseSchedule} from './components/CourseSchedule/courseSchedule'
-import {Logs} from './components/Logs/Logs'
+import {logProvider} from './components/LogProvider/logProvider'
 
 export default class App extends Component {
   static displayName = 'App.name';
@@ -13,7 +13,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={Home} />
         <Route path='/courseSchedule' component={courseSchedule} />
-          <Route path='/logs' component={Logs} />
+          <Route path='/logs' component={logProvider} />
       </Layout>
     );
   }
