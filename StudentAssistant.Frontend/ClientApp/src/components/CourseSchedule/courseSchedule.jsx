@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import ru from "date-fns/locale/ru";
 
+import RestService from "../../services/RestService"
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -16,7 +17,7 @@ import {TitleComponent} from "../TitleComponent/TitleComponent";
 
 registerLocale("ru", ru);
 
-const url = 'http://localhost:18935';
+const restService = new RestService();
 
 const title = "Расписание - Student Assistant";
 
@@ -47,6 +48,7 @@ export class courseSchedule extends Component {
 
         // по дефолту отправляем Date.Now()
         this.getCourseScheduleModel(this.selectedDate);
+
     }
 
     //текст бокс с датой
@@ -103,70 +105,56 @@ export class courseSchedule extends Component {
     }
 
     updateCourseSchedule() {
-        let path = url + '/api/v1/schedule/download';
+        let path = '/api/v1/schedule/download';
 
-        fetch(path)
-            .then(response => response.json())
+        restService.get(path)
             .then(json => console.log(json));
 
         this.getCourseScheduleModel(this.state.selectedDate);
     }
-    
+
     isWeekday(date) {
         const day = date.getDay();
         return day !== 0 //&& day !== 6 // воскресение заблокировано
     }
 
     getCourseScheduleModel(selectedDatetime) {
-        let path = url + '/api/v1/schedule/selected';
+
+        let path = '/api/v1/schedule/selected';
 
         let requestModel = {
             dateTimeRequest: selectedDatetime,
             groupName: this.state.groupName
         };
 
-        fetch(path, {
-            method: 'POST',
-            headers: {
-                'Accept': ' application/json',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-            },
-            body: JSON.stringify(requestModel)
-        })
-            .then(res => res.json())
-            .then(data => {
-                this.setState({courseScheduleModel: data, loading: false});
-            })
-            .then(response => JSON.stringify(response))
-            .catch(error => console.error('Error:', error));
+        restService.post(path, requestModel)
+            .then(response => {
+                    this.setState(
+                        {
+                            courseScheduleModel: response,
+                            loading: false
+                        });
+                }
+            );
     }
 
     getCourseScheduleModelByGroup(groupName) {
-        let path = url + '/api/v1/schedule/selected';
+        let path = '/api/v1/schedule/selected';
 
         let requestModel = {
             dateTimeRequest: this.state.selectedDate,
             groupName: groupName
         };
 
-        fetch(path, {
-            method: 'POST',
-            headers: {
-                'Accept': ' application/json',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-            },
-            body: JSON.stringify(requestModel)
-        })
-            .then(res => res.json())
-            .then(data => {
-                this.setState({courseScheduleModel: data, loading: false});
-            })
-            .then(response => JSON.stringify(response))
-            .catch(error => console.error('Error:', error));
+        restService.post(path, requestModel)
+            .then(response => {
+                    this.setState(
+                        {
+                            courseScheduleModel: response,
+                            loading: false
+                        });
+                }
+            );
     }
 
     static renderCourseSchedule(courseScheduleModel) {
