@@ -1,9 +1,10 @@
 ﻿import React, {Component} from 'react';
 import {TitleComponent} from "../TitleComponent/TitleComponent";
+import RestService from "../../services/RestService";
 
 const title = "Логи - Student Assistant";
 
-const url = 'http://localhost:18935';
+const restService = new RestService();
 
 export class logProvider extends Component {
 
@@ -19,22 +20,17 @@ export class logProvider extends Component {
     static displayName = logProvider.name;
 
     getLogs() {
-        let path = url + '/api/v1/log/get';
+        let path = '/api/v1/log/get';
 
-        fetch(path, {
-            method: 'GET',
-            headers: {
-                'Accept': ' application/json',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-            }
-        })
-            .then(res => res.json())
-            .then(data => {
-                this.setState({logs: data});
-            })
-            .catch(error => console.error('Error:', error));
+        restService.get(path)
+            .then(response => {
+                    this.setState(
+                        {
+                            logs: response,
+                            loading: false
+                        });
+                }
+            );
     }
 
     /*костыль*/
@@ -47,13 +43,12 @@ export class logProvider extends Component {
     }
 
     static renderCourseSchedule(logs) {
-        {
-          return (<a> {logs.logs} </a>)
-        }
+        return (
+            <div>{logs.logs}</div>
+        )
     }
 
     render() {
-
         let contents = logProvider.renderCourseSchedule(this.state.logs);
 
         return (

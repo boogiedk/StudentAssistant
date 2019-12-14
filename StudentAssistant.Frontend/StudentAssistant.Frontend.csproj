@@ -15,11 +15,11 @@
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="Pages\**" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
+    <Content Include="ClientApp\src\services\RestService.jsx" />
     <EmbeddedResource Remove="Pages\**" />
     <None Remove="$(SpaRoot)**" />
     <None Remove="Pages\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-    <None Include="ClientApp\src\components\Logs\Logs.jsx" />
   </ItemGroup>
 
   <ItemGroup>
