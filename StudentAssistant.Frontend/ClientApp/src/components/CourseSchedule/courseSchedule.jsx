@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import ru from "date-fns/locale/ru";
 
-import RestService from "../../services/RestService"
+import CourseScheduleService from "../../services/CourseScheduleService";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -17,7 +17,7 @@ import {TitleComponent} from "../TitleComponent/TitleComponent";
 
 registerLocale("ru", ru);
 
-const restService = new RestService();
+const courseScheduleService = new CourseScheduleService();
 
 const title = "Расписание - Student Assistant";
 
@@ -27,7 +27,6 @@ export class courseSchedule extends Component {
         super(props);
         this.state = {
             courseScheduleModel: [],
-            dateTimeString: '',
             selectedDate: moment(new Date()).format('YYYY-MM-DD'),
             loading: true,
             groupName: 'БББО-01-16',
@@ -42,22 +41,17 @@ export class courseSchedule extends Component {
 
         this.updateCourseSchedule = this.updateCourseSchedule.bind(this);
 
-        // default values
-        this.groupName = 'БББО-01-16';
-        this.selectedDate = moment(new Date()).format('YYYY-MM-DD');
-
         // по дефолту отправляем Date.Now()
-        this.getCourseScheduleModel(this.selectedDate);
-
+        this.getCourseSchedule();
     }
 
     //текст бокс с датой
     handleChange(event) {
         this.setState({
             selectedDate: event.target.value
+        }, () => {
+            this.getCourseSchedule();
         });
-
-        this.getCourseScheduleModel(event.target.value);
     }
 
     //следующий день
@@ -68,9 +62,9 @@ export class courseSchedule extends Component {
 
         this.setState({
             selectedDate: moment(myDate).format('YYYY-MM-DD'),
+        }, () => {
+            this.getCourseSchedule();
         });
-
-        this.getCourseScheduleModel(myDate);
     }
 
     //предыдущий день
@@ -81,80 +75,52 @@ export class courseSchedule extends Component {
 
         this.setState({
             selectedDate: moment(myDate).format('YYYY-MM-DD')
+        }, () => {
+            this.getCourseSchedule();
         });
-
-        this.getCourseScheduleModel(myDate);
     }
 
     //изменение календаря
     handleChangeCalendar(date) {
         this.setState({
             selectedDate: moment(date).format('YYYY-MM-DD')
+        }, () => {
+            this.getCourseSchedule();
         });
-
-        this.getCourseScheduleModel(date);
     }
 
     //изменение селектора групп
     handleChangeSelect(event) {
         this.setState({
             groupName: event.target.value,
+        }, () => {
+            this.getCourseSchedule();
         });
-
-        this.getCourseScheduleModelByGroup(event.target.value);
     }
 
+    // обновить расписание (скачать новый файл на сервер)
     updateCourseSchedule() {
-        let path = '/api/v1/schedule/download';
-
-        restService.get(path)
-            .then(json => console.log(json));
-
-        this.getCourseScheduleModel(this.state.selectedDate);
+        courseScheduleService.update();
+        
+        this.getCourseSchedule();
     }
 
+    // фильтр для виджета календаря
     isWeekday(date) {
         const day = date.getDay();
         return day !== 0 //&& day !== 6 // воскресение заблокировано
     }
 
-    getCourseScheduleModel(selectedDatetime) {
-
-        let path = '/api/v1/schedule/selected';
-
-        let requestModel = {
-            dateTimeRequest: selectedDatetime,
-            groupName: this.state.groupName
-        };
-
-        restService.post(path, requestModel)
+    // получить модель с расписанием
+    getCourseSchedule() {
+        courseScheduleService.get(this.state.selectedDate, this.state.groupName)
             .then(response => {
-                    this.setState(
-                        {
-                            courseScheduleModel: response,
-                            loading: false
-                        });
-                }
-            );
-    }
-
-    getCourseScheduleModelByGroup(groupName) {
-        let path = '/api/v1/schedule/selected';
-
-        let requestModel = {
-            dateTimeRequest: this.state.selectedDate,
-            groupName: groupName
-        };
-
-        restService.post(path, requestModel)
-            .then(response => {
-                    this.setState(
-                        {
-                            courseScheduleModel: response,
-                            loading: false
-                        });
-                }
-            );
+                this.setState(
+                    {
+                        courseScheduleModel: response,
+                        loading: false
+                    });
+            });
     }
 
     static renderCourseSchedule(courseScheduleModel) {
