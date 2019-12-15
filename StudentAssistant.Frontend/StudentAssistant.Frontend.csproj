@@ -15,6 +15,7 @@
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="Pages\**" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
+    <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
     <Content Include="ClientApp\src\services\RestService.jsx" />
     <EmbeddedResource Remove="Pages\**" />
     <None Remove="$(SpaRoot)**" />
