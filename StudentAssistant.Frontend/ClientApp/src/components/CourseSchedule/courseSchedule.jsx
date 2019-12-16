@@ -30,7 +30,7 @@ export class courseSchedule extends Component {
             selectedDate: moment(new Date()).format('YYYY-MM-DD'),
             loading: true,
             groupName: 'БББО-01-16',
-            isWeekday: true,
+          //  isWeekday: true,
             counter: 0
         };
         this.handleChange = this.handleChange.bind(this);
@@ -125,52 +125,49 @@ export class courseSchedule extends Component {
 
     static renderCourseSchedule(courseScheduleModel) {
 
-        if ((typeof courseScheduleModel === "undefined") || (
-            courseScheduleModel.coursesViewModel.length === 1 &
-            courseScheduleModel.coursesViewModel[0].courseName === "")) {
+        if (courseScheduleService.validate(courseScheduleModel)) {
             return (
-                // если кол-во моделей 1 - значит есть вероятность, что модель пустая
-                // далее проверяем имя первой пары и убеждаемся в этом
-                <p className="infoMessage"><em>Пар не найдено. Попробуйте выбрать другой день</em></p>)
+                <table className='table table-striped'>
+                    <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Начало</th>
+                        <th>Конец</th>
+                        <th>Название</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {courseScheduleModel.coursesViewModel.map(courseViewModel =>
+                        <tr key={courseViewModel.courseNumber}>
+                            <td>{courseViewModel.courseNumber}</td>
+                            <td>{courseViewModel.startOfClasses}</td>
+                            <td>{courseViewModel.endOfClasses}</td>
+                            <td>
+                                <div className="courseNameStyle"> {courseViewModel.courseName} </div>
+                                <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
+                                <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
+                                <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
+
+                                <Popup trigger={<button className="infoIcon"></button>} position="top center">
+                                    <div>
+                                        <div
+                                            className="combinedGroupStyle"> {courseViewModel.combinedGroup !== "" ? "Совмещено с " + courseViewModel.combinedGroup : "Несовмещенная пара"}</div>
+                                        Пара повторяется на <div
+                                        className="numberWeekStyle"> {courseViewModel.numberWeek !== "" ? "" + courseViewModel.numberWeek : "каждой " + courseViewModel.parityWeek}</div> неделе.
+                                    </div>
+                                </Popup>
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
+                </table>
+            );
         }
 
         return (
-            <table className='table table-striped'>
-                <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Начало</th>
-                    <th>Конец</th>
-                    <th>Название</th>
-                </tr>
-                </thead>
-                <tbody>
-                {courseScheduleModel.coursesViewModel.map(courseViewModel =>
-                    <tr key={courseViewModel.courseNumber}>
-                        <td>{courseViewModel.courseNumber}</td>
-                        <td>{courseViewModel.startOfClasses}</td>
-                        <td>{courseViewModel.endOfClasses}</td>
-                        <td>
-                            <div className="courseNameStyle"> {courseViewModel.courseName} </div>
-                            <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
-                            <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
-                            <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
-
-                            <Popup trigger={<button className="infoIcon"></button>} position="top center">
-                                <div>
-                                    <div
-                                        className="combinedGroupStyle"> {courseViewModel.combinedGroup !== "" ? "Совмещено с " + courseViewModel.combinedGroup : "Несовмещенная пара"}</div>
-                                    Пара повторяется на <div
-                                    className="numberWeekStyle"> {courseViewModel.numberWeek !== "" ? "" + courseViewModel.numberWeek : "каждой " + courseViewModel.parityWeek}</div> неделе.
-                                </div>
-                            </Popup>
-                        </td>
-                    </tr>
-                )}
-                </tbody>
-            </table>
-        );
-
+            // если кол-во моделей 1 - значит есть вероятность, что модель пустая
+            // далее проверяем имя первой пары и убеждаемся в этом
+            <p className="infoMessage"><em>Пар не найдено. Попробуйте выбрать другой день</em></p>)
     }
 
     static getTitle() {
@@ -269,7 +266,6 @@ export class courseSchedule extends Component {
                         <img
                             src="https://image.flaticon.com/icons/svg/152/152555.svg"
                             title="Скачать расписание"
-                            onClick={this.downloadCourseSchedule}
                             className="iconDownload"
                             alt="Download"
                         /></a>
