@@ -30,7 +30,6 @@ export class courseSchedule extends Component {
             selectedDate: moment(new Date()).format('YYYY-MM-DD'),
             loading: true,
             groupName: 'БББО-01-16',
-          //  isWeekday: true,
             counter: 0
         };
         this.handleChange = this.handleChange.bind(this);
