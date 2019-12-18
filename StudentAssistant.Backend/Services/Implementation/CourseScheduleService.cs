@@ -168,7 +168,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 _logger.LogInformation("DownloadAsync: " + "Start");
 
                 // проверяем свежесть файла
@@ -184,7 +184,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     FileNameRemote = "KBiSP-4-kurs-1-sem",
                     FileFormat = "xlsx"
                 };
-                
+
                 _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
                 // если не свежий => качаем новый (1 сутки)
@@ -226,7 +226,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile();

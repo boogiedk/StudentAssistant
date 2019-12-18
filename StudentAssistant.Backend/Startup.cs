@@ -99,6 +99,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
             services.AddScoped<ICourseScheduleMongoDbService, CourseScheduleMongoDbService>();
             services.AddScoped<ILogService, LogService>();
+            services.AddScoped<IControlWeekService,ControlWeekService>();
 
             services.AddSingleton(mapper);
 
