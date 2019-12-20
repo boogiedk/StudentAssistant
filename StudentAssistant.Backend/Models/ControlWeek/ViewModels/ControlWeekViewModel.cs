@@ -19,11 +19,6 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         public string DatetimeRequest { get; set; }
 
         /// <summary>
-        /// Название дня недели.
-        /// </summary>
-        public string NameOfDayWeek { get; set; }
-
-        /// <summary>
         /// Дата последнего изменения файла с расписанием.
         /// </summary>
         public string UpdateDatetime { get; set; }
@@ -37,7 +32,7 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         
         public override string ToString()
         {
-            return $"DatetimeRequest: {DatetimeRequest} NameOfDayWeek: {NameOfDayWeek} CoursesViewModel: {ControlCourseViewModel.Count}";
+            return $"DatetimeRequest: {DatetimeRequest} CoursesViewModel: {ControlCourseViewModel.Count}";
         }
         
     }

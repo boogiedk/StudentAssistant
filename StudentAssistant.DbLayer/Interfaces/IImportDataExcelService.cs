@@ -9,9 +9,9 @@ namespace StudentAssistant.DbLayer.Interfaces
     public interface IImportDataExcelService
     {
         /// <summary>
-        /// Импортирует данные из Excel файла.
+        /// Импортирует данные расписания из Excel файла.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels();
+        IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName);
     }
 }

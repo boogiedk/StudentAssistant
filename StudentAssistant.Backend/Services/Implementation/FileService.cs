@@ -10,14 +10,10 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class FileService : IFileService
     {
-        // вынести в конфиг
-        private readonly string _pathToFile = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
-        //
-
-        public Task<bool> CheckExcelFile(DateTime datetimeUfc) => Task.Run(() =>
+        public Task<bool> CheckExcelFile(DateTime datetimeUfc, string fileName) => Task.Run(() =>
         {
             var lastAccessTimeUtc = File.GetLastAccessTimeUtc(
-                Path.Combine($"{_pathToFile}"));
+                Path.Combine($"{fileName}"));
 
             return lastAccessTimeUtc.Date == datetimeUfc.Date;
         });
@@ -58,7 +54,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public async Task DownloadByLinkAsync(Uri uri, CancellationToken cancellationToken)
+        public async Task DownloadByLinkAsync(Uri uri, string fileName, CancellationToken cancellationToken)
         {
             try
             {
@@ -74,7 +70,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                             var fileBytes = await result.Content.ReadAsByteArrayAsync();
 
                             await File.WriteAllBytesAsync(
-                             _pathToFile,
+                                fileName,
                                 fileBytes, cancellationToken);
                         }
                     }
@@ -86,10 +82,10 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public Task<DateTime> GetLastWriteTime() => Task.Run(() =>
+        public Task<DateTime> GetLastWriteTime(string fileName) => Task.Run(() =>
         {
-            var lastAccessTimeUtc = File.GetLastWriteTime (
-                Path.Combine($"{_pathToFile}"));
+            var lastAccessTimeUtc = File.GetLastWriteTime(
+                Path.Combine($"{fileName}"));
 
             return lastAccessTimeUtc;
         });

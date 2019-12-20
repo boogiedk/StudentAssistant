@@ -3,7 +3,7 @@
 namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
 {
     /// <summary>
-    /// Модель представления с данными о днях из расписания.
+    /// Модель представления с данными о днях из расписания зачетной недели.
     /// </summary>
     public class ControlCourseViewModel
     {
@@ -25,6 +25,11 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         /// Номер предмета.
         /// </summary>
         public int CourseNumber { get; set; }
+        
+        /// <summary>
+        /// Название дня недели.
+        /// </summary>
+        public string NameOfDayWeek { get; set; }
 
         /// <summary>
         /// Тип предмета.
@@ -50,5 +55,7 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         /// Окончание Занятий.
         /// </summary>
         public string EndOfClasses { get; set; }
+        
+        public string GroupName { get; set; }
     }
 }

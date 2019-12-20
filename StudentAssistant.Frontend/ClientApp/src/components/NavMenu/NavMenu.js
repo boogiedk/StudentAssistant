@@ -36,6 +36,9 @@ export class NavMenu extends Component {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/courseSchedule">Расписание</NavLink>
                 </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/controlWeek">Зачётная неделя</NavLink>
+                </NavItem>
               </ul>
             </Collapse>
           </Container>

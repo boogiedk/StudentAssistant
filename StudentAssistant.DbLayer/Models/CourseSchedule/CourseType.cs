@@ -25,6 +25,12 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// </summary>
         [Description("Лабораторная")]
         LaboratoryWork = 3,
+        
+        /// <summary>
+        /// Зачёт.
+        /// </summary>
+        [Description("Зачёт")]
+        ControlCourse = 4,
 
         /// <summary>
         /// Другое.
