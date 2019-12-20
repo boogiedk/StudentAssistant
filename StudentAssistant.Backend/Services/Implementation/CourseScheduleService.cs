@@ -25,6 +25,8 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
+        readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
+
         public CourseScheduleService(
             ICourseScheduleMongoDbService courseScheduleMongoDbService,
             ICourseScheduleFileService courseScheduleFileService,
@@ -62,7 +64,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                         .GetDayName(input.DateTimeRequest.DayOfWeek),
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest),
                     GroupName = input.GroupName,
-                    DatetimeRequest = input.DateTimeRequest
+                    DatetimeRequest = input.DateTimeRequest,
+                    FileName = _fileName
                 };
 
                 // на данным момент расписание берется из Excel файла.
@@ -105,7 +108,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                         NameOfDayWeek =
                             parameters.NameOfDayWeek.ToUpper(),
                         DatetimeRequest = parameters.DatetimeRequest.Date.ToShortDateString(),
-                        UpdateDatetime = _fileService.GetLastWriteTime().Result.ToShortDateString(),
+                        UpdateDatetime = _fileService.GetLastWriteTime(parameters.FileName).Result.ToShortDateString(),
                         CoursesViewModel = new List<CourseViewModel> {new CourseViewModel()},
                         NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(parameters.DatetimeRequest.Date)
                     };
@@ -128,7 +131,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     CoursesViewModel = sortedCoursesViewModel,
                     NameOfDayWeek = parameters.NameOfDayWeek.ToUpper(),
                     DatetimeRequest = parameters.DatetimeRequest.Date.ToShortDateString(),
-                    UpdateDatetime = _fileService.GetLastWriteTime().Result.Date.ToShortDateString(),
+                    UpdateDatetime = _fileService.GetLastWriteTime(parameters.FileName).Result.Date.ToShortDateString(),
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(parameters.DatetimeRequest)
                 };
 
@@ -168,11 +171,11 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 _logger.LogInformation("DownloadAsync: " + "Start");
 
                 // проверяем свежесть файла
-                var isNewFile = _fileService.CheckExcelFile(DateTime.UtcNow);
+                var isNewFile = _fileService.CheckExcelFile(DateTime.UtcNow, _fileName);
 
                 // TODO: вынести в конфиг
                 var downloadFileParametersModel = new DownloadFileParametersModel
@@ -184,7 +187,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     FileNameRemote = "KBiSP-4-kurs-1-sem",
                     FileFormat = "xlsx"
                 };
-                
+
                 _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
                 // если не свежий => качаем новый (1 сутки)
@@ -211,7 +214,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("DownloadByLinkAsync: " + "Uri: " + request.Uri);
 
-                await _fileService.DownloadByLinkAsync(request.Uri,
+                await _fileService.DownloadByLinkAsync(request.Uri, _fileName,
                     cancellationToken);
             }
             catch (Exception ex)
@@ -226,10 +229,10 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
-                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile();
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
 
                 await _courseScheduleMongoDbService.UpdateAsync(courseScheduleList, cancellationToken);
             }
@@ -245,7 +248,9 @@ namespace StudentAssistant.Backend.Services.Implementation
             try
             {
                 _logger.LogInformation("GetLastAccessTimeUtc: " + "Start");
-                var lastAccessTimeUtc = _fileService.GetLastWriteTime();
+
+
+                var lastAccessTimeUtc = _fileService.GetLastWriteTime(_fileName);
 
                 //https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.getlastwritetime
                 var errorDatetime = new DateTime(1601, 01, 01, 3, 0, 0);

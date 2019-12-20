@@ -10,12 +10,13 @@ namespace StudentAssistant.Backend.Interfaces
     /// </summary>
    public interface IFileService
    {
-        /// <summary>
-        /// Проверяет актуальность Excel файла.
-        /// </summary>
-        /// <param name="datetimeUtc"></param>
-        /// <returns></returns>
-        Task<bool> CheckExcelFile(DateTime datetimeUtc);
+       /// <summary>
+       /// Проверяет актуальность Excel файла.
+       /// </summary>
+       /// <param name="datetimeUtc"></param>
+       /// <param name="fileName"></param>
+       /// <returns></returns>
+       Task<bool> CheckExcelFile(DateTime datetimeUtc,string fileName);
 
        /// <summary>
        /// Скачивает Excel файл с URL университета.
@@ -30,13 +31,13 @@ namespace StudentAssistant.Backend.Interfaces
        /// </summary>
        /// <returns></returns>
        Task DownloadByLinkAsync(
-           Uri uri,
+           Uri uri, string fileName,
            CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает дату последней записи в файл.
         /// </summary>
         /// <returns></returns>
-        Task<DateTime> GetLastWriteTime();
+        Task<DateTime> GetLastWriteTime(string fileName);
    }
 }

@@ -31,5 +31,10 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// Время запроса.
         /// </summary>
         public DateTimeOffset DatetimeRequest { get; set; }
+        
+        /// <summary>
+        /// Имя файла.
+        /// </summary>
+        public string FileName { get; set; }
     }
 }

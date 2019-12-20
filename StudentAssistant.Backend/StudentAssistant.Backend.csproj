@@ -68,9 +68,6 @@
     <None Update="Infrastructure\ScheduleFile\file.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\ScheduleFile\scheduleFile.xlsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using AutoMapper;
 using Humanizer;
+using StudentAssistant.Backend.Models.ControlWeek.ViewModels;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.Email;
@@ -37,6 +38,10 @@ namespace StudentAssistant.Backend.Infrastructure.AutoMapper
             //    opts => opts.MapFrom(src => src.Title));
 
             CreateMap<LogDtoResponseModel, LogResponseModel>();
+
+            CreateMap<CourseScheduleDatabaseModel, ControlCourseViewModel>()
+                .ForMember(destination => destination.CourseType,
+                    opts => opts.MapFrom(src => src.CourseType.Humanize()));
 
         }
     }

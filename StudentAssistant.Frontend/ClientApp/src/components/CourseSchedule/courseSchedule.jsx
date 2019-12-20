@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
+
 import "./courseSchedule.css";
 
 import Popup from "reactjs-popup";
@@ -21,7 +22,7 @@ const courseScheduleService = new CourseScheduleService();
 
 const title = "Расписание - Student Assistant";
 
-export class courseSchedule extends Component {
+export class courseSchedule extends React.Component {
 
     constructor(props) {
         super(props);
@@ -100,7 +101,7 @@ export class courseSchedule extends Component {
     // обновить расписание (скачать новый файл на сервер)
     updateCourseSchedule() {
         courseScheduleService.update();
-        
+
         this.getCourseSchedule();
     }
 
@@ -121,7 +122,7 @@ export class courseSchedule extends Component {
                     });
             });
     }
-
+    
     static renderCourseSchedule(courseScheduleModel) {
 
         if (courseScheduleService.validate(courseScheduleModel)) {
@@ -177,6 +178,7 @@ export class courseSchedule extends Component {
         );
     }
 
+
     render() {
 
         let contents = this.state.loading
@@ -185,31 +187,32 @@ export class courseSchedule extends Component {
 
         courseSchedule.getTitle();
 
+
         if (contents != null) {
             return (
                 <div>
                     <React.Fragment>
                         <TitleComponent title={title}/>
                     </React.Fragment>
+                    <div>
+                        <h1>Расписание</h1>
+                        {
+                            this.state.courseScheduleModel.length !== 0 ?
+                                <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
+                                    <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek === 3
+                                        ? this.state.courseScheduleModel.numberWeek + "-я"
+                                        : this.state.courseScheduleModel.numberWeek + "-ая "} неделя.
+                                </p> : <p className="infoMessage"><em>Идет загрузка данных...</em></p>}
+                        <p>
+                            <label className="labelChooseGroup">Выберите группу: </label>
+                            <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
+                                <option value="БББО-01-16">БББО-01-16</option>
+                                <option value="БББО-02-16">БББО-02-16</option>
+                                <option value="БББО-03-16">БББО-03-16</option>
+                            </select>
+                        </p>
 
-                    <h1>Расписание</h1>
-                    {
-                        this.state.courseScheduleModel.length !== 0 ?
-                            <p>На странице отображено расписание на {this.state.courseScheduleModel.datetimeRequest},
-                                <b> {this.state.courseScheduleModel.nameOfDayWeek}</b>, {this.state.courseScheduleModel.numberWeek === 3
-                                    ? this.state.courseScheduleModel.numberWeek + "-я"
-                                    : this.state.courseScheduleModel.numberWeek + "-ая "} неделя.
-                            </p> : <p className="infoMessage"><em>Идет загрузка данных...</em></p>}
-                    <p>
-                        <label className="labelChooseGroup">Выберите группу: </label>
-                        <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
-                            <option value="БББО-01-16">БББО-01-16</option>
-                            <option value="БББО-02-16">БББО-02-16</option>
-                            <option value="БББО-03-16">БББО-03-16</option>
-                        </select>
-                    </p>
-
-                    <span>
+                        <span>
                     <label className="labelChooseDate">Выберите дату: </label>
                     <input
                         type="date"
@@ -247,27 +250,28 @@ export class courseSchedule extends Component {
                            className="rightArrow"
                            alt="right"/>
                 </span>
+                        
+                        {contents}
+                        
+                        <i className="bottom">Последнее обновление
+                            расписания: {this.state.courseScheduleModel.updateDatetime}.</i>
 
-                    {contents}
-
-                    <i className="bottom">Последнее обновление
-                        расписания: {this.state.courseScheduleModel.updateDatetime}.</i>
-
-                    <img
-                        src="https://image.flaticon.com/icons/svg/60/60961.svg"
-                        title="Обновить расписание"
-                        onClick={this.updateCourseSchedule}
-                        className="iconLoad"
-                        alt="iconUpdate"/>
-
-
-                    <a href="https://www.mirea.ru/upload/medialibrary/0b8/KBiSP-4-kurs-1-sem.xlsx">
                         <img
-                            src="https://image.flaticon.com/icons/svg/152/152555.svg"
-                            title="Скачать расписание"
-                            className="iconDownload"
-                            alt="Download"
-                        /></a>
+                            src="https://image.flaticon.com/icons/svg/60/60961.svg"
+                            title="Обновить расписание"
+                            onClick={this.updateCourseSchedule}
+                            className="iconLoad"
+                            alt="iconUpdate"/>
+
+
+                        <a href="https://www.mirea.ru/upload/medialibrary/0b8/KBiSP-4-kurs-1-sem.xlsx">
+                            <img
+                                src="https://image.flaticon.com/icons/svg/152/152555.svg"
+                                title="Скачать расписание"
+                                className="iconDownload"
+                                alt="Download"
+                            /></a>
+                    </div>
                 </div>
             );
         } else {

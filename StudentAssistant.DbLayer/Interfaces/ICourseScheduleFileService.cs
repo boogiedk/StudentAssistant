@@ -13,7 +13,7 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// Вовзращает все раписание из Excel файла.
         /// </summary>
         /// <returns></returns>
-        Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile();
+        Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile(string fileName);
         
         /// <summary>
         /// Возвращает расписание, взятое из Excel файла и отфильтрованное по заданным параметрам.

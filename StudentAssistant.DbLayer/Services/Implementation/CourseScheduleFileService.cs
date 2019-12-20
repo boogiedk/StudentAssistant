@@ -19,12 +19,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 importDataExcelService ?? throw new ArgumentNullException(nameof(importDataExcelService));
         }
 
-        public async Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile()
+        public async Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile(string fileName)
         {
             var result = Task.Run(() =>
             {
                 var courseScheduleDatabaseModels = _importDataExcelService
-                    .GetCourseScheduleDatabaseModels().ToList();
+                    .GetCourseScheduleDatabaseModels(fileName).ToList();
 
                 return courseScheduleDatabaseModels;
             });
@@ -39,7 +39,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 if (input == null) throw new ArgumentNullException(nameof(input));
 
                 var courseScheduleDatabaseModels = _importDataExcelService
-                    .GetCourseScheduleDatabaseModels();
+                    .GetCourseScheduleDatabaseModels(input.FileName);
 
                 // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
                 var filterByNameOfWeek = courseScheduleDatabaseModels

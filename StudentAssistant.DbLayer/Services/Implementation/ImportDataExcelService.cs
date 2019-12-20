@@ -21,124 +21,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             _logger = logger;
         }
-        /*
-                private IEnumerable<ImportDataExcelModel> LoadExcelFile()
-                {
-                    var fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
-                    var file = new FileInfo(fileName);
-
-                    var importDataExcelModels = new List<ImportDataExcelModel>();
-
-                    if (file.Length > 0)
-                    {
-                        using (var stream = new FileStream(fileName, FileMode.Open))
-                        {
-                            stream.Position = 0;
-
-                            XSSFWorkbook hssfwb = new XSSFWorkbook(stream); //This will read 2007+
-                            //Excel format  
-                            var sheet = hssfwb.GetSheetAt(0);
-
-                            // Итератор перехода для номера предмета, начала и
-                            // конца занятий внутри одного номера.
-                            var firstIterator = 0;
-
-                            // Итератор для четности, названия предмета, типа предмета.
-                            // имени преподавателя и кабинета.
-                            var secondIterator = 3;
-
-                            // Итератор для номера предмета, начала и конца занятий.
-                            var thirdIterator = 3;
-
-                            // Итератор для дня недели.
-                            var fourIterator = 3;
-
-                            // Итератор группы
-                            var fiveIterator = 0;
-
-                            // Итератор расписания группы
-                            var sixIterator = 0;
-
-                            for (int j = 0; j < 3; j++)
-                            {
-
-                                for (int i = 3; i < 75; i++)
-                                {
-                                    var model = new ImportDataExcelModel()
-                                    {
-                                        DayOfTheWeek = sheet.GetRow(fourIterator).GetCell(0).StringCellValue?.ToLower(),
-                                        GroupName = sheet.GetRow(1).GetCell(5 + fiveIterator)?.StringCellValue,
-                                    };
-
-                                    if (j != 0)
-                                    {
-                                        if (firstIterator == 2)
-                                        {
-                                            model.CourseNumber = sheet.GetRow(i).GetCell(1).NumericCellValue;
-                                            model.StartOfClasses = sheet.GetRow(i).GetCell(2)?.StringCellValue;
-                                            model.EndOfClasses = sheet.GetRow(i).GetCell(3)?.StringCellValue;
-
-                                            firstIterator = 0;
-                                            thirdIterator += 2;
-                                        }
-                                        else
-                                        {
-                                            model.CourseNumber = sheet.GetRow(thirdIterator).GetCell(1).NumericCellValue;
-                                            model.StartOfClasses = sheet.GetRow(thirdIterator).GetCell(2)?.StringCellValue;
-                                            model.EndOfClasses = sheet.GetRow(thirdIterator).GetCell(3)?.StringCellValue;
-                                        }
-
-                                        model.ParityWeek = sheet.GetRow(secondIterator).GetCell(4)?.StringCellValue;
-                                    }
-
-                                    model.CourseName = sheet.GetRow(secondIterator).GetCell(5 + sixIterator)?.StringCellValue;
-                                    model.CourseType = sheet.GetRow(secondIterator).GetCell(6 + sixIterator)?.StringCellValue;
-                                    model.TeacherFullName = sheet.GetRow(secondIterator).GetCell(7 + sixIterator)?.StringCellValue;
-
-                                    model.CoursePlace =
-                                        sheet.GetRow(secondIterator).GetCell(8 + sixIterator).CellType ==
-                                        CellType.Numeric // проверяем тип ячейки
-
-                                            ? sheet.GetRow(secondIterator).GetCell(8 + sixIterator).NumericCellValue
-                                                .ToString(CultureInfo.InvariantCulture) // если нумерик, то достаем double
-
-                                            : sheet.GetRow(secondIterator).GetCell(8 + sixIterator)
-                                                  ?.StringCellValue // если строковая, то достаем string
-
-                                              ?? ""; // если ячейка null, присваиваем ""
-
-                                    importDataExcelModels.Add(model);
-
-                                    secondIterator++;
-                                    firstIterator++;
-
-                                    // каждые 12 итераций меняем итератор
-                                    // дня недели на 12 (след. день недели)
-                                    if (i == 14 || i == 26 || i == 38 || i == 50 || i == 62 || i == 74)
-                                    {
-                                        fourIterator += 12;
-                                    }
-                                }
-
-                                sixIterator += 8;
-                            }
-                        }
-                    }
-
-                    // Создает Json файл с расписанием
-                    // CreateJsonFileForConfig(importDataExcelModels);
-
-                    return importDataExcelModels;
-                }
-        */
-
-        private IEnumerable<ImportDataExcelModel> ParseExcelFileForThreeGroup()
+        private IEnumerable<ImportDataExcelModel> ParseExcelFileForThreeGroup(string fileName)
         {
             try
             {
                 _logger.LogInformation("ParseExcelFileForThreeGroup: Start parse Excel file.");
-                var fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
                 var file = new FileInfo(fileName);
 
@@ -276,26 +164,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError("PrepareImportDataExcelModelToDatabaseModel: Exception when prepare excel file. " + ex);
+                _logger.LogError("PrepareImportDataExcelModelToDatabaseModel: Exception when prepare excel file. " +
+                                 ex);
                 throw new NotSupportedException();
             }
         }
 
-        private string ParseGroupName(string groupName)
+        public IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName)
         {
-            if (groupName == null) // БББО-01-16 (КБ-1)10.03.01
-            {
-                return string.Empty;
-            }
-
-            var groupNameResult = groupName.Split(' ')[0];
-
-            return groupNameResult; // БББО-01-16
-        }
-
-        public IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels()
-        {
-            var importDataExcelModels = ParseExcelFileForThreeGroup();
+            var importDataExcelModels = ParseExcelFileForThreeGroup(fileName);
 
             var courseScheduleDatabaseModel =
                 PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
@@ -319,6 +196,23 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     File.WriteAllText(fileName, jsonData);
                 }
         */
+
+        /// <summary>
+        /// Парсит строку с группой и возвращает название группы.
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
+        private string ParseGroupName(string groupName)
+        {
+            if (groupName == null) // БББО-01-16 (КБ-1)10.03.01
+            {
+                return string.Empty;
+            }
+
+            var groupNameResult = groupName.Split(' ')[0];
+
+            return groupNameResult; // БББО-01-16
+        }
 
         /// <summary>
         /// Парсит строку с четностью и возвращает true или false в зависимости от результата.
@@ -367,6 +261,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     return CourseType.LaboratoryWork;
                 case "лек":
                     return CourseType.Lecture;
+                case "зач":
+                    return CourseType.ControlCourse;
 
                 default:
                     return CourseType.Other;
