@@ -28,6 +28,19 @@ export default class ControlWeekService {
 
         return true;
     }
-    
+
+    prepareNameOfDayWeek(nameOfDayWeek) {
+        if (nameOfDayWeek === null || typeof nameOfDayWeek === "undefined")
+            return nameOfDayWeek;
+
+        // размер минимального имени дня недели, 
+        // который помещается в таблицу
+        if (nameOfDayWeek.length > 7) {
+            return nameOfDayWeek.substring(0, 5) + ".";
+        } else {
+            return nameOfDayWeek;
+        }
+    }
+
 }
 
