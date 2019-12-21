@@ -11,7 +11,7 @@ export default class RestService {
         })
             .then(response => {
                 return response.data
-            })
+            }) 
             .catch((error) => {
                 console.log(error);
             });

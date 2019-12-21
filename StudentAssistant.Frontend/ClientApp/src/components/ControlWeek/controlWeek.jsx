@@ -19,6 +19,7 @@ export class controlWeek extends Component {
             groupName: 'БББО-01-16'
         };
         this.updateControlWeek= this.updateControlWeek.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this);
 
         // по дефолту отправляем Date.Now()
         this.getControlWeek();
@@ -47,17 +48,15 @@ export class controlWeek extends Component {
                         <th>День недели</th>
                         <th>№</th>
                         <th>Начало</th>
-                        <th>Конец</th>
                         <th>Название</th>
                     </tr>
                     </thead>
                     <tbody>
                     {controlWeekModel.controlCourseViewModel.map(courseViewModel =>
                         <tr key={courseViewModel.courseName}>
-                            <td>{courseViewModel.nameOfDayWeek}</td>
+                            <td>{controlWeekService.prepareNameOfDayWeek(courseViewModel.nameOfDayWeek)}</td>
                             <td>{courseViewModel.courseNumber}</td>
                             <td>{courseViewModel.startOfClasses}</td>
-                            <td>{courseViewModel.endOfClasses}</td>
                             <td>
                                 <div className="courseNameStyle"> {courseViewModel.courseName} </div>
                                 <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
@@ -90,6 +89,15 @@ export class controlWeek extends Component {
         controlWeekService.update();
     }
 
+    //изменение селектора групп
+    handleChangeSelect(event) {
+        this.setState({
+            groupName: event.target.value,
+        }, () => {
+            this.getControlWeek();
+        });
+    }
+
     
     render() {
 
@@ -107,6 +115,15 @@ export class controlWeek extends Component {
                     </React.Fragment>
 
                     <h1>Расписание</h1>
+
+                    <p>
+                        <label className="labelChooseGroup">Выберите группу: </label>
+                        <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
+                            <option value="БББО-01-16">БББО-01-16</option>
+                            <option value="БББО-02-16">БББО-02-16</option>
+                            <option value="БББО-03-16">БББО-03-16</option>
+                        </select>
+                    </p>
                     
                     {contents}
 

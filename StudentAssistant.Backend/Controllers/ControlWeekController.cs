@@ -21,11 +21,11 @@ namespace StudentAssistant.Backend.Controllers
     public class ControlWeekController : Controller
     {
         private readonly IControlWeekService _controlWeekService;
-        private readonly ILogger<CourseScheduleController> _logger;
+        private readonly ILogger<ControlWeekController> _logger;
 
         public ControlWeekController(
             IControlWeekService controlWeekService,
-            ILogger<CourseScheduleController> logger)
+            ILogger<ControlWeekController> logger)
         {
             _controlWeekService = controlWeekService;
             _logger = logger;
