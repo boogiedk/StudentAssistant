@@ -19,6 +19,7 @@ export class controlWeek extends Component {
             groupName: 'БББО-01-16'
         };
         this.updateControlWeek= this.updateControlWeek.bind(this);
+        this.handleChangeSelect = this.handleChangeSelect.bind(this);
 
         // по дефолту отправляем Date.Now()
         this.getControlWeek();
@@ -90,6 +91,15 @@ export class controlWeek extends Component {
         controlWeekService.update();
     }
 
+    //изменение селектора групп
+    handleChangeSelect(event) {
+        this.setState({
+            groupName: event.target.value,
+        }, () => {
+            this.getControlWeek();
+        });
+    }
+
     
     render() {
 
@@ -107,6 +117,15 @@ export class controlWeek extends Component {
                     </React.Fragment>
 
                     <h1>Расписание</h1>
+
+                    <p>
+                        <label className="labelChooseGroup">Выберите группу: </label>
+                        <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
+                            <option value="БББО-01-16">БББО-01-16</option>
+                            <option value="БББО-02-16">БББО-02-16</option>
+                            <option value="БББО-03-16">БББО-03-16</option>
+                        </select>
+                    </p>
                     
                     {contents}
 
