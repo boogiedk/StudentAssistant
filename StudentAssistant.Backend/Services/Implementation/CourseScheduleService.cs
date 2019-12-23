@@ -25,7 +25,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
+        private readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
         public CourseScheduleService(
             ICourseScheduleMongoDbService courseScheduleMongoDbService,

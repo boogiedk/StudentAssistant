@@ -23,7 +23,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "controlWeek.xlsx");
+        private readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "controlWeek.xlsx");
 
         public ControlWeekService(
             ICourseScheduleFileService courseScheduleFileService,
