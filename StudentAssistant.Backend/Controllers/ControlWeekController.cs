@@ -57,7 +57,7 @@ namespace StudentAssistant.Backend.Controllers
         }
 
         /// <summary>
-        /// Метод для скачивания файла с расписанием.
+        /// Метод для скачивания файла с расписанием зачётов.
         /// </summary>
         /// <returns></returns>
         [HttpGet("download")]

@@ -17,8 +17,7 @@ export default class ControlWeekService {
     update() {
         let path = '/api/v1/controlWeek/download';
 
-        restService.get(path)
-            .then(json => console.log(json));
+        return restService.get(path);
     }
 
     validate(controlWeekModel) {

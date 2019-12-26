@@ -7,11 +7,15 @@ import Popup from "reactjs-popup";
 import DatePicker, {registerLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+
+import 'react-toastify/dist/ReactToastify.css';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import ru from "date-fns/locale/ru";
 
 import CourseScheduleService from "../../services/CourseScheduleService";
-
-import 'bootstrap/dist/css/bootstrap.min.css';
+import ToastNotificationService from "../../services/ToastNotificationService";
 
 import moment from 'moment';
 import {TitleComponent} from "../TitleComponent/TitleComponent";
@@ -19,6 +23,7 @@ import {TitleComponent} from "../TitleComponent/TitleComponent";
 registerLocale("ru", ru);
 
 const courseScheduleService = new CourseScheduleService();
+const toastNotificationService = new ToastNotificationService();
 
 const title = "Расписание - Student Assistant";
 
@@ -100,7 +105,8 @@ export class courseSchedule extends React.Component {
 
     // обновить расписание (скачать новый файл на сервер)
     updateCourseSchedule() {
-        courseScheduleService.update();
+        courseScheduleService.update()
+            .then(response => toastNotificationService.notifyInfo(response));
 
         this.getCourseSchedule();
     }
@@ -194,6 +200,7 @@ export class courseSchedule extends React.Component {
                     <React.Fragment>
                         <TitleComponent title={title}/>
                     </React.Fragment>
+                    
                     <div>
                         <h1>Расписание</h1>
                         {

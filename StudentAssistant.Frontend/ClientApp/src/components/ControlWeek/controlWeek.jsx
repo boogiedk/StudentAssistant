@@ -3,13 +3,18 @@ import React, {Component} from 'react';
 import ControlWeekService from "../../services/ControlWeekService";
 import {TitleComponent} from "../TitleComponent/TitleComponent";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import ToastNotificationService from "../../services/ToastNotificationService";
+
 const title = "Расписание зачётов - Student Assistant";
 
 const controlWeekService = new ControlWeekService();
+const toastNotificationService = new ToastNotificationService();
 
 export class controlWeek extends Component {
     
-
     constructor(props) {
         super(props);
         this.state = {
@@ -36,7 +41,6 @@ export class controlWeek extends Component {
                     });
             });
     }
-    
     
     static renderControlWeek(controlWeekModel) {
 
@@ -86,7 +90,8 @@ export class controlWeek extends Component {
 
     // обновить расписание (скачать новый файл на сервер)
     updateControlWeek() {
-        controlWeekService.update();
+        controlWeekService.update()
+            .then(response => toastNotificationService.notifyInfo(response));
     }
 
     //изменение селектора групп
@@ -97,7 +102,6 @@ export class controlWeek extends Component {
             this.getControlWeek();
         });
     }
-
     
     render() {
 
