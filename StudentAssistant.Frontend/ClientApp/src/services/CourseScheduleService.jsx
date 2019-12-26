@@ -18,8 +18,7 @@ export default class CourseScheduleService {
     update() {
         let path = '/api/v1/schedule/download';
 
-        restService.get(path)
-            .then(json => console.log(json));
+        return restService.get(path);
     }
 
     validate(courseScheduleModel) {

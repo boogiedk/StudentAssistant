@@ -19,6 +19,7 @@
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
     <Content Include="ClientApp\src\services\RestService.jsx" />
+    <Content Include="ClientApp\src\services\ToastNotificationService.jsx" />
     <EmbeddedResource Remove="Pages\**" />
     <None Remove="$(SpaRoot)**" />
     <None Remove="Pages\**" />
