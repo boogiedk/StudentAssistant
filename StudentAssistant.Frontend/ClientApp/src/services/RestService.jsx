@@ -10,7 +10,7 @@ export default class RestService {
             params: params
         })
             .then(response => {
-                return response
+                return response;
             }) 
             .catch((error) => {
                 console.log(error);
