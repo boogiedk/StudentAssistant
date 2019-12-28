@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.ControlWeek;
 using StudentAssistant.Backend.Models.ControlWeek.ViewModels;
+using StudentAssistant.Backend.Services.Implementation;
 
 namespace StudentAssistant.Backend.Interfaces
 {
@@ -19,6 +20,6 @@ namespace StudentAssistant.Backend.Interfaces
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task DownloadAsync(CancellationToken cancellationToken);
+        Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken);
     }
 }

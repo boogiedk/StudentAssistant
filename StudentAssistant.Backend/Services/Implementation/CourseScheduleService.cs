@@ -166,7 +166,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             return counterEmpty == input.Count;
         }
 
-        public async Task DownloadAsync(CancellationToken cancellationToken)
+        public async Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -190,10 +190,28 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
+                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
+
+                var result = new DownloadAsyncResponseModel
+                {
+                    IsNewFile = await isNewFile
+                };
+
+
                 // если не свежий => качаем новый (1 сутки)
                 if (!(await isNewFile))
+                {
                     await _fileService.DownloadAsync(
                         downloadFileParametersModel, cancellationToken);
+
+                    result.Message = "Данные обновлены!";
+                }
+                else
+                {
+                    result.Message = "Обновление невозможно. Попробуйте позже.";
+                }
+
+                return result;
             }
             catch (Exception ex)
             {

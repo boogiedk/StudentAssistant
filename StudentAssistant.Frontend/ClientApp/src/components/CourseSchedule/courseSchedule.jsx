@@ -106,7 +106,7 @@ export class courseSchedule extends React.Component {
     // обновить расписание (скачать новый файл на сервер)
     updateCourseSchedule() {
         courseScheduleService.update()
-            .then(response => toastNotificationService.notifyInfo(response));
+            .then(response => toastNotificationService.notifyInfo(response.message));
 
         this.getCourseSchedule();
     }

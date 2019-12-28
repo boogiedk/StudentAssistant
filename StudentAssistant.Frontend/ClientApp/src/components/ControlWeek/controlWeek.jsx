@@ -91,7 +91,7 @@ export class controlWeek extends Component {
     // обновить расписание (скачать новый файл на сервер)
     updateControlWeek() {
         controlWeekService.update()
-            .then(response => toastNotificationService.notifyInfo(response));
+            .then(response => toastNotificationService.notifyInfo(response.message));
     }
 
     //изменение селектора групп
