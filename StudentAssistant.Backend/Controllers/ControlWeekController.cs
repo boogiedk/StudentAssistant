@@ -61,7 +61,7 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("download")]
-        public async Task<IActionResult> DownloadCourseScheduleFileAsync(
+        public async Task<IActionResult> DownloadControlWeekFileAsync(
             CancellationToken cancellationToken)
         {
             try

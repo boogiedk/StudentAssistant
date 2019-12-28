@@ -10,7 +10,7 @@ export default class RestService {
             params: params
         })
             .then(response => {
-                return response.data
+                return response
             }) 
             .catch((error) => {
                 console.log(error);
@@ -22,7 +22,7 @@ export default class RestService {
             headers: this.headers()
         })
             .then(function (response) {
-                return response.data;
+                return response;
             })
             .catch(function (error) {
                 console.log(error);

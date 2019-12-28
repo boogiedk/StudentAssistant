@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.ControlWeek;
 using StudentAssistant.Backend.Models.ControlWeek.ViewModels;
+using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -135,7 +136,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 }
                 else
                 {
-                    result.Message = "Обновление невозможно. Попробуйте позже.";
+                    result.Message = "Обновление недоступно. Попробуйте позже.";
                 }
 
                 return result;
@@ -198,14 +199,5 @@ namespace StudentAssistant.Backend.Services.Implementation
             a[0] = char.ToUpper(a[0]);
             return new string(a);
         }
-    }
-
-    /// <summary>
-    /// Модель с ответом об обновленном расписании.
-    /// </summary>
-    public class DownloadAsyncResponseModel
-    {
-        public bool IsNewFile { get; set; }
-        public string Message { get; set; }
     }
 }

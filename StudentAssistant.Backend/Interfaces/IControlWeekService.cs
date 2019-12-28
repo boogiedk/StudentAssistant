@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.ControlWeek;
 using StudentAssistant.Backend.Models.ControlWeek.ViewModels;
+using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Services.Implementation;
 
 namespace StudentAssistant.Backend.Interfaces

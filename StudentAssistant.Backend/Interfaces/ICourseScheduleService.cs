@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Services.Implementation;
 
 namespace StudentAssistant.Backend.Interfaces
