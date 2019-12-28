@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -166,7 +167,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             return counterEmpty == input.Count;
         }
 
-        public async Task DownloadAsync(CancellationToken cancellationToken)
+        public async Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -190,10 +191,28 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
+                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
+
+                var result = new DownloadAsyncResponseModel
+                {
+                    IsNewFile = await isNewFile
+                };
+
+
                 // если не свежий => качаем новый (1 сутки)
                 if (!(await isNewFile))
+                {
                     await _fileService.DownloadAsync(
                         downloadFileParametersModel, cancellationToken);
+
+                    result.Message = "Данные обновлены!";
+                }
+                else
+                {
+                    result.Message = "Обновление невозможно. Попробуйте позже.";
+                }
+
+                return result;
             }
             catch (Exception ex)
             {

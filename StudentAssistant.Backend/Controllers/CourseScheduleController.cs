@@ -129,10 +129,11 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                await _courseScheduleService.DownloadAsync(cancellationToken);
+               var response = await _courseScheduleService.DownloadAsync(cancellationToken);
 
                 _logger.LogInformation($"Response: " + "Данные обновлены!");
-                return Ok("Данные обновлены!");
+                
+                return Ok(response);
             }
             catch (Exception ex)
             {

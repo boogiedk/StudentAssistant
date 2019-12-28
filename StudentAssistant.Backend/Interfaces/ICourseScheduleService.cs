@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.Backend.Models.DownloadAsync;
+using StudentAssistant.Backend.Services.Implementation;
 
 namespace StudentAssistant.Backend.Interfaces
 {
@@ -21,7 +23,7 @@ namespace StudentAssistant.Backend.Interfaces
         /// Отправляет запрос на обновление расписания в базе данных.
         /// </summary>
         /// <returns></returns>
-        Task DownloadAsync(CancellationToken cancellationToken);
+        Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает дату последнего изменения файла с расписанием.

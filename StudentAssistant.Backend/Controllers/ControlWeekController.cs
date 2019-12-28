@@ -61,15 +61,16 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("download")]
-        public async Task<IActionResult> DownloadCourseScheduleFileAsync(
+        public async Task<IActionResult> DownloadControlWeekFileAsync(
             CancellationToken cancellationToken)
         {
             try
             {
-                await _controlWeekService.DownloadAsync(cancellationToken);
+                var response = await _controlWeekService.DownloadAsync(cancellationToken);
 
                 _logger.LogInformation($"Response: " + "Данные обновлены!");
-                return Ok("Данные обновлены!");
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

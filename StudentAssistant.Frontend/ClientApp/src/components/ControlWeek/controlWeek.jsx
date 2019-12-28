@@ -3,18 +3,14 @@ import React, {Component} from 'react';
 import ControlWeekService from "../../services/ControlWeekService";
 import {TitleComponent} from "../TitleComponent/TitleComponent";
 
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import ToastNotificationService from "../../services/ToastNotificationService";
 
 const title = "Расписание зачётов - Student Assistant";
 
 const controlWeekService = new ControlWeekService();
-const toastNotificationService = new ToastNotificationService();
 
 export class controlWeek extends Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -23,28 +19,27 @@ export class controlWeek extends Component {
             loading: true,
             groupName: 'БББО-01-16'
         };
-        this.updateControlWeek= this.updateControlWeek.bind(this);
+        this.updateControlWeek = this.updateControlWeek.bind(this);
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
 
         // по дефолту отправляем Date.Now()
         this.getControlWeek();
     }
-    
-    getControlWeek()
-    {
+
+    getControlWeek() {
         controlWeekService.get(this.state.groupName)
             .then(response => {
                 this.setState(
                     {
-                        controlWeekModel: response,
-                        loading: false
+                        controlWeekModel: response.controlWeekModel,
+                        loading: response.loading
                     });
             });
     }
-    
+
     static renderControlWeek(controlWeekModel) {
 
-        if (controlWeekService.validate(controlWeekModel)) {
+        if (controlWeekService.validateControlWeekModel(controlWeekModel)) {
             return (
                 <table className='table table-striped'>
                     <thead>
@@ -90,8 +85,7 @@ export class controlWeek extends Component {
 
     // обновить расписание (скачать новый файл на сервер)
     updateControlWeek() {
-        controlWeekService.update()
-            .then(response => toastNotificationService.notifyInfo(response));
+        controlWeekService.update();
     }
 
     //изменение селектора групп
@@ -102,7 +96,7 @@ export class controlWeek extends Component {
             this.getControlWeek();
         });
     }
-    
+
     render() {
 
         let contents = this.state.loading
@@ -128,7 +122,7 @@ export class controlWeek extends Component {
                             <option value="БББО-03-16">БББО-03-16</option>
                         </select>
                     </p>
-                    
+
                     {contents}
 
                     <i className="bottom">Последнее обновление
@@ -149,7 +143,7 @@ export class controlWeek extends Component {
                             className="iconDownload"
                             alt="Download"
                         /></a>
-                    
+
                 </div>
             );
         } else {
@@ -160,5 +154,5 @@ export class controlWeek extends Component {
         }
 
     }
-    
+
 }

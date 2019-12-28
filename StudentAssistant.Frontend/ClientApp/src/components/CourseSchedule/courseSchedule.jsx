@@ -15,7 +15,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ru from "date-fns/locale/ru";
 
 import CourseScheduleService from "../../services/CourseScheduleService";
-import ToastNotificationService from "../../services/ToastNotificationService";
 
 import moment from 'moment';
 import {TitleComponent} from "../TitleComponent/TitleComponent";
@@ -23,7 +22,7 @@ import {TitleComponent} from "../TitleComponent/TitleComponent";
 registerLocale("ru", ru);
 
 const courseScheduleService = new CourseScheduleService();
-const toastNotificationService = new ToastNotificationService();
+
 
 const title = "Расписание - Student Assistant";
 
@@ -105,10 +104,7 @@ export class courseSchedule extends React.Component {
 
     // обновить расписание (скачать новый файл на сервер)
     updateCourseSchedule() {
-        courseScheduleService.update()
-            .then(response => toastNotificationService.notifyInfo(response));
-
-        this.getCourseSchedule();
+        courseScheduleService.update();
     }
 
     // фильтр для виджета календаря
@@ -119,19 +115,18 @@ export class courseSchedule extends React.Component {
 
     // получить модель с расписанием
     getCourseSchedule() {
-        courseScheduleService.get(this.state.selectedDate, this.state.groupName)
-            .then(response => {
-                this.setState(
-                    {
-                        courseScheduleModel: response,
-                        loading: false
-                    });
-            });
+        courseScheduleService.get(this.state.selectedDate, this.state.groupName).then(response =>
+            this.setState(
+                {
+                    courseScheduleModel: response.courseScheduleModel,
+                    loading: response.loading
+                })
+        );
     }
-    
+
     static renderCourseSchedule(courseScheduleModel) {
 
-        if (courseScheduleService.validate(courseScheduleModel)) {
+        if (courseScheduleService.validateCourseScheduleModel(courseScheduleModel)) {
             return (
                 <table className='table table-striped'>
                     <thead>
@@ -184,7 +179,6 @@ export class courseSchedule extends React.Component {
         );
     }
 
-
     render() {
 
         let contents = this.state.loading
@@ -193,14 +187,13 @@ export class courseSchedule extends React.Component {
 
         courseSchedule.getTitle();
 
-
         if (contents != null) {
             return (
                 <div>
                     <React.Fragment>
                         <TitleComponent title={title}/>
                     </React.Fragment>
-                    
+
                     <div>
                         <h1>Расписание</h1>
                         {
@@ -257,9 +250,9 @@ export class courseSchedule extends React.Component {
                            className="rightArrow"
                            alt="right"/>
                 </span>
-                        
+
                         {contents}
-                        
+
                         <i className="bottom">Последнее обновление
                             расписания: {this.state.courseScheduleModel.updateDatetime}.</i>
 
