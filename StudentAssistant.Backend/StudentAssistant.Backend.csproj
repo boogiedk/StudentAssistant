@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudentAssistant.DbLayer\StudentAssistant.DbLayer.csproj" />
+    <ProjectReference Include="..\StudentAssistant.Parser\StudentAssistant.Parser.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

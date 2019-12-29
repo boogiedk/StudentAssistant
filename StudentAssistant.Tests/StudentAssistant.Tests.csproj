@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudentAssistant.Backend\StudentAssistant.Backend.csproj" />
+    <ProjectReference Include="..\StudentAssistant.Parser\StudentAssistant.Parser.fsproj" />
   </ItemGroup>
 
 </Project>
