@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Linq;
+using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
@@ -31,14 +32,17 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Parser
         }
 
         [Fact]
-        public void Test()
+        public void GetExamScheduleDatabaseModels_CountDatabaseModels_ShouldParseExcelAndReturnCountModels()
         {
-            var f = new ImportDataExcelService(_logger.Object);
-
+            // Arrange
+            var importDataExcelService = new ImportDataExcelService(_logger.Object);
             var fileName = @"C:\Users\ganz1\Desktop\VS Projects\StudentAssistant\StudentAssistant.Backend\Infrastructure\ScheduleFile\ekz_KBiSP_4-kurs_zima.xls";
-
-
-           // var h = f.PrepareExcelFileWithExamsModelToDatabaseModel(fileName);
+            
+            //Act
+            var result = importDataExcelService.GetExamScheduleDatabaseModels(fileName).ToList();
+            
+            //Assert
+            Assert.True(result.Count>0);
         }
     }
 }

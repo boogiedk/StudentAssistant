@@ -222,8 +222,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                         Func<(string, bool)> getCellValue = () =>
                         {
-                            string cellValue = string.Empty;
-                            bool isNumeric = false;
+                            string cellValue;
+                            bool isNumeric;
 
                             if (sheet.GetRow(2 + firstIterator).GetCell(2).CellType ==
                                 CellType.Numeric) // проверяем тип ячейки
@@ -261,18 +261,18 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                                 GroupName = sheet.GetRow(1 + thirdIterator).GetCell(3)?.StringCellValue,
                             };
 
-                            var dateTuple = getCellValue.Invoke();
+                            var (cellValue, isNumeric) = getCellValue.Invoke();
 
-                            model.Date = dateTuple.Item1;
-
-                            importDataExcelModels.Add(model);
-
-                            if (dateTuple.Item2)
+                            model.Date = cellValue;
+                            
+                            if (isNumeric)
                             {
                                 firstIterator++;
                                 secondIterator++;
                                 continue;
                             }
+                            
+                            importDataExcelModels.Add(model);
 
                             firstIterator += 3;
                             secondIterator += 3;
