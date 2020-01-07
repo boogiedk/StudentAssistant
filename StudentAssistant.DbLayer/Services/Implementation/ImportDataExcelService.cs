@@ -4,7 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using Newtonsoft.Json;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StudentAssistant.DbLayer.Interfaces;
@@ -180,6 +183,112 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             return courseScheduleDatabaseModel;
         }
 
+        public IEnumerable<ExamScheduleDatabaseModel> GetExamScheduleDatabaseModels(string fileName)
+        {
+            var importDataExcelModels = ParseExcelFileWithExams(fileName);
+
+            var examScheduleDatabaseModel =
+                PrepareExcelFileWithExamsModelToDatabaseModel(importDataExcelModels);
+
+            return examScheduleDatabaseModel;
+        }
+
+        private IEnumerable<ExamScheduleExcelModel> ParseExcelFileWithExams(string fileName)
+        {
+            try
+            {
+                // _logger.LogInformation("ParseExcelFileWithExams: Start parse Excel file.");
+
+                var file = new FileInfo(fileName);
+
+                var importDataExcelModels = new List<ExamScheduleExcelModel>();
+
+                if (file.Length > 0)
+                {
+                    using (var stream = new FileStream(fileName, FileMode.Open))
+                    {
+                        stream.Position = 0;
+
+                        HSSFWorkbook hssfwb = new HSSFWorkbook(stream);
+
+                        //Excel format  
+                        var sheet = hssfwb.GetSheetAt(0);
+
+                        var firstIterator = 0;
+
+                        var secondIterator = 0;
+
+                        var thirdIterator = 0;
+
+                        Func<(string, bool)> getCellValue = () =>
+                        {
+                            string cellValue = string.Empty;
+                            bool isNumeric = false;
+
+                            if (sheet.GetRow(2 + firstIterator).GetCell(2).CellType ==
+                                CellType.Numeric) // проверяем тип ячейки
+                            {
+                                cellValue = sheet.GetRow(2 + firstIterator).GetCell(2).NumericCellValue
+                                    .ToString(CultureInfo.InvariantCulture); // если нумерик, то достаем double
+
+                                isNumeric = true;
+                            }
+                            else
+                            {
+                                cellValue = sheet.GetRow(2 + firstIterator).GetCell(2)
+                                    ?.StringCellValue; // если строковая, то достаем string
+
+                                isNumeric = false;
+                            }
+
+                            return (cellValue, isNumeric);
+                        };
+
+                        for (int i = 0; i < 23; i++)
+                        {
+                            var model = new ExamScheduleExcelModel
+                            {
+                                Month = sheet.GetRow(2).GetCell(1)?.StringCellValue,
+
+                                StartOfClasses = sheet.GetRow(2 + firstIterator).GetCell(4)?.StringCellValue,
+                                CoursePlace = sheet.GetRow(2 + firstIterator).GetCell(5)?.StringCellValue,
+
+                                CourseType = sheet.GetRow(2 + 0 + secondIterator).GetCell(3)?.StringCellValue,
+                                CourseName = sheet.GetRow(2 + 1 + secondIterator).GetCell(3)?.StringCellValue,
+                                TeacherFullName =
+                                    sheet.GetRow(2 + 2 + secondIterator).GetCell(3)?.StringCellValue,
+
+                                GroupName = sheet.GetRow(1 + thirdIterator).GetCell(3)?.StringCellValue,
+                            };
+
+                            var dateTuple = getCellValue.Invoke();
+
+                            model.Date = dateTuple.Item1;
+
+                            importDataExcelModels.Add(model);
+
+                            if (dateTuple.Item2)
+                            {
+                                firstIterator++;
+                                secondIterator++;
+                                continue;
+                            }
+
+                            firstIterator += 3;
+                            secondIterator += 3;
+                        }
+                    }
+                }
+
+                return importDataExcelModels;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("ParseExcelFileWithExams: Exception when parse excel file. " + ex);
+                throw new NotSupportedException();
+            }
+        }
+
         /*
                 /// <summary>
                 /// Создает Json файл с данными из Excel.
@@ -196,6 +305,32 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     File.WriteAllText(fileName, jsonData);
                 }
         */
+
+        public IEnumerable<ExamScheduleDatabaseModel> PrepareExcelFileWithExamsModelToDatabaseModel(
+            IEnumerable<ExamScheduleExcelModel> input)
+        {
+            try
+            {
+                return input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
+                    {
+                        CoursePlace = importDataExcelModel.CoursePlace,
+                        CourseName = importDataExcelModel.CourseName,
+                        CourseType = ParseCourseType(importDataExcelModel.CourseType),
+                        TeacherFullName = importDataExcelModel.TeacherFullName,
+                        GroupName = ParseGroupName(importDataExcelModel.GroupName),
+                        StartOfClasses = importDataExcelModel.StartOfClasses,
+                        Date = importDataExcelModel.Date,
+                        Month = importDataExcelModel.Month
+                    })
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("PrepareExcelFileWithExamsModelToDatabaseModel: Exception when prepare excel file. " +
+                                 ex);
+                throw new NotSupportedException();
+            }
+        }
 
         /// <summary>
         /// Парсит строку с группой и возвращает название группы.
@@ -263,6 +398,10 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     return CourseType.Lecture;
                 case "зач":
                     return CourseType.ControlCourse;
+                case "Консультация":
+                    return CourseType.СonsultationCourse;
+                case "Экзамен":
+                    return CourseType.ExamCourse;
 
                 default:
                     return CourseType.Other;

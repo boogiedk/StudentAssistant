@@ -1,10 +1,11 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
+using StudentAssistant.DbLayer.Services.Implementation;
 using Xunit;
-using StudentAssistant.Parser;
 
 
 namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Parser
@@ -17,6 +18,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Parser
     {
         private readonly Mock<IMapper> _mockMapper;
         private readonly IMapper _mapper;
+        private readonly Mock<ILogger<ImportDataExcelService>> _logger;
 
         public ParserTests()
         {
@@ -25,19 +27,18 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Parser
             _mapper = new MapperConfiguration(c =>
                 c.AddProfile<AutoMapperConfiguration>()).CreateMapper();
             _mockMapper = fixture.Freeze<Mock<IMapper>>();
+            _logger = fixture.Freeze<Mock<ILogger<ImportDataExcelService>>>();
         }
 
         [Fact]
-        public void ExcelParser_DataFromExcelFile_ParseExcelFile()
+        public void Test()
         {
-            // Arrange
-            var expected = "Test Value from Parser";
-            
-            // Act
-            var result = ParserUnitTest.GetTestValue;
+            var f = new ImportDataExcelService(_logger.Object);
 
-            // Assert
-            Assert.Equal(expected,result);
+            var fileName = @"C:\Users\ganz1\Desktop\VS Projects\StudentAssistant\StudentAssistant.Backend\Infrastructure\ScheduleFile\ekz_KBiSP_4-kurs_zima.xls";
+
+
+           // var h = f.PrepareExcelFileWithExamsModelToDatabaseModel(fileName);
         }
     }
 }

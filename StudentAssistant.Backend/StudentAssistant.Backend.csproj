@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudentAssistant.DbLayer\StudentAssistant.DbLayer.csproj" />
-    <ProjectReference Include="..\StudentAssistant.Parser\StudentAssistant.Parser.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,7 +49,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\ScheduleFile\" />
-    <Folder Include="Storages\NLog" />
   </ItemGroup>
 
   <ItemGroup>

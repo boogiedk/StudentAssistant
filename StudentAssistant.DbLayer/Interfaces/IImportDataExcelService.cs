@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.ImportData;
+using StudentAssistant.DbLayer.Services.Implementation;
 
 namespace StudentAssistant.DbLayer.Interfaces
 {
@@ -13,5 +15,12 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// </summary>
         /// <returns></returns>
         IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName);
+
+        /// <summary>
+        /// Импортирует данные расписания экзаменов из Excel файла.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        IEnumerable<ExamScheduleDatabaseModel> GetExamScheduleDatabaseModels(string fileName);
     }
 }
