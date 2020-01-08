@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.ImportData;
 
 namespace StudentAssistant.DbLayer.Interfaces
 {
@@ -21,5 +22,12 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// <param name="input"></param>
         /// <returns></returns>
        IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input);
+
+        /// <summary>
+        /// Возвращает расписание с экзаменами.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        Task<List<ExamScheduleDatabaseModel>> GetExamScheduleFromExcelFile(string fileName);
     }
 }

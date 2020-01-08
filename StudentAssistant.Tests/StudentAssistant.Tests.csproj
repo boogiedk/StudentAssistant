@@ -19,7 +19,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudentAssistant.Backend\StudentAssistant.Backend.csproj" />
-    <ProjectReference Include="..\StudentAssistant.Parser\StudentAssistant.Parser.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestFiles" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="HelpFiles\examScheduleFileTest.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
