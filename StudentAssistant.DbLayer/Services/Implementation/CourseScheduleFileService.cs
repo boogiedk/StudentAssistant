@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.ImportData;
 
 
 namespace StudentAssistant.DbLayer.Services.Implementation
@@ -25,6 +26,19 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 var courseScheduleDatabaseModels = _importDataExcelService
                     .GetCourseScheduleDatabaseModels(fileName).ToList();
+
+                return courseScheduleDatabaseModels;
+            });
+
+            return await result;
+        }
+        
+        public async Task<List<ExamScheduleDatabaseModel>> GetExamScheduleFromExcelFile(string fileName)
+        {
+            var result = Task.Run(() =>
+            {
+                var courseScheduleDatabaseModels = _importDataExcelService
+                    .GetExamScheduleDatabaseModels(fileName).ToList();
 
                 return courseScheduleDatabaseModels;
             });

@@ -5,11 +5,13 @@ using StudentAssistant.Backend.Models.ControlWeek.ViewModels;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.Email;
+using StudentAssistant.Backend.Models.ExamSchedule.ViewModels;
 using StudentAssistant.Backend.Models.LogProvider;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Models.UserSupport;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.ImportData;
 
 namespace StudentAssistant.Backend.Infrastructure.AutoMapper
 {
@@ -40,6 +42,10 @@ namespace StudentAssistant.Backend.Infrastructure.AutoMapper
             CreateMap<LogDtoResponseModel, LogResponseModel>();
 
             CreateMap<CourseScheduleDatabaseModel, ControlCourseViewModel>()
+                .ForMember(destination => destination.CourseType,
+                    opts => opts.MapFrom(src => src.CourseType.Humanize()));
+            
+            CreateMap<ExamScheduleDatabaseModel, ExamCourseViewModel>()
                 .ForMember(destination => destination.CourseType,
                     opts => opts.MapFrom(src => src.CourseType.Humanize()));
 

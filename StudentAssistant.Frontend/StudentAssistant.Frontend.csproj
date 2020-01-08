@@ -15,9 +15,11 @@
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="Pages\**" />
     <Content Include="ClientApp\src\components\ControlWeek\controlWeek.jsx" />
+    <Content Include="ClientApp\src\components\ExamSchedule\examSchedule.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
+    <Content Include="ClientApp\src\services\ExamScheduleService.jsx" />
     <Content Include="ClientApp\src\services\RestService.jsx" />
     <Content Include="ClientApp\src\services\ToastNotificationService.jsx" />
     <EmbeddedResource Remove="Pages\**" />

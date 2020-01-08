@@ -1,11 +1,6 @@
-﻿using StudentAssistant.DbLayer.Models.CourseSchedule;
-
-namespace StudentAssistant.DbLayer.Models.ImportData
+namespace StudentAssistant.Backend.Models.ExamSchedule.ViewModels
 {
-    /// <summary>
-    /// ООП модель "базы данных" с данными о расписании экзаменов.
-    /// </summary>
-    public class ExamScheduleDatabaseModel
+    public class ExamCourseViewModel
     {
         /// <summary>
         /// Название предмета.
@@ -16,7 +11,7 @@ namespace StudentAssistant.DbLayer.Models.ImportData
         /// Месяц проведения экзамена.
         /// </summary>
         public string Month { get; set; }
-        
+
         /// <summary>
         /// Число проведения экзамена.
         /// </summary>
@@ -30,7 +25,7 @@ namespace StudentAssistant.DbLayer.Models.ImportData
         /// <summary>
         /// Тип предмета.
         /// </summary>
-        public CourseType CourseType { get; set; }
+        public string CourseType { get; set; }
 
         /// <summary>
         /// Полное имя преподавателя.

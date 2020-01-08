@@ -100,7 +100,8 @@ namespace StudentAssistant.Backend
             services.AddScoped<ICourseScheduleMongoDbService, CourseScheduleMongoDbService>();
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IControlWeekService,ControlWeekService>();
-
+            services.AddScoped<IExamScheduleService,ExamScheduleService>();
+            
             services.AddSingleton(mapper);
 
             #endregion
