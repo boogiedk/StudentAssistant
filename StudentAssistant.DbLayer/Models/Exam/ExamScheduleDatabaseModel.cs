@@ -1,12 +1,15 @@
-﻿using StudentAssistant.DbLayer.Models.CourseSchedule;
+﻿using System;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
-namespace StudentAssistant.DbLayer.Models.ImportData
+namespace StudentAssistant.DbLayer.Models.Exam
 {
     /// <summary>
     /// ООП модель "базы данных" с данными о расписании экзаменов.
     /// </summary>
     public class ExamScheduleDatabaseModel
     {
+        public Guid Id { get; set; }
+        
         /// <summary>
         /// Название предмета.
         /// </summary>
@@ -33,9 +36,9 @@ namespace StudentAssistant.DbLayer.Models.ImportData
         public CourseType CourseType { get; set; }
 
         /// <summary>
-        /// Полное имя преподавателя.
+        /// Преподаватель
         /// </summary>
-        public string TeacherFullName { get; set; }
+        public TeacherModel TeacherModel { get; set; }
 
         /// <summary>
         /// Место проведения.
@@ -45,7 +48,7 @@ namespace StudentAssistant.DbLayer.Models.ImportData
         /// <summary>
         /// Название группы.
         /// </summary>
-        public string GroupName { get; set; }
+        public StudyGroupModel StudyGroupModel { get; set; }
 
         /// <summary>
         /// Нач. Занятий.

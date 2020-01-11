@@ -1,10 +1,14 @@
-﻿namespace StudentAssistant.DbLayer.Models.ImportData
+﻿using System;
+
+namespace StudentAssistant.DbLayer.Models.Exam
 {
     /// <summary>
     /// ООП модель Excel таблицы с расписанием экзамена.
     /// </summary>
     public class ExamScheduleExcelModel
     {
+        public Guid Id { get; set; }
+        
         /// <summary>
         /// Месяц проведения экзамена.
         /// </summary>

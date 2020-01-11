@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 
 namespace StudentAssistant.DbLayer.Models.CourseSchedule
@@ -8,7 +9,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
     /// </summary>
     public class CourseScheduleDatabaseModel
     {
-        public ObjectId Id;
+        public Guid Id { get; set; }
         /// <summary>
         /// Номер недели.
         /// </summary>
@@ -42,7 +43,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// <summary>
         /// Полное имя преподавателя.
         /// </summary>
-        public string TeacherFullName { get; set; }
+        public TeacherModel TeacherModel { get; set; }
 
         /// <summary>
         /// Место проведения.
@@ -52,7 +53,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// <summary>
         /// Название группы.
         /// </summary>
-        public string GroupName { get; set; }
+        public StudyGroupModel StudyGroupModel { get; set; }
 
         /// <summary>
         /// Нач. Занятий.
@@ -67,11 +68,11 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// <summary>
         /// Группы, с которыми объединенные пары.
         /// </summary>
-        public List<string> CombinedGroup { get; set; }
+        public List<StudyGroupModel> CombinedGroup { get; set; }
 
         public CourseScheduleDatabaseModel()
         {
-            CombinedGroup = new List<string>();
+            CombinedGroup = new List<StudyGroupModel>();
         }
     }
 }

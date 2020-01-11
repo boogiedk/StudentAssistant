@@ -73,7 +73,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         || f.NumberWeek == null
                         || f.NumberWeek.Count == 0)
                     && f.ParityWeek == parameters.ParityWeek
-                    && f.GroupName == parameters.GroupName).ToListAsync();
+                    && f.StudyGroupModel.Name == parameters.GroupName).ToListAsync();
 
                 return result;
             }

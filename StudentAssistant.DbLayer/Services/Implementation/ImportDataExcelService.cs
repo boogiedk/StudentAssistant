@@ -11,7 +11,9 @@ using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
@@ -151,6 +153,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 return importDataExcelModels.Select(importDataExcelModel => new CourseScheduleDatabaseModel
                     {
+                        Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = PrepareCourseName(importDataExcelModel.CourseName),
                         CourseNumber = (int) importDataExcelModel.CourseNumber,
@@ -158,8 +161,16 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
                         NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
                         ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
-                        TeacherFullName = importDataExcelModel.TeacherFullName,
-                        GroupName = ParseGroupName(importDataExcelModel.GroupName),
+                        TeacherModel = new TeacherModel
+                        {
+                            Id = Guid.NewGuid(),
+                            FullName = importDataExcelModel.TeacherFullName
+                        },
+                        StudyGroupModel = new StudyGroupModel
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = ParseGroupName(importDataExcelModel.GroupName)
+                        },
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         EndOfClasses = importDataExcelModel.EndOfClasses
                     })
@@ -254,15 +265,21 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                                 {
                                     Month = sheet.GetRow(2).GetCell(1)?.StringCellValue,
 
-                                    StartOfClasses = sheet.GetRow(2 + firstIterator).GetCell(4+fourthIterator)?.StringCellValue,
-                                    CoursePlace = sheet.GetRow(2 + firstIterator).GetCell(5+fourthIterator)?.StringCellValue,
+                                    StartOfClasses = sheet.GetRow(2 + firstIterator).GetCell(4 + fourthIterator)
+                                        ?.StringCellValue,
+                                    CoursePlace = sheet.GetRow(2 + firstIterator).GetCell(5 + fourthIterator)
+                                        ?.StringCellValue,
 
-                                    CourseType = sheet.GetRow(2 + 0 + secondIterator).GetCell(3+fourthIterator)?.StringCellValue,
-                                    CourseName = sheet.GetRow(2 + 1 + secondIterator).GetCell(3+fourthIterator)?.StringCellValue,
+                                    CourseType = sheet.GetRow(2 + 0 + secondIterator).GetCell(3 + fourthIterator)
+                                        ?.StringCellValue,
+                                    CourseName = sheet.GetRow(2 + 1 + secondIterator).GetCell(3 + fourthIterator)
+                                        ?.StringCellValue,
                                     TeacherFullName =
-                                        sheet.GetRow(2 + 2 + secondIterator).GetCell(3+fourthIterator)?.StringCellValue,
+                                        sheet.GetRow(2 + 2 + secondIterator).GetCell(3 + fourthIterator)
+                                            ?.StringCellValue,
 
-                                    GroupName = sheet.GetRow(1 + thirdIterator).GetCell(3+fourthIterator)?.StringCellValue,
+                                    GroupName = sheet.GetRow(1 + thirdIterator).GetCell(3 + fourthIterator)
+                                        ?.StringCellValue,
                                 };
 
                                 var (cellValue, isNumeric) = getCellValue.Invoke();
@@ -322,15 +339,24 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 return input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
                     {
+                        Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = importDataExcelModel.CourseName,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
-                        TeacherFullName = importDataExcelModel.TeacherFullName,
-                        GroupName = ParseGroupName(importDataExcelModel.GroupName),
+                        TeacherModel = new TeacherModel
+                        {
+                            Id = Guid.NewGuid(),
+                            FullName = importDataExcelModel.TeacherFullName
+                        },
+                        StudyGroupModel = new StudyGroupModel
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = ParseGroupName(importDataExcelModel.GroupName)
+                        },
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         NumberDate = PrepareDate(importDataExcelModel.Date).Item1, // число
                         DayOfWeek = PrepareDate(importDataExcelModel.Date).Item2, // день недели 
-                        Month = importDataExcelModel?.Month.Replace(" ", "") 
+                        Month = importDataExcelModel?.Month.Replace(" ", "")
                     })
                     .ToList();
             }

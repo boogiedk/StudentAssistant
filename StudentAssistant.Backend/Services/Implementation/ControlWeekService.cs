@@ -69,7 +69,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             var sortedControlCourseViewModel = controlCourseViewModel
                 .Where(w => !string.IsNullOrEmpty(w.CourseName)
                             && w.CourseName != "Военная кафедра"
-                            && string.Equals(w.GroupName, requestModel.GroupName)
+                            && string.Equals(w.StudyGroupModel.Name, requestModel.GroupName)
                 )
                 .Select(s =>
                 {

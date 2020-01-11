@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
 
 
@@ -69,9 +71,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                                 && w.ParityWeek == input.ParityWeek).ToArray();
 
                 // фильтруем по группе
-                var filterByGroup = filterByParameters.Where(w => string.Equals(w.GroupName, input.GroupName));
+                var filterByGroup = filterByParameters.Where(w => string.Equals(w.StudyGroupModel.Name, input.GroupName));
 
-                var result = new List<string>();
+                var result = new List<StudyGroupModel>();
 
                 // добавляем в модель с расписанием комбинированные пары с другими группами
                 foreach (var courseScheduleDatabaseModel in filterByGroup)
@@ -80,11 +82,11 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     {
                         if (courseScheduleDatabaseModel.CoursePlace == scheduleDatabaseModel.CoursePlace
                             && courseScheduleDatabaseModel.CourseNumber == scheduleDatabaseModel.CourseNumber
-                            && courseScheduleDatabaseModel.GroupName != scheduleDatabaseModel.GroupName)
+                            && courseScheduleDatabaseModel.StudyGroupModel.Name != scheduleDatabaseModel.StudyGroupModel.Name)
                         {
-                            result.Add(scheduleDatabaseModel.GroupName);
+                            result.Add(scheduleDatabaseModel.StudyGroupModel);
 
-                            courseScheduleDatabaseModel.CombinedGroup = result.Distinct().ToList();
+                            courseScheduleDatabaseModel.CombinedGroup =  result.Distinct().ToList();
                         }
                     }
                 }

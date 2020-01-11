@@ -1,4 +1,5 @@
 ﻿using System;
+using StudentAssistant.DbLayer.Models;
 
 namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
 {
@@ -10,12 +11,12 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         public ControlCourseViewModel()
         {
             CourseName = String.Empty;
-            TeacherFullName = String.Empty;
             CourseType = String.Empty;
             CoursePlace = String.Empty;
         }
         
-
+        public Guid Id { get; set; }
+        
         /// <summary>
         /// Название предмета.
         /// </summary>
@@ -39,7 +40,7 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         /// <summary>
         /// Полное имя преподавателя.
         /// </summary>
-        public string TeacherFullName { get; set; }
+        public TeacherModel TeacherModel { get; set; }
 
         /// <summary>
         /// Место проведения.
@@ -56,6 +57,6 @@ namespace StudentAssistant.Backend.Models.ControlWeek.ViewModels
         /// </summary>
         public string EndOfClasses { get; set; }
         
-        public string GroupName { get; set; }
+        public StudyGroupModel StudyGroupModel { get; set; }
     }
 }

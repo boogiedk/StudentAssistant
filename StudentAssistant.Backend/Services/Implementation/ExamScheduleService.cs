@@ -12,6 +12,7 @@ using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.Backend.Models.ExamSchedule;
 using StudentAssistant.Backend.Models.ExamSchedule.ViewModels;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
 
 namespace StudentAssistant.Backend.Services.Implementation
@@ -67,7 +68,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             // удаляем пустые предметы и сортируем по позиции в раписании
             var sortedControlCourseViewModel = controlCourseViewModel
                 .Where(w => !string.IsNullOrEmpty(w.CourseName)
-                            && string.Equals(w.GroupName, requestModel.GroupName)
+                            && string.Equals(w.StudyGroupModel.Name, requestModel.GroupName)
                 )
                 .OrderBy(o => Int32.Parse(o.NumberDate))
                 .ToList();

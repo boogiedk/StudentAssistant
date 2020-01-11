@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using StudentAssistant.DbLayer.Models;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
 {
@@ -11,13 +12,12 @@ namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
         public CourseViewModel()
         {
             CourseName = String.Empty;
-            TeacherFullName = String.Empty;
             CourseType = String.Empty;
             CoursePlace = String.Empty;
             ParityWeek = String.Empty;
         }
 
-
+        public Guid Id { get; set; }
         /// <summary>
         /// Номер недели.
         /// </summary>
@@ -44,9 +44,9 @@ namespace StudentAssistant.Backend.Models.CourseSchedule.ViewModels
         public string CourseType { get; set; }
 
         /// <summary>
-        /// Полное имя преподавателя.
+        /// Преподаватель.
         /// </summary>
-        public string TeacherFullName { get; set; }
+        public TeacherModel TeacherModel { get; set; }
 
         /// <summary>
         /// Место проведения.
