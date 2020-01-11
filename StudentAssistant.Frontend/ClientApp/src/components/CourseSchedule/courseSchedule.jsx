@@ -147,7 +147,7 @@ export class courseSchedule extends React.Component {
                                 <div className="courseNameStyle"> {courseViewModel.courseName} </div>
                                 <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
                                 <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
-                                <div className="teacherFullNameStyle"> {courseViewModel.teacher.fullName}</div>
+                                <div className="teacherFullNameStyle"> {courseViewModel.teacherModel.fullName}</div>
 
                                 <Popup trigger={<button className="infoIcon"></button>} position="top center">
                                     <div>

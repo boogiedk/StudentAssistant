@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -71,9 +72,10 @@ namespace StudentAssistant.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<Context>();
+            services.AddDbContext<ApplicationDbContext>(options=>
+                options.UseSqlServer("Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;Integrated Security=True"));
             services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<Context>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultTokenProviders();
 

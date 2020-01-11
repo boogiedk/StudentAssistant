@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\StudentAssistant.Backend\StudentAssistant.Backend.csproj" />
+    <Folder Include="TestFiles" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TestFiles" />
+    <ProjectReference Include="..\StudentAssistant.Backend\StudentAssistant.Backend.csproj" />
   </ItemGroup>
 
   <ItemGroup>

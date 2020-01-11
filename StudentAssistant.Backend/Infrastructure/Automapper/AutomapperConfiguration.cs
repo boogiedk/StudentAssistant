@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using AutoMapper;
 using Humanizer;
 using StudentAssistant.Backend.Models.ControlWeek.ViewModels;

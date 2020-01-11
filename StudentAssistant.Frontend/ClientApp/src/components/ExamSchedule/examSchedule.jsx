@@ -58,7 +58,7 @@ export class examSchedule extends Component {
                                 <div className="courseNameStyle"> {courseViewModel.courseName} </div>
                                 <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
                                 <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
-                                <div className="teacherFullNameStyle"> {courseViewModel.teacher.fullName}</div>
+                                <div className="teacherFullNameStyle"> {courseViewModel.teacherModel.fullName}</div>
                             </td>
                         </tr>
                     )}

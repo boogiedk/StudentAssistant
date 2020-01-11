@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using StudentAssistant.DbLayer.Models;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.Backend.Models.CourseSchedule
 {
@@ -13,7 +14,7 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
         /// <summary>
         /// Номер недели.
         /// </summary>
-        public List<int> NumberWeek { get; set; }
+        public List<NumberWeekModel> NumberWeek { get; set; }
 
         /// <summary>
         /// Чётность недели.

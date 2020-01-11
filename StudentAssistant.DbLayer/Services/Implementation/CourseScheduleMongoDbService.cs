@@ -69,7 +69,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 var result = await _courseScheduleDatabaseModelCollection.Find(f =>
                     f.NameOfDayWeek == parameters.NameOfDayWeek
                     && (f.NumberWeek != null
-                        && f.NumberWeek.Contains(parameters.NumberWeek)
+                        && f.NumberWeek.Contains( new NumberWeekModel() {NumberWeek = parameters.NumberWeek})
                         || f.NumberWeek == null
                         || f.NumberWeek.Count == 0)
                     && f.ParityWeek == parameters.ParityWeek

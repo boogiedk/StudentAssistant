@@ -4,6 +4,16 @@ using MongoDB.Bson;
 
 namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
+    public class NumberWeekModel
+    {
+        public Guid Id { get; set; }
+        public int NumberWeek { get; set; }
+        
+        public override string ToString()
+        {
+            return NumberWeek.ToString();
+        }
+    }
     /// <summary>
     /// Модель с учебным расписанием.
     /// </summary>
@@ -13,7 +23,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// <summary>
         /// Номер недели.
         /// </summary>
-        public List<int> NumberWeek { get; set; }
+        public List<NumberWeekModel> NumberWeek { get; set; }
 
         /// <summary>
         /// Чётность недели.

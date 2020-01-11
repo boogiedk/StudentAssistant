@@ -34,7 +34,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
             return await result;
         }
-        
+
         public async Task<List<ExamScheduleDatabaseModel>> GetExamScheduleFromExcelFile(string fileName)
         {
             var result = Task.Run(() =>
@@ -66,12 +66,13 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 // или если не указаны номера недель, то фильтруем по четности.
                 var filterByParameters = filterByNameOfWeek
                     .Where(w => (w.NumberWeek != null
-                                 && w.NumberWeek.Contains(input.NumberWeek))
+                                 && w.NumberWeek.Any(s=>s.NumberWeek == input.NumberWeek))
                                 || (w.NumberWeek == null || w.NumberWeek.Count == 0)
                                 && w.ParityWeek == input.ParityWeek).ToArray();
 
                 // фильтруем по группе
-                var filterByGroup = filterByParameters.Where(w => string.Equals(w.StudyGroupModel.Name, input.GroupName));
+                var filterByGroup =
+                    filterByParameters.Where(w => string.Equals(w.StudyGroupModel.Name, input.GroupName));
 
                 var result = new List<StudyGroupModel>();
 
@@ -82,11 +83,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     {
                         if (courseScheduleDatabaseModel.CoursePlace == scheduleDatabaseModel.CoursePlace
                             && courseScheduleDatabaseModel.CourseNumber == scheduleDatabaseModel.CourseNumber
-                            && courseScheduleDatabaseModel.StudyGroupModel.Name != scheduleDatabaseModel.StudyGroupModel.Name)
+                            && courseScheduleDatabaseModel.StudyGroupModel.Name !=
+                            scheduleDatabaseModel.StudyGroupModel.Name)
                         {
                             result.Add(scheduleDatabaseModel.StudyGroupModel);
 
-                            courseScheduleDatabaseModel.CombinedGroup =  result.Distinct().ToList();
+                            courseScheduleDatabaseModel.CombinedGroup = result.Distinct().ToList();
                         }
                     }
                 }

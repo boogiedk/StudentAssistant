@@ -470,29 +470,35 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="numberWeek"></param>
         /// <returns></returns>
-        private List<int> ParseNumberWeek(string numberWeek)
+        private List<NumberWeekModel> ParseNumberWeek(string numberWeek)
         {
             try
             {
                 if (string.IsNullOrEmpty(numberWeek))
                 {
-                    return new List<int>();
+                    return new List<NumberWeekModel>();
                 }
 
                 var stringNumbers = numberWeek.Split('н')[0];
 
                 if (stringNumbers[0] == 'к')
                 {
-                    return new List<int>();
+                    return new List<NumberWeekModel>();
                 }
 
-                List<int> numbers = new List<int>();
+                var numbers = new List<NumberWeekModel>();
 
                 if (IsNumberContains(stringNumbers))
                 {
                     numbers = stringNumbers
-                        .Split(',').Select(int.Parse)
-                        .Where(n => n != 0).ToList();
+                        .Split(',').Select(s =>
+                            new NumberWeekModel
+                            {
+                                Id = Guid.NewGuid(),
+                                NumberWeek = int.Parse(s)
+                            })
+                        .Where(n => n.NumberWeek != 0)
+                        .ToList();
                 }
 
 
@@ -503,7 +509,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 //exception handler
             }
 
-            return new List<int>();
+            return new List<NumberWeekModel>();
         }
 
         /// <summary>
