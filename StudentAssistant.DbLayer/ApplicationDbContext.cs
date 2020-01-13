@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Models.Exam;
 
-namespace StudentAssistant.Backend.Infrastructure
+namespace StudentAssistant.DbLayer
 {
     public sealed class ApplicationDbContext : IdentityDbContext
     {

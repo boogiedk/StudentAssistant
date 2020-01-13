@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
@@ -15,7 +16,7 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// Импортирует данные расписания из Excel файла.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName);
+       IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName);
 
         /// <summary>
         /// Импортирует данные расписания экзаменов из Excel файла.

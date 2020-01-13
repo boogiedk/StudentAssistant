@@ -27,6 +27,7 @@ using StudentAssistant.Backend.Infrastructure;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
+using StudentAssistant.DbLayer;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -103,6 +104,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IControlWeekService,ControlWeekService>();
             services.AddScoped<IExamScheduleService,ExamScheduleService>();
+            services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
             
             services.AddSingleton(mapper);
 
