@@ -74,7 +74,7 @@ namespace StudentAssistant.Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options=>
-                options.UseSqlServer("Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;Integrated Security=True"));
+                options.UseSqlServer("Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;MultipleActiveResultSets=true;Integrated Security=True"));
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()

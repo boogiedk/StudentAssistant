@@ -79,10 +79,32 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// Группы, с которыми объединенные пары.
         /// </summary>
         public List<StudyGroupModel> CombinedGroup { get; set; }
+        
+        /// <summary>
+        /// Удалена ли запись.
+        /// </summary>
+        public bool IsDeleted { get; set; }
+        
+        /// <summary>
+        /// Время создания записи.
+        /// </summary>
+        public DateTimeOffset  DateTimeCreate { get; set; }
+        
+        /// <summary>
+        /// Время обновления записи.
+        /// </summary>
+        public DateTimeOffset DateTimeUpdate { get; set; }
+        
+        /// <summary>
+        /// Версия записи.
+        /// </summary>
+        public string Version { get; set; }
+
 
         public CourseScheduleDatabaseModel()
         {
             CombinedGroup = new List<StudyGroupModel>();
+            TeacherModel = new TeacherModel();
         }
     }
 }

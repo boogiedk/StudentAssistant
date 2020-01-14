@@ -55,18 +55,16 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     throw new NotSupportedException();
                 }
 
-                var result = await _context.CourseScheduleDatabaseModels.Where(f =>
+                return _context.CourseScheduleDatabaseModels.Where(f =>
                     f.NameOfDayWeek == parameters.NameOfDayWeek
                     && (f.NumberWeek != null
-                        && f.NumberWeek.Contains(new NumberWeekModel {NumberWeek = parameters.NumberWeek})
+                        && f.NumberWeek.Any(a => a.NumberWeek == parameters.NumberWeek)
                         || f.NumberWeek == null
                         || f.NumberWeek.Count == 0)
                     && f.ParityWeek == parameters.ParityWeek
-                    && f.StudyGroupModel.Name == parameters.GroupName).ToListAsync();
-
-                return result;
+                    && f.StudyGroupModel.Name == parameters.GroupName).ToList();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new NotSupportedException();
             }
@@ -74,11 +72,34 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
         public async Task UpdateAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
 
-            _context.CourseScheduleDatabaseModels.RemoveRange(_context.CourseScheduleDatabaseModels);
+                cancellationToken.ThrowIfCancellationRequested();
 
-            await InsertAsync(input, cancellationToken);
+                var models = _context.CourseScheduleDatabaseModels
+                    .Include(i => i.NumberWeek)
+                    .Include(i => i.TeacherModel)
+                    .Include(i => i.StudyGroupModel).ToList();
+
+                foreach (var entity in models)
+                {
+                    _context.CourseScheduleDatabaseModels
+                        .Remove(entity);
+                    _context.SaveChanges();
+                    
+                }
+                
+                //    _context.CourseScheduleDatabaseModels.RemoveRange(_context.CourseScheduleDatabaseModels);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            //  await InsertAsync(input, cancellationToken);
         }
     }
 }

@@ -174,7 +174,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                             Name = ParseGroupName(importDataExcelModel.GroupName)
                         },
                         StartOfClasses = importDataExcelModel.StartOfClasses,
-                        EndOfClasses = importDataExcelModel.EndOfClasses
+                        EndOfClasses = importDataExcelModel.EndOfClasses,
+                        
+                        DateTimeCreate = DateTimeOffset.UtcNow,
+                        DateTimeUpdate = DateTimeOffset.UtcNow,
+                        IsDeleted = false,
+                        Version = DateTimeOffset.UtcNow.ToString()
                     })
                     .ToList();
             }

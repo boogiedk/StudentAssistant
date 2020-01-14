@@ -38,7 +38,7 @@ namespace StudentAssistant.Backend.Controllers
         /// <para name="requestModel">Модель запроса для получения расписания.</para>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
         [HttpPost("selected")]
-        public IActionResult GetCourseScheduleSelected(
+        public async Task<IActionResult> GetCourseScheduleSelected(
             [FromBody] CourseScheduleRequestModel requestModel)
         {
             try
@@ -62,7 +62,7 @@ namespace StudentAssistant.Backend.Controllers
                 };
 
                 // подготавливаем ViewModel для отображения
-                var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
+                var courseScheduleViewModel = await _courseScheduleService.Get(courseScheduleDtoModel);
 
                 _logger.LogInformation("Response: " + courseScheduleViewModel);
                 return Ok(courseScheduleViewModel);

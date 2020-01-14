@@ -19,6 +19,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class CourseScheduleService : ICourseScheduleService
     {
+        private readonly ICourseScheduleDatabaseService _courseScheduleDatabaseService;
         private readonly ICourseScheduleMongoDbService _courseScheduleMongoDbService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
@@ -29,6 +30,7 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
         public CourseScheduleService(
+            ICourseScheduleDatabaseService courseScheduleDatabaseService,
             ICourseScheduleMongoDbService courseScheduleMongoDbService,
             ICourseScheduleFileService courseScheduleFileService,
             IParityOfTheWeekService parityOfTheWeekService,
@@ -44,10 +46,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _courseScheduleDatabaseService = courseScheduleDatabaseService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public CourseScheduleViewModel Get(CourseScheduleDtoModel input)
+        public async Task<CourseScheduleViewModel> Get(CourseScheduleDtoModel input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
@@ -68,16 +71,19 @@ namespace StudentAssistant.Backend.Services.Implementation
                     DatetimeRequest = input.DateTimeRequest,
                     FileName = _fileName
                 };
-
+                
+                var courseScheduleDatabaseModel = await _courseScheduleDatabaseService.GetByParameters(courseScheduleParameters);
+                
                 // на данным момент расписание берется из Excel файла.
-                var courseScheduleDatabaseModel = _courseScheduleFileService
-                    .GetFromExcelFileByParameters(courseScheduleParameters);
+                  var courseScheduleDatabaseModel2 = _courseScheduleFileService
+                   .GetFromExcelFileByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
                 var result = PrepareViewModel(courseScheduleModel, courseScheduleParameters);
 
                 _logger.LogInformation("Get: " + result);
+                
                 return result;
             }
             catch (Exception ex)
@@ -191,8 +197,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
-                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
-
                 var result = new DownloadAsyncResponseModel
                 {
                     IsNewFile = await isNewFile
@@ -253,7 +257,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
 
-                await _courseScheduleMongoDbService.UpdateAsync(courseScheduleList, cancellationToken);
+                await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }
             catch (Exception ex)
             {

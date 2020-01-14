@@ -17,7 +17,7 @@ namespace StudentAssistant.Backend.Interfaces
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-       CourseScheduleViewModel Get(CourseScheduleDtoModel input);
+       Task<CourseScheduleViewModel> Get(CourseScheduleDtoModel input);
 
         /// <summary>
         /// Отправляет запрос на обновление расписания в базе данных.
