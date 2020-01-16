@@ -2,16 +2,16 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StudentAssistant.DbLayer.Models
+namespace StudentAssistant.DbLayer.Models.CourseSchedule
 {
-    public class StudyGroupModel
+    public class NumberWeekModel
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public int NumberWeek { get; set; }
         
         public override string ToString()
         {
-            return Name;
+            return NumberWeek.ToString();
         }
     }
 }

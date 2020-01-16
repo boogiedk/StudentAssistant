@@ -9,7 +9,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
     /// <summary>
     /// Модель с учебным расписанием.
     /// </summary>
-    public class CourseScheduleDatabaseModel
+    public class CourseScheduleDtoModel
     {
         public Guid Id { get; set; }
         /// <summary>
@@ -93,7 +93,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         public string Version { get; set; }
 
 
-        public CourseScheduleDatabaseModel()
+        public CourseScheduleDtoModel()
         {
             CombinedGroup = new List<StudyGroupModel>();
             TeacherModel = new TeacherModel();

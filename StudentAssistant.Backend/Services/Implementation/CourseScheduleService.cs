@@ -7,13 +7,16 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using CourseScheduleDtoModel = StudentAssistant.Backend.Models.CourseSchedule.CourseScheduleDtoModel;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -71,19 +74,20 @@ namespace StudentAssistant.Backend.Services.Implementation
                     DatetimeRequest = input.DateTimeRequest,
                     FileName = _fileName
                 };
-                
-                var courseScheduleDatabaseModel = await _courseScheduleDatabaseService.GetByParameters(courseScheduleParameters);
-                
+
+                var courseScheduleDatabaseModel =
+                    await _courseScheduleDatabaseService.GetByParameters(courseScheduleParameters);
+
                 // на данным момент расписание берется из Excel файла.
-                  var courseScheduleDatabaseModel2 = _courseScheduleFileService
-                   .GetFromExcelFileByParameters(courseScheduleParameters);
+                var courseScheduleDatabaseModel2 = _courseScheduleFileService
+                    .GetFromExcelFileByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
                 var result = PrepareViewModel(courseScheduleModel, courseScheduleParameters);
 
                 _logger.LogInformation("Get: " + result);
-                
+
                 return result;
             }
             catch (Exception ex)
@@ -172,7 +176,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             return counterEmpty == input.Count;
         }
-
+        
         public async Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken)
         {
             try
@@ -256,6 +260,27 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                
+                var sortedCoursesViewModel = courseScheduleList
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                    .ToList();
+
+                var studyGroups = courseScheduleList.GroupBy(g => g.StudyGroupModel.Name)
+                    .Select(y => y.First())
+                    .Select(s => s.StudyGroupModel)
+                    .ToList();
+                
+                // сохраняем в бд группы
+
+                var teachers = courseScheduleList.GroupBy(g => g.TeacherModel.FullName)
+                    .Select(y => y.First())
+                    .Select(s => s.TeacherModel)
+                    .Where(w => !string.IsNullOrEmpty(w.FullName))
+                    .ToList();
+                
+                // сохраняем в бд преподов
+                
+                
 
                 await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }

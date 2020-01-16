@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Models.Exam

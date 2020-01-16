@@ -179,7 +179,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         DateTimeCreate = DateTimeOffset.UtcNow,
                         DateTimeUpdate = DateTimeOffset.UtcNow,
                         IsDeleted = false,
-                        Version = DateTimeOffset.UtcNow.ToString()
+                        //TODO: исправить
+                        Version = DateTimeOffset.UtcNow.Minute.ToString() 
                     })
                     .ToList();
             }

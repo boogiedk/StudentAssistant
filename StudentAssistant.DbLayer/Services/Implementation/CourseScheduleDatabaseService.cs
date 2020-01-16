@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
@@ -27,6 +28,51 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     foreach (var courseScheduleDatabaseModel in input)
                     {
                         _context.CourseScheduleDatabaseModels.Add(courseScheduleDatabaseModel);
+                        
+                        await _context.SaveChangesAsync(cancellationToken);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+        
+        public async Task InsertStudyGroup(List<StudyGroupModel> input, CancellationToken cancellationToken)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync(cancellationToken))
+            {
+                try
+                {
+                    foreach (var courseScheduleDatabaseModel in input)
+                    {
+                        _context.StudyGroupDatabaseModels.Add(courseScheduleDatabaseModel);
+                        await _context.SaveChangesAsync(cancellationToken);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+        
+        public async Task InsertTeacher(List<TeacherModel> input, CancellationToken cancellationToken)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync(cancellationToken))
+            {
+                try
+                {
+                    foreach (var courseScheduleDatabaseModel in input)
+                    {
+                        _context.TeacherDatabaseModels.Add(courseScheduleDatabaseModel);
                         await _context.SaveChangesAsync(cancellationToken);
                     }
 
@@ -99,7 +145,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 throw;
             }
 
-            //  await InsertAsync(input, cancellationToken);
+              await InsertAsync(input, cancellationToken);
         }
     }
 }
