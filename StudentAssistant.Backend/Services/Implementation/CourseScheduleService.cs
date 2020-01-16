@@ -272,11 +272,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 
                 // сохраняем в бд группы
 
-                var teachers = courseScheduleList.GroupBy(g => g.TeacherModel.FullName)
-                    .Select(y => y.First())
-                    .Select(s => s.TeacherModel)
-                    .Where(w => !string.IsNullOrEmpty(w.FullName))
-                    .ToList();
+//                var teachers = courseScheduleList.GroupBy(g => g.TeacherModel.FullName)
+//                    .Select(y => y.First())
+//                    .Select(s => s.TeacherModel)
+//                    .Where(w => !string.IsNullOrEmpty(w.FullName))
+//                    .ToList();
                 
                 // сохраняем в бд преподов
                 

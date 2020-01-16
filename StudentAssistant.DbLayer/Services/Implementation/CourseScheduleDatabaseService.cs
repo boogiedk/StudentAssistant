@@ -28,7 +28,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     foreach (var courseScheduleDatabaseModel in input)
                     {
                         _context.CourseScheduleDatabaseModels.Add(courseScheduleDatabaseModel);
-                        
+
                         await _context.SaveChangesAsync(cancellationToken);
                     }
 
@@ -41,7 +41,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
             }
         }
-        
+
         public async Task InsertStudyGroup(List<StudyGroupModel> input, CancellationToken cancellationToken)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync(cancellationToken))
@@ -63,7 +63,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
             }
         }
-        
+
         public async Task InsertTeacher(List<TeacherModel> input, CancellationToken cancellationToken)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync(cancellationToken))
@@ -120,7 +120,6 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var models = _context.CourseScheduleDatabaseModels
@@ -133,11 +132,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     _context.CourseScheduleDatabaseModels
                         .Remove(entity);
                     _context.SaveChanges();
-                    
                 }
-                
-                //    _context.CourseScheduleDatabaseModels.RemoveRange(_context.CourseScheduleDatabaseModels);
 
+                //    _context.CourseScheduleDatabaseModels.RemoveRange(_context.CourseScheduleDatabaseModels);
             }
             catch (Exception e)
             {
@@ -145,7 +142,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 throw;
             }
 
-              await InsertAsync(input, cancellationToken);
+            await InsertAsync(input, cancellationToken);
         }
     }
 }

@@ -153,7 +153,25 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                return importDataExcelModels.Select(importDataExcelModel => new CourseScheduleDatabaseModel
+                var studyGroups = importDataExcelModels.GroupBy(g => g.CourseName)
+                    .Select(y => y.First())
+                    .Select(s => new StudyGroupModel
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = s.GroupName
+                    })
+                    .ToList();
+
+                var teachers = importDataExcelModels.GroupBy(g => g.TeacherFullName)
+                    .Select(y => y.First())
+                    .Select(s => new TeacherModel
+                    {
+                        Id = Guid.NewGuid(),
+                        FullName = s.TeacherFullName
+                    })
+                    .ToList();
+
+                var result = importDataExcelModels.Select(importDataExcelModel => new CourseScheduleDatabaseModel
                     {
                         Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
@@ -163,26 +181,21 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
                         NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
                         ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
-                        TeacherModel = new TeacherModel
-                        {
-                            Id = Guid.NewGuid(),
-                            FullName = importDataExcelModel.TeacherFullName
-                        },
-                        StudyGroupModel = new StudyGroupModel
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = ParseGroupName(importDataExcelModel.GroupName)
-                        },
+                        TeacherModel = teachers.FirstOrDefault(w=>w.FullName==importDataExcelModel.TeacherFullName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w=>w.Name==importDataExcelModel.GroupName),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         EndOfClasses = importDataExcelModel.EndOfClasses,
-                        
+
                         DateTimeCreate = DateTimeOffset.UtcNow,
                         DateTimeUpdate = DateTimeOffset.UtcNow,
                         IsDeleted = false,
                         //TODO: исправить
-                        Version = DateTimeOffset.UtcNow.Minute.ToString() 
+                        Version = DateTimeOffset.UtcNow.Minute.ToString()
                     })
                     .ToList();
+
+
+                return result;
             }
             catch (Exception ex)
             {
