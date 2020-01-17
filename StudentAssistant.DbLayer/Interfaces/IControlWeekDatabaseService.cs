@@ -5,21 +5,21 @@ using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Interfaces
 {
-    public interface ICourseScheduleDatabaseService
+    public interface IControlWeekDatabaseService
     {
         /// <summary>
         /// Добавляет данные с расписанием.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="cancellationToken"></param>
-         Task InsertAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken);
+        Task InsertAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken);
 
         /// <summary>
         /// Возвращает данные с расписанием по указанными параметрам.
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        Task<List<CourseScheduleDatabaseModel>> GetByParameters(CourseScheduleParameters parameters);
+        Task<List<CourseScheduleDatabaseModel>> Get();
 
         /// <summary>
         /// Обновляет расписание в базе данных.

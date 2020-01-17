@@ -10,11 +10,11 @@ using StudentAssistant.DbLayer.Models.CourseSchedule;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
-    public class CourseScheduleDatabaseService : ICourseScheduleDatabaseService
+    public class ControlWeekDatabaseService : IControlWeekDatabaseService
     {
         private readonly ApplicationDbContext _context;
 
-        public CourseScheduleDatabaseService(ApplicationDbContext context)
+        public ControlWeekDatabaseService(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -42,23 +42,13 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
-        public async Task<List<CourseScheduleDatabaseModel>> GetByParameters(CourseScheduleParameters parameters)
+        public async Task<List<CourseScheduleDatabaseModel>> Get()
         {
             try
             {
-                if (parameters == null)
-                {
-                    throw new NotSupportedException();
-                }
-
-                return _context.CourseScheduleDatabaseModels.Where(f =>
-                    f.NameOfDayWeek == parameters.NameOfDayWeek
-                    && (f.NumberWeek != null
-                        && f.NumberWeek.Any(a => a.NumberWeek == parameters.NumberWeek)
-                        || f.NumberWeek == null
-                        || f.NumberWeek.Count == 0)
-                    && f.ParityWeek == parameters.ParityWeek
-                    && f.StudyGroupModel.Name == parameters.GroupName).ToList();
+                return _context.CourseScheduleDatabaseModels
+                    .Where(w => w.CourseType == CourseType.ControlCourse)
+                    .ToList();
             }
             catch (Exception ex)
             {

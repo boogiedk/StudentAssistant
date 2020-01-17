@@ -17,13 +17,14 @@ namespace StudentAssistant.DbLayer
           
           public DbSet<StudyGroupModel> StudyGroupDatabaseModels { get; set; }
           
+          public DbSet<NumberWeekModel> NumberWeekModels { get; set; }
+          
           public DbSet<TeacherModel> TeacherDatabaseModels { get; set; }
 
           public DbSet<ExamScheduleDatabaseModel> ExamScheduleDatabaseModels { get; set; }
           
-       // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-      //  {
-      //      base.OnConfiguring(optionsBuilder);
-      //  }
+          public DbSet<StudentModel> StudentModels { get; set; }
+          
+          public DbSet<UserModel> UserModels { get; set; }
     }
 }

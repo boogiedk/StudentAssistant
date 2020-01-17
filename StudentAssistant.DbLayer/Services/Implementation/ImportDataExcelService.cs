@@ -179,7 +179,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         CourseNumber = (int) importDataExcelModel.CourseNumber,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
                         NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
-                        NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
+                        NumberWeek =  ParseNumberWeek(importDataExcelModel.CourseName),
                         ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
                         TeacherModel = teachers.FirstOrDefault(w=>w.FullName==importDataExcelModel.TeacherFullName),
                         StudyGroupModel = studyGroups.FirstOrDefault(w=>w.Name==importDataExcelModel.GroupName),
@@ -359,22 +359,32 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
+                var studyGroups = input.GroupBy(g => g.CourseName)
+                    .Select(y => y.First())
+                    .Select(s => new StudyGroupModel
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = s.GroupName
+                    })
+                    .ToList();
+
+                var teachers = input.GroupBy(g => g.TeacherFullName)
+                    .Select(y => y.First())
+                    .Select(s => new TeacherModel
+                    {
+                        Id = Guid.NewGuid(),
+                        FullName = s.TeacherFullName
+                    })
+                    .ToList();
+                
                 return input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
                     {
                         Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = importDataExcelModel.CourseName,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
-                        TeacherModel = new TeacherModel
-                        {
-                            Id = Guid.NewGuid(),
-                            FullName = importDataExcelModel.TeacherFullName
-                        },
-                        StudyGroupModel = new StudyGroupModel
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = ParseGroupName(importDataExcelModel.GroupName)
-                        },
+                        TeacherModel = teachers.FirstOrDefault(w=>w.FullName==importDataExcelModel.TeacherFullName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w=>w.Name==importDataExcelModel.GroupName),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         NumberDate = PrepareDate(importDataExcelModel.Date).Item1, // число
                         DayOfWeek = PrepareDate(importDataExcelModel.Date).Item2, // день недели 

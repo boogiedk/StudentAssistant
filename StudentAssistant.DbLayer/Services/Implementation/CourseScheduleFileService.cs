@@ -64,11 +64,11 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
                 // или если не указаны номера недель, то фильтруем по четности.
-                var filterByParameters = filterByNameOfWeek
-                    .Where(w => (w.NumberWeek != null
-                                 && w.NumberWeek.Any(s=>s.NumberWeek == input.NumberWeek))
-                                || (w.NumberWeek == null || w.NumberWeek.Count == 0)
-                                && w.ParityWeek == input.ParityWeek).ToArray();
+                var filterByParameters = filterByNameOfWeek;
+                  //  .Where(w => (w.NumberWeek != null
+                                // && w.NumberWeek.Any(s=>s.NumberWeek == input.NumberWeek))
+                               // || (w.NumberWeek == null || w.NumberWeek.Count == 0)
+                              //  && w.ParityWeek == input.ParityWeek).ToArray();
 
                 // фильтруем по группе
                 var filterByGroup =

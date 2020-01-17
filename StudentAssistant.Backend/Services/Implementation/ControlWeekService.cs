@@ -20,6 +20,7 @@ namespace StudentAssistant.Backend.Services.Implementation
     public class ControlWeekService : IControlWeekService
     {
         private readonly ICourseScheduleFileService _courseScheduleFileService;
+        private readonly IControlWeekDatabaseService _controlWeekDatabaseService;
         private readonly ILogger<CourseScheduleService> _logger;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
@@ -30,12 +31,13 @@ namespace StudentAssistant.Backend.Services.Implementation
             ICourseScheduleFileService courseScheduleFileService,
             ILogger<CourseScheduleService> logger,
             IFileService fileService,
-            IMapper mapper)
+            IMapper mapper, IControlWeekDatabaseService controlWeekDatabaseService)
         {
             _courseScheduleFileService = courseScheduleFileService ??
                                          throw new ArgumentNullException(nameof(courseScheduleFileService));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _controlWeekDatabaseService = controlWeekDatabaseService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -45,7 +47,9 @@ namespace StudentAssistant.Backend.Services.Implementation
             {
                 _logger.LogInformation("Get: " + $"{requestModel?.GroupName}");
 
-                var controlWeekList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+              //  var controlWeekList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+
+                var controlWeekList = await _controlWeekDatabaseService.Get();
 
                 var controlWeekControlModel = PrepareViewModel(controlWeekList, requestModel);
 
@@ -198,6 +202,25 @@ namespace StudentAssistant.Backend.Services.Implementation
             char[] a = s.ToCharArray();
             a[0] = char.ToUpper(a[0]);
             return new string(a);
+        }
+        
+        public async Task UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _logger.LogInformation("UpdateAsync: " + "Start");
+
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                
+                await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UpdateAsync Exception: " + ex);
+                throw new NotSupportedException();
+            }
         }
     }
 }

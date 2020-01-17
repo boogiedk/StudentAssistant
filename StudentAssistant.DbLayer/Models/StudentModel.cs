@@ -1,13 +1,9 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace StudentAssistant.DbLayer.Models
 {
     /// <summary>
-    /// Преподаватель.
+    /// Студент.
     /// </summary>
-    public class TeacherModel : UserModel
+    public class StudentModel : UserModel
     {
         /// <summary>
         /// Имя.
@@ -23,10 +19,10 @@ namespace StudentAssistant.DbLayer.Models
         /// Отчество.
         /// </summary>
         public string MiddleName { get; set; }
-
+        
         /// <summary>
-        /// Полное имя (временно)
+        /// Учебная группа.
         /// </summary>
-        public string FullName { get; set; }
+        public StudyGroupModel StudyGroupModel { get; set; }
     }
 }

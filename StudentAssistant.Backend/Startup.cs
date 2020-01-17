@@ -100,11 +100,11 @@ namespace StudentAssistant.Backend
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
-            services.AddScoped<ICourseScheduleMongoDbService, CourseScheduleMongoDbService>();
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IControlWeekService,ControlWeekService>();
             services.AddScoped<IExamScheduleService,ExamScheduleService>();
             services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
+            services.AddScoped<IControlWeekDatabaseService, ControlWeekDatabaseService>();
             
             services.AddSingleton(mapper);
 

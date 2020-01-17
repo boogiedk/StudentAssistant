@@ -23,7 +23,6 @@ namespace StudentAssistant.Backend.Services.Implementation
     public class CourseScheduleService : ICourseScheduleService
     {
         private readonly ICourseScheduleDatabaseService _courseScheduleDatabaseService;
-        private readonly ICourseScheduleMongoDbService _courseScheduleMongoDbService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly ILogger<CourseScheduleService> _logger;
@@ -34,15 +33,12 @@ namespace StudentAssistant.Backend.Services.Implementation
 
         public CourseScheduleService(
             ICourseScheduleDatabaseService courseScheduleDatabaseService,
-            ICourseScheduleMongoDbService courseScheduleMongoDbService,
             ICourseScheduleFileService courseScheduleFileService,
             IParityOfTheWeekService parityOfTheWeekService,
             ILogger<CourseScheduleService> logger,
             IFileService fileService,
             IMapper mapper)
         {
-            _courseScheduleMongoDbService = courseScheduleMongoDbService ??
-                                            throw new ArgumentNullException(nameof(courseScheduleMongoDbService));
             _courseScheduleFileService = courseScheduleFileService ??
                                          throw new ArgumentNullException(nameof(courseScheduleFileService));
             _parityOfTheWeekService =
@@ -78,9 +74,9 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var courseScheduleDatabaseModel =
                     await _courseScheduleDatabaseService.GetByParameters(courseScheduleParameters);
 
-                // на данным момент расписание берется из Excel файла.
-                var courseScheduleDatabaseModel2 = _courseScheduleFileService
-                    .GetFromExcelFileByParameters(courseScheduleParameters);
+//                // на данным момент расписание берется из Excel файла.
+//                var courseScheduleDatabaseModel2 = _courseScheduleFileService
+//                    .GetFromExcelFileByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
@@ -261,27 +257,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
                 
-                var sortedCoursesViewModel = courseScheduleList
-                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
-                    .ToList();
-
-                var studyGroups = courseScheduleList.GroupBy(g => g.StudyGroupModel.Name)
-                    .Select(y => y.First())
-                    .Select(s => s.StudyGroupModel)
-                    .ToList();
-                
-                // сохраняем в бд группы
-
-//                var teachers = courseScheduleList.GroupBy(g => g.TeacherModel.FullName)
-//                    .Select(y => y.First())
-//                    .Select(s => s.TeacherModel)
-//                    .Where(w => !string.IsNullOrEmpty(w.FullName))
-//                    .ToList();
-                
-                // сохраняем в бд преподов
-                
-                
-
                 await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }
             catch (Exception ex)
