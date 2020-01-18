@@ -16,7 +16,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         private readonly ApplicationDbContext _context;
         private readonly IImportDataExcelService _importDataExcelService;
 
-        public CourseScheduleDatabaseService(ApplicationDbContext context, IImportDataExcelService importDataExcelService)
+        public CourseScheduleDatabaseService(
+            ApplicationDbContext context,
+            IImportDataExcelService importDataExcelService)
         {
             _context = context;
             _importDataExcelService = importDataExcelService;
@@ -34,10 +36,6 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                         await _context.SaveChangesAsync(cancellationToken);
                     }
-
-//                    _context.CourseScheduleDatabaseModels.AddRange(input);
-//
-//                    await _context.SaveChangesAsync(cancellationToken);
 
                     transaction.Commit();
                 }
@@ -61,8 +59,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 var courseScheduleDatabaseModel = _context.CourseScheduleDatabaseModels
-                    .Include(i=>i.TeacherModel)
-                    .Include(d=>d.StudyGroupModel)
+                    .Include(i => i.TeacherModel)
+                    .Include(d => d.StudyGroupModel)
                     .ToList();
 
                 var list = new List<CourseScheduleDatabaseModel>();
@@ -77,10 +75,11 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 var result = list.Where(f =>
-                    f.NameOfDayWeek == parameters.NameOfDayWeek
-                    && (f.NumberWeek.Any(a => a == parameters.NumberWeek) || f.NumberWeek.Count == 0)
-                    && f.ParityWeek == parameters.ParityWeek
-                    && f.StudyGroupModel?.Name == parameters.GroupName)
+                        f.NameOfDayWeek == parameters.NameOfDayWeek
+                        && (f.NumberWeek.Any(a => a == parameters.NumberWeek) || f.NumberWeek.Count == 0)
+                        && f.ParityWeek == parameters.ParityWeek
+                        && f.StudyGroupModel?.Name == parameters.GroupName
+                        && f.IsDeleted == false)
                     .ToList();
 
                 return result;
@@ -91,18 +90,27 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
+        public void MarkLikeDeleted(CancellationToken cancellationToken)
+        {
+            var notDeletedList = _context.CourseScheduleDatabaseModels.Where(d => d.IsDeleted == false).ToList();
+
+            notDeletedList.ForEach(s => s.IsDeleted = true);
+
+            _context.CourseScheduleDatabaseModels.UpdateRange(notDeletedList);
+        }
+
         public async Task UpdateAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                //   foreach (var entity in _context.CourseScheduleDatabaseModels)
-                //    {
-                //        _context.CourseScheduleDatabaseModels
-                //           .Remove(entity);
-                //       _context.SaveChanges();
-                //    }
+                var csd = _context.CourseScheduleDatabaseModels;
+
+                _context.CourseScheduleDatabaseModels
+                    .RemoveRange(csd);
+
+                _context.SaveChanges();
 
 
                 // преподы

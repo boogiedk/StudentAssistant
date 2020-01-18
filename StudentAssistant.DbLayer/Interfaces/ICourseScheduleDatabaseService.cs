@@ -28,5 +28,11 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task UpdateAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Помечает записи в базе данных как удаленные.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        void MarkLikeDeleted(CancellationToken cancellationToken);
     }
 }

@@ -52,7 +52,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .Where(w => w.CourseType == CourseType.ControlCourse)
                     .ToList();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new NotSupportedException();
             }
