@@ -24,5 +24,12 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// <param name="fileName"></param>
         /// <returns></returns>
         IEnumerable<ExamScheduleDatabaseModel> GetExamScheduleDatabaseModels(string fileName);
+
+        /// <summary>
+        /// Парсит строку со списком даты и возращает лист с данными.
+        /// </summary>
+        /// <param name="numberWeek"></param>
+        /// <returns></returns>
+        List<int> ParseNumberWeek(string numberWeek);
     }
 }

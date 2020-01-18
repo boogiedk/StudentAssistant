@@ -49,7 +49,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
+#pragma warning disable 1998
         public async Task<List<CourseScheduleDatabaseModel>> GetByParameters(CourseScheduleParameters parameters)
+#pragma warning restore 1998
         {
             try
             {
@@ -83,7 +85,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new NotSupportedException();
             }

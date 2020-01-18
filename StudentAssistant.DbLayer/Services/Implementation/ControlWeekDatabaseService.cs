@@ -42,7 +42,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
+#pragma warning disable 1998
         public async Task<List<CourseScheduleDatabaseModel>> Get()
+#pragma warning restore 1998
         {
             try
             {
