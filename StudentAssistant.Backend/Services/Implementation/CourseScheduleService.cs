@@ -172,7 +172,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
             return counterEmpty == input.Count;
         }
-        
+
         public async Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken)
         {
             try
@@ -256,7 +256,11 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
-                
+
+                courseScheduleList.Where(w => !string.Equals(w.CourseName, string.Empty));
+
+                // await  _courseScheduleDatabaseService.InsertAsync(courseScheduleList,cancellationToken);
+
                 await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }
             catch (Exception ex)

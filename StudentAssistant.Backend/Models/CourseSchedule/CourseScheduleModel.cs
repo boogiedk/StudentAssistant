@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
@@ -11,10 +13,14 @@ namespace StudentAssistant.Backend.Models.CourseSchedule
     public class CourseScheduleModel
     {
         public Guid Id { get; set; }
+        
         /// <summary>
         /// Номер недели.
         /// </summary>
-        public List<NumberWeekModel> NumberWeek { get; set; }
+        [NotMapped]
+        public List<int> NumberWeek { get; set; }
+
+        public string NumberWeekString { get; set; }
 
         /// <summary>
         /// Чётность недели.

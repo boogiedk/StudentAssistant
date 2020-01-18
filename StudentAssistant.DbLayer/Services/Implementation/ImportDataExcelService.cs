@@ -158,7 +158,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .Select(s => new StudyGroupModel
                     {
                         Id = Guid.NewGuid(),
-                        Name = s.GroupName
+                        Name = ParseGroupName(s.GroupName)
                     })
                     .ToList();
 
@@ -179,13 +179,16 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         CourseNumber = (int) importDataExcelModel.CourseNumber,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
                         NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
-                        NumberWeek =  ParseNumberWeek(importDataExcelModel.CourseName),
+
+                        NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
+                        NumberWeekString = String.Join(",",
+                            ParseNumberWeek(importDataExcelModel.CourseName).Select(p => p.ToString())),
+
                         ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
-                        TeacherModel = teachers.FirstOrDefault(w=>w.FullName==importDataExcelModel.TeacherFullName),
-                        StudyGroupModel = studyGroups.FirstOrDefault(w=>w.Name==importDataExcelModel.GroupName),
+                        TeacherModel = teachers.FirstOrDefault(w => w.FullName == importDataExcelModel.TeacherFullName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w => string.Equals(w.Name,ParseGroupName(importDataExcelModel.GroupName))),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         EndOfClasses = importDataExcelModel.EndOfClasses,
-
                         DateTimeCreate = DateTimeOffset.UtcNow,
                         DateTimeUpdate = DateTimeOffset.UtcNow,
                         IsDeleted = false,
@@ -376,15 +379,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         FullName = s.TeacherFullName
                     })
                     .ToList();
-                
+
                 return input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
                     {
                         Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = importDataExcelModel.CourseName,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
-                        TeacherModel = teachers.FirstOrDefault(w=>w.FullName==importDataExcelModel.TeacherFullName),
-                        StudyGroupModel = studyGroups.FirstOrDefault(w=>w.Name==importDataExcelModel.GroupName),
+                        TeacherModel = teachers.FirstOrDefault(w => w.FullName == importDataExcelModel.TeacherFullName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w => w.Name == importDataExcelModel.GroupName),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         NumberDate = PrepareDate(importDataExcelModel.Date).Item1, // число
                         DayOfWeek = PrepareDate(importDataExcelModel.Date).Item2, // день недели 
@@ -502,35 +505,28 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="numberWeek"></param>
         /// <returns></returns>
-        private List<NumberWeekModel> ParseNumberWeek(string numberWeek)
+        public List<int> ParseNumberWeek(string numberWeek)
         {
             try
             {
                 if (string.IsNullOrEmpty(numberWeek))
                 {
-                    return new List<NumberWeekModel>();
+                    return new List<int>();
                 }
 
                 var stringNumbers = numberWeek.Split('н')[0];
 
                 if (stringNumbers[0] == 'к')
                 {
-                    return new List<NumberWeekModel>();
+                    return new List<int>();
                 }
 
-                var numbers = new List<NumberWeekModel>();
+                var numbers = new List<int>();
 
                 if (IsNumberContains(stringNumbers))
                 {
-                    numbers = stringNumbers
-                        .Split(',').Select(s =>
-                            new NumberWeekModel
-                            {
-                                Id = Guid.NewGuid(),
-                                NumberWeek = int.Parse(s)
-                            })
-                        .Where(n => n.NumberWeek != 0)
-                        .ToList();
+                    numbers = stringNumbers.Split(',').ToList().Select(int.Parse)
+                        .Where(n => n != 0).ToList();
                 }
 
 
@@ -541,7 +537,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 //exception handler
             }
 
-            return new List<NumberWeekModel>();
+            return new List<int>();
         }
 
         /// <summary>

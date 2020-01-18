@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using MongoDB.Bson;
 
 namespace StudentAssistant.DbLayer.Models.CourseSchedule
@@ -12,10 +13,14 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
     public class CourseScheduleDatabaseModel
     {
         public Guid Id { get; set; }
+
         /// <summary>
         /// Номер недели.
         /// </summary>
-        public List<NumberWeekModel> NumberWeek { get; set; }
+        [NotMapped]
+        public List<int> NumberWeek { get; set; }
+
+        public string NumberWeekString { get; set; }
 
         /// <summary>
         /// Чётность недели.
@@ -66,27 +71,27 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// Окончание Занятий.
         /// </summary>
         public string EndOfClasses { get; set; }
-        
+
         /// <summary>
         /// Группы, с которыми объединенные пары.
         /// </summary>
         public List<StudyGroupModel> CombinedGroup { get; set; }
-        
+
         /// <summary>
         /// Удалена ли запись.
         /// </summary>
         public bool IsDeleted { get; set; }
-        
+
         /// <summary>
         /// Время создания записи.
         /// </summary>
-        public DateTimeOffset  DateTimeCreate { get; set; }
-        
+        public DateTimeOffset DateTimeCreate { get; set; }
+
         /// <summary>
         /// Время обновления записи.
         /// </summary>
         public DateTimeOffset DateTimeUpdate { get; set; }
-        
+
         /// <summary>
         /// Версия записи.
         /// </summary>

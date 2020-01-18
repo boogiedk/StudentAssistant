@@ -16,9 +16,7 @@ namespace StudentAssistant.DbLayer
           public DbSet<CourseScheduleDatabaseModel> CourseScheduleDatabaseModels { get; set; }
           
           public DbSet<StudyGroupModel> StudyGroupDatabaseModels { get; set; }
-          
-          public DbSet<NumberWeekModel> NumberWeekModels { get; set; }
-          
+
           public DbSet<TeacherModel> TeacherDatabaseModels { get; set; }
 
           public DbSet<ExamScheduleDatabaseModel> ExamScheduleDatabaseModels { get; set; }

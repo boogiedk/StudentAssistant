@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Extensions.Internal;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -13,10 +14,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
     public class CourseScheduleDatabaseService : ICourseScheduleDatabaseService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IImportDataExcelService _importDataExcelService;
 
-        public CourseScheduleDatabaseService(ApplicationDbContext context)
+        public CourseScheduleDatabaseService(ApplicationDbContext context, IImportDataExcelService importDataExcelService)
         {
             _context = context;
+            _importDataExcelService = importDataExcelService;
         }
 
         public async Task InsertAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
@@ -31,6 +34,10 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                         await _context.SaveChangesAsync(cancellationToken);
                     }
+
+//                    _context.CourseScheduleDatabaseModels.AddRange(input);
+//
+//                    await _context.SaveChangesAsync(cancellationToken);
 
                     transaction.Commit();
                 }
@@ -51,14 +58,30 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     throw new NotSupportedException();
                 }
 
-                return _context.CourseScheduleDatabaseModels.Where(f =>
+                var courseScheduleDatabaseModel = _context.CourseScheduleDatabaseModels
+                    .Include(i=>i.TeacherModel)
+                    .Include(d=>d.StudyGroupModel)
+                    .ToList();
+
+                var list = new List<CourseScheduleDatabaseModel>();
+
+                foreach (var scheduleDatabaseModel in courseScheduleDatabaseModel)
+                {
+                    var model = scheduleDatabaseModel;
+
+                    model.NumberWeek = _importDataExcelService.ParseNumberWeek(scheduleDatabaseModel.NumberWeekString);
+
+                    list.Add(model);
+                }
+
+                var result = list.Where(f =>
                     f.NameOfDayWeek == parameters.NameOfDayWeek
-                    && (f.NumberWeek != null
-                        && f.NumberWeek.Any(a => a.NumberWeek == parameters.NumberWeek)
-                        || f.NumberWeek == null
-                        || f.NumberWeek.Count == 0)
+                    && (f.NumberWeek.Any(a => a == parameters.NumberWeek) || f.NumberWeek.Count == 0)
                     && f.ParityWeek == parameters.ParityWeek
-                    && f.StudyGroupModel.Name == parameters.GroupName).ToList();
+                    && f.StudyGroupModel?.Name == parameters.GroupName)
+                    .ToList();
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -72,12 +95,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                foreach (var entity in _context.CourseScheduleDatabaseModels)
-                {
-                    _context.CourseScheduleDatabaseModels
-                        .Remove(entity);
-                    _context.SaveChanges();
-                }
+                //   foreach (var entity in _context.CourseScheduleDatabaseModels)
+                //    {
+                //        _context.CourseScheduleDatabaseModels
+                //           .Remove(entity);
+                //       _context.SaveChanges();
+                //    }
 
 
                 // преподы
