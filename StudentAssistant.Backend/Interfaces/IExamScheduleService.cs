@@ -24,5 +24,12 @@ namespace StudentAssistant.Backend.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновить расписание экзаменов в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task UpdateAsync(CancellationToken cancellationToken);
     }
 }

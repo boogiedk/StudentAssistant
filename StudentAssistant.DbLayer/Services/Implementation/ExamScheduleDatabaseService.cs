@@ -4,19 +4,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Extensions.Internal;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.Exam;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
-    public class CourseScheduleDatabaseService : ICourseScheduleDatabaseService
+    public class ExamScheduleDatabaseService : IExamScheduleDatabaseService
     {
         private readonly ApplicationDbContext _context;
         private readonly IImportDataExcelService _importDataExcelService;
 
-        public CourseScheduleDatabaseService(
+        public ExamScheduleDatabaseService(
             ApplicationDbContext context,
             IImportDataExcelService importDataExcelService)
         {
@@ -24,15 +24,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             _importDataExcelService = importDataExcelService;
         }
 
-        public async Task InsertAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
+        public async Task InsertAsync(List<ExamScheduleDatabaseModel> input, CancellationToken cancellationToken)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync(cancellationToken))
             {
                 try
                 {
-                    foreach (var courseScheduleDatabaseModel in input)
+                    foreach (var examScheduleDatabaseModel in input)
                     {
-                        _context.CourseScheduleDatabaseModels.Add(courseScheduleDatabaseModel);
+                        _context.ExamScheduleDatabaseModels.Add(examScheduleDatabaseModel);
 
                         await _context.SaveChangesAsync(cancellationToken);
                     }
@@ -48,7 +48,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         }
 
 #pragma warning disable 1998
-        public async Task<List<CourseScheduleDatabaseModel>> GetByParameters(CourseScheduleParameters parameters)
+        public async Task<List<ExamScheduleDatabaseModel>> GetByParameters(ExamScheduleParametersModel parameters)
 #pragma warning restore 1998
         {
             try
@@ -58,27 +58,14 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     throw new NotSupportedException();
                 }
 
-                var courseScheduleDatabaseModel = _context.CourseScheduleDatabaseModels
+                var examScheduleDatabaseModels = _context.ExamScheduleDatabaseModels
                     .Include(i => i.TeacherModel)
                     .Include(d => d.StudyGroupModel)
                     .ToList();
 
-                var list = new List<CourseScheduleDatabaseModel>();
-
-                foreach (var scheduleDatabaseModel in courseScheduleDatabaseModel)
-                {
-                    var model = scheduleDatabaseModel;
-
-                    model.NumberWeek = _importDataExcelService.ParseNumberWeek(scheduleDatabaseModel.NumberWeekString);
-
-                    list.Add(model);
-                }
-
-                var result = list.Where(f =>
-                        f.NameOfDayWeek == parameters.NameOfDayWeek
-                        && (f.NumberWeek.Any(a => a == parameters.NumberWeek) || f.NumberWeek.Count == 0)
-                        && f.ParityWeek == parameters.ParityWeek
-                        && f.StudyGroupModel?.Name == parameters.GroupName
+                var result = examScheduleDatabaseModels.Where(f =>
+                        f.CourseType == parameters.CourseType
+                        && string.Equals(f.StudyGroupModel.Name, parameters.StudyGroupModel.Name)
                         && f.IsDeleted == false)
                     .ToList();
 
@@ -92,32 +79,28 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
         public void MarkLikeDeleted(CancellationToken cancellationToken)
         {
-            var notDeletedList = _context.CourseScheduleDatabaseModels.Where(d => d.IsDeleted == false).ToList();
+            var notDeletedList = _context.ExamScheduleDatabaseModels.Where(d => d.IsDeleted == false).ToList();
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
 
-            _context.CourseScheduleDatabaseModels.UpdateRange(notDeletedList);
+            _context.ExamScheduleDatabaseModels.UpdateRange(notDeletedList);
         }
 
-        public async Task UpdateAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
+        public async Task UpdateAsync(List<ExamScheduleDatabaseModel> input, CancellationToken cancellationToken)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var csd = _context.CourseScheduleDatabaseModels.Where
-                (w => w.CourseType == CourseType.Lecture
-                      || w.CourseType == CourseType.Practicte
-                      || w.CourseType == CourseType.LaboratoryWork
-                      || w.CourseType == CourseType.Other);
+                var csd = _context.ExamScheduleDatabaseModels.Where(w => w.CourseType == CourseType.ExamCourse);
 
-                _context.CourseScheduleDatabaseModels
+                _context.ExamScheduleDatabaseModels
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
 
 
-                // преподы
+                 // преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 
                 // сравниваем список из бд и входящих,

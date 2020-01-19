@@ -31,6 +31,7 @@ using StudentAssistant.DbLayer;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.Exam;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace StudentAssistant.Backend
@@ -105,6 +106,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<IExamScheduleService,ExamScheduleService>();
             services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
             services.AddScoped<IControlWeekDatabaseService, ControlWeekDatabaseService>();
+            services.AddScoped<IExamScheduleDatabaseService, ExamScheduleDatabaseService>();
             
             services.AddSingleton(mapper);
 

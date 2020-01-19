@@ -76,5 +76,27 @@ namespace StudentAssistant.Backend.Controllers
                 return BadRequest(ex);
             }
         }
+        
+        /// <summary>
+        /// Метод для обновления расписания в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("update")]
+        public async Task<IActionResult> UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _examScheduleService.UpdateAsync(cancellationToken);
+
+                _logger.LogInformation("Response: " + "Данные обновлены!");
+                return Ok("Данные обновлены!");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
     }
 }

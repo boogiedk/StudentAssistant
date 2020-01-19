@@ -213,8 +213,10 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+
+                await _controlWeekDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
                 
-                await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+              //  await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }
             catch (Exception ex)
             {

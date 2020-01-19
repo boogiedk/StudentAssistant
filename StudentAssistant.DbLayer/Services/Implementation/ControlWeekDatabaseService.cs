@@ -49,6 +49,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             try
             {
                 return _context.CourseScheduleDatabaseModels
+                    .Include(d=>d.StudyGroupModel)
+                    .Include(d=>d.TeacherModel)
                     .Where(w => w.CourseType == CourseType.ControlCourse)
                     .ToList();
             }
@@ -64,15 +66,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                foreach (var entity in _context.CourseScheduleDatabaseModels)
-                {
-                    _context.CourseScheduleDatabaseModels
-                        .Remove(entity);
-                    _context.SaveChanges();
-                }
+                var csd = _context.CourseScheduleDatabaseModels.Where
+                (w => w.CourseType == CourseType.ControlCourse);
 
+                _context.CourseScheduleDatabaseModels
+                    .RemoveRange(csd);
 
-                // преподы
+                _context.SaveChanges();
+
+                   // преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 
                 // сравниваем список из бд и входящих,
@@ -110,7 +112,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 var studyGroupNew = studyGroupDb
                     .Where(p => input
                         .Select(s => s.StudyGroupModel)
-                        .All(f => !string.Equals(f.Name, p.Name)));
+                        .All(f => !string.Equals(f.Name, p.Name))).ToList();
 
                 // добавляем новые группы в бд
                 foreach (var studyGroupModel in studyGroupNew)
@@ -130,6 +132,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     model.StudyGroupModel = studyGroupDbAll
                         .FirstOrDefault(s => string.Equals(s.Name, model.StudyGroupModel.Name));
                 }
+
+
 
 
                 await InsertAsync(input, cancellationToken);

@@ -56,5 +56,25 @@ namespace StudentAssistant.DbLayer.Models.Exam
         /// Нач. Занятий.
         /// </summary>
         public string StartOfClasses { get; set; }
+        
+        /// <summary>
+        /// Удалена ли запись.
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// Время создания записи.
+        /// </summary>
+        public DateTimeOffset DateTimeCreate { get; set; }
+
+        /// <summary>
+        /// Время обновления записи.
+        /// </summary>
+        public DateTimeOffset DateTimeUpdate { get; set; }
+
+        /// <summary>
+        /// Версия записи.
+        /// </summary>
+        public string Version { get; set; }
     }
 }

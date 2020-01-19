@@ -12,6 +12,8 @@ using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.Backend.Models.ExamSchedule;
 using StudentAssistant.Backend.Models.ExamSchedule.ViewModels;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
+using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
 
@@ -19,6 +21,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 {
     public class ExamScheduleService : IExamScheduleService
     {
+        private readonly IExamScheduleDatabaseService _examScheduleDatabaseService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly ILogger<ExamScheduleService> _logger;
         private readonly IFileService _fileService;
@@ -30,12 +33,13 @@ namespace StudentAssistant.Backend.Services.Implementation
             ICourseScheduleFileService courseScheduleFileService,
             ILogger<ExamScheduleService> logger,
             IFileService fileService,
-            IMapper mapper)
+            IMapper mapper, IExamScheduleDatabaseService examScheduleDatabaseService)
         {
             _courseScheduleFileService = courseScheduleFileService ??
                                          throw new ArgumentNullException(nameof(courseScheduleFileService));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _examScheduleDatabaseService = examScheduleDatabaseService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -45,7 +49,15 @@ namespace StudentAssistant.Backend.Services.Implementation
             {
                 _logger.LogInformation("Get: " + $"{requestModel?.GroupName}");
 
-                var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
+               // var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
+
+                var parameters = new ExamScheduleParametersModel()
+                {
+                    CourseType = CourseType.ExamCourse,
+                    StudyGroupModel = new StudyGroupModel() { Name = requestModel.GroupName }
+                };
+
+                var examScheduleList = await _examScheduleDatabaseService.GetByParameters(parameters);
 
                 var examScheduleViewModel = PrepareViewModel(examScheduleList, requestModel);
 
@@ -174,6 +186,27 @@ namespace StudentAssistant.Backend.Services.Implementation
                     return DayOfWeek.Sunday;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        public async Task UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _logger.LogInformation("UpdateAsync: " + "Start");
+
+                var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
+
+                examScheduleList.Where(w => !string.Equals(w.CourseName, string.Empty));
+
+                await _examScheduleDatabaseService.UpdateAsync(examScheduleList, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("UpdateAsync Exception: " + ex);
+                throw new NotSupportedException();
             }
         }
     }
