@@ -14,14 +14,11 @@ namespace StudentAssistant.DbLayer.Services.Implementation
     public class ExamScheduleDatabaseService : IExamScheduleDatabaseService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IImportDataExcelService _importDataExcelService;
 
         public ExamScheduleDatabaseService(
-            ApplicationDbContext context,
-            IImportDataExcelService importDataExcelService)
+            ApplicationDbContext context)
         {
             _context = context;
-            _importDataExcelService = importDataExcelService;
         }
 
         public async Task InsertAsync(List<ExamScheduleDatabaseModel> input, CancellationToken cancellationToken)
@@ -64,8 +61,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .ToList();
 
                 var result = examScheduleDatabaseModels.Where(f =>
-                        f.CourseType == parameters.CourseType
-                        && string.Equals(f.StudyGroupModel.Name, parameters.StudyGroupModel.Name)
+                        (f.CourseType == parameters.CourseType
+                        || f.CourseType==CourseType.СonsultationCourse)
+                        && string.Equals(f.StudyGroupModel?.Name, parameters.StudyGroupModel.Name)
                         && f.IsDeleted == false)
                     .ToList();
 
@@ -100,7 +98,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 _context.SaveChanges();
 
 
-                 // преподы
+                // преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 
                 // сравниваем список из бд и входящих,
@@ -129,26 +127,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     model.TeacherModel = teachersDbAll
                         .FirstOrDefault(s => string.Equals(s.FullName, model.TeacherModel.FullName));
                 }
-
-                // группы
-                var studyGroupDb = _context.StudyGroupDatabaseModels.ToList();
-
-                // сравниваем список из бд и входящих,
-                // чтобы найти группы, которых нет в бд
-                var studyGroupNew = studyGroupDb
-                    .Where(p => input
-                        .Select(s => s.StudyGroupModel)
-                        .All(f => !string.Equals(f.Name, p.Name)));
-
-                // добавляем новые группы в бд
-                foreach (var studyGroupModel in studyGroupNew)
-                {
-                    _context.StudyGroupDatabaseModels.Add(new StudyGroupModel
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = studyGroupModel.Name
-                    });
-                }
+                
 
                 var studyGroupDbAll = _context.StudyGroupDatabaseModels.ToList();
 
@@ -156,9 +135,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 foreach (var model in input)
                 {
                     model.StudyGroupModel = studyGroupDbAll
-                        .FirstOrDefault(s => string.Equals(s.Name, model.StudyGroupModel.Name));
+                        .FirstOrDefault(s => string.Equals(s.Name, model.StudyGroupModel?.Name));
                 }
-
 
                 await InsertAsync(input, cancellationToken);
             }

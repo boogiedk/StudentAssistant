@@ -20,7 +20,7 @@ namespace StudentAssistant.DbLayer.Models
         /// <summary>
         /// Студенты группы.
         /// </summary>
-        public List<StudentModel> Students { get; set; }
+      //  public List<StudentModel> Students { get; set; }
         
         public override string ToString()
         {

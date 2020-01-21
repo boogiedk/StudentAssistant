@@ -367,7 +367,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .Select(s => new StudyGroupModel
                     {
                         Id = Guid.NewGuid(),
-                        Name = s.GroupName
+                        Name = ParseGroupName(s.GroupName)
                     })
                     .ToList();
 
@@ -379,21 +379,29 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         FullName = s.TeacherFullName
                     })
                     .ToList();
-
-                return input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
+                
+                var result = input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
                     {
                         Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = importDataExcelModel.CourseName,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
                         TeacherModel = teachers.FirstOrDefault(w => w.FullName == importDataExcelModel.TeacherFullName),
-                        StudyGroupModel = studyGroups.FirstOrDefault(w => w.Name == importDataExcelModel.GroupName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w => string.Equals(w.Name,ParseGroupName(importDataExcelModel.GroupName))),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         NumberDate = PrepareDate(importDataExcelModel.Date).Item1, // число
                         DayOfWeek = PrepareDate(importDataExcelModel.Date).Item2, // день недели 
-                        Month = importDataExcelModel?.Month.Replace(" ", "")
+                        Month = importDataExcelModel?.Month.Replace(" ", ""),
+                        
+                        DateTimeCreate = DateTimeOffset.UtcNow,
+                        DateTimeUpdate = DateTimeOffset.UtcNow,
+                        IsDeleted = false,
+                        //TODO: исправить
+                        Version = DateTimeOffset.UtcNow.Minute.ToString()
                     })
                     .ToList();
+
+                return result;
             }
             catch (Exception ex)
             {

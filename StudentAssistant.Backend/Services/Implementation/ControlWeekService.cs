@@ -73,7 +73,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             var sortedControlCourseViewModel = controlCourseViewModel
                 .Where(w => !string.IsNullOrEmpty(w.CourseName)
                             && w.CourseName != "Военная кафедра"
-                            && string.Equals(w.StudyGroupModel.Name, requestModel.GroupName)
+                            && string.Equals(w.StudyGroupModel?.Name, requestModel.GroupName)
                 )
                 .Select(s =>
                 {
@@ -214,9 +214,9 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
 
-                await _controlWeekDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
+               // await _controlWeekDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
                 
-              //  await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+                await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }
             catch (Exception ex)
             {

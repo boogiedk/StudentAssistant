@@ -148,32 +148,13 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 // группы
-                var studyGroupDb = _context.StudyGroupDatabaseModels.ToList();
-
-                // сравниваем список из бд и входящих,
-                // чтобы найти группы, которых нет в бд
-                var studyGroupNew = studyGroupDb
-                    .Where(p => input
-                        .Select(s => s.StudyGroupModel)
-                        .All(f => !string.Equals(f.Name, p.Name)));
-
-                // добавляем новые группы в бд
-                foreach (var studyGroupModel in studyGroupNew)
-                {
-                    _context.StudyGroupDatabaseModels.Add(new StudyGroupModel
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = studyGroupModel.Name
-                    });
-                }
-
                 var studyGroupDbAll = _context.StudyGroupDatabaseModels.ToList();
 
                 // изменяем модели групп во входящем списке
                 foreach (var model in input)
                 {
                     model.StudyGroupModel = studyGroupDbAll
-                        .FirstOrDefault(s => string.Equals(s.Name, model.StudyGroupModel.Name));
+                        .FirstOrDefault(s => string.Equals(s.Name, model.StudyGroupModel?.Name));
                 }
 
 

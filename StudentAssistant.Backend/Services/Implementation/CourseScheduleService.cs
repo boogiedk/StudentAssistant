@@ -259,9 +259,9 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 courseScheduleList.Where(w => !string.Equals(w.CourseName, string.Empty));
 
-                // await  _courseScheduleDatabaseService.InsertAsync(courseScheduleList,cancellationToken);
+                 await  _courseScheduleDatabaseService.InsertAsync(courseScheduleList,cancellationToken);
 
-                await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+              //  await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
             }
             catch (Exception ex)
             {
