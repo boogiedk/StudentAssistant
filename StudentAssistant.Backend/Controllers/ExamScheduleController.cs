@@ -87,10 +87,11 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                await _examScheduleService.UpdateAsync(cancellationToken);
+              var response =  await _examScheduleService.UpdateAsync(cancellationToken);
 
                 _logger.LogInformation("Response: " + "Данные обновлены!");
-                return Ok("Данные обновлены!");
+                
+                return Ok(response);
             }
             catch (Exception ex)
             {

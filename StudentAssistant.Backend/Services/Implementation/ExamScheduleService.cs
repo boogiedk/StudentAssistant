@@ -11,6 +11,7 @@ using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.Backend.Models.ExamSchedule;
 using StudentAssistant.Backend.Models.ExamSchedule.ViewModels;
+using StudentAssistant.Backend.Models.UpdateAsync;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -49,12 +50,16 @@ namespace StudentAssistant.Backend.Services.Implementation
             {
                 _logger.LogInformation("Get: " + $"{requestModel?.GroupName}");
 
-               // var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
-
-                var parameters = new ExamScheduleParametersModel()
+                if (requestModel == null)
                 {
-                    CourseType = CourseType.ExamCourse,
-                    StudyGroupModel = new StudyGroupModel() { Name = requestModel.GroupName }
+                    throw new NotSupportedException();
+                }
+
+                var parameters = new ExamScheduleParametersModel
+                {
+                    CourseTypeExam = CourseType.ExamCourse,
+                    CourseTypeConsultation = CourseType.СonsultationCourse,
+                    StudyGroupModel = new StudyGroupModel {Name = requestModel.GroupName}
                 };
 
                 var examScheduleList = await _examScheduleDatabaseService.GetByParameters(parameters);
@@ -154,7 +159,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public async Task UpdateAsync(CancellationToken cancellationToken)
+        public async Task<UpdateAsyncResponseModel> UpdateAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -164,11 +169,17 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
 
-                var examScheduleDatabaseModels = examScheduleList.Where(w => !string.IsNullOrEmpty(w.CourseName)).ToList();
+                var examScheduleDatabaseModels =
+                    examScheduleList.Where(w => !string.IsNullOrEmpty(w.CourseName)).ToList();
 
                 await _examScheduleDatabaseService.UpdateAsync(examScheduleDatabaseModels, cancellationToken);
-               
-              // await _examScheduleDatabaseService.InsertAsync(examScheduleList, cancellationToken);
+
+                var response = new UpdateAsyncResponseModel
+                {
+                    Message = "Данные обновлены"
+                };
+
+                return response;
             }
             catch (Exception ex)
             {
@@ -176,7 +187,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException();
             }
         }
-        
+
         public async Task InsertAsync(CancellationToken cancellationToken)
         {
             try

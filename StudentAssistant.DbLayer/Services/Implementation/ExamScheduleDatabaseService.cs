@@ -61,8 +61,8 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .ToList();
 
                 var result = examScheduleDatabaseModels.Where(f =>
-                        (f.CourseType == parameters.CourseType
-                         || f.CourseType == CourseType.СonsultationCourse)
+                        (f.CourseType == parameters.CourseTypeExam
+                         || f.CourseType == parameters.CourseTypeConsultation)
                         && string.Equals(f.StudyGroupModel?.Name, parameters.StudyGroupModel.Name)
                         && f.IsDeleted == false)
                     .ToList();

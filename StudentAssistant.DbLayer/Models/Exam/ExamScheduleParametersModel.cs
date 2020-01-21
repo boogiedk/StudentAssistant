@@ -6,9 +6,14 @@ namespace StudentAssistant.DbLayer.Models.Exam
     public class ExamScheduleParametersModel
     {
         /// <summary>
-        /// Тип предмета.
+        /// Тип предмета. (Экзамен)
         /// </summary>
-        public CourseType CourseType { get; set; }
+        public CourseType CourseTypeExam { get; set; }
+        
+        /// <summary>
+        /// Тип предмета. (Консультация)
+        /// </summary>
+        public CourseType CourseTypeConsultation { get; set; }
         
         /// <summary>
         /// Группа.
