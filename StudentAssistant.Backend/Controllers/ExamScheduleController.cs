@@ -98,5 +98,50 @@ namespace StudentAssistant.Backend.Controllers
                 return BadRequest(ex);
             }
         }
+        
+        /// <summary>
+        /// Метод для добавления расписания в базу данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("insert")]
+        public async Task<IActionResult> InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _examScheduleService.InsertAsync(cancellationToken);
+
+                _logger.LogInformation("Response: " + "Данные вставлены!");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для пометки как удаленное в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("marklikedeleted")]
+        public IActionResult MarkLikeDeleted()
+        {
+            try
+            {
+                _examScheduleService.MarkLikeDeleted();
+
+                _logger.LogInformation("Response: " + "Данные помечены!");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
     }
 }

@@ -154,41 +154,6 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        /// <summary>
-        /// Парсит строку с названием дня недели в DayOfWeek енум.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        /// <exception cref="NullReferenceException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private DayOfWeek ToDayOfWeek(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                throw new NullReferenceException();
-            }
-
-            switch (str.ToLower())
-            {
-                case "пн":
-                    return DayOfWeek.Monday;
-                case "вт":
-                    return DayOfWeek.Tuesday;
-                case "ср":
-                    return DayOfWeek.Wednesday;
-                case "чт":
-                    return DayOfWeek.Thursday;
-                case "пт":
-                    return DayOfWeek.Friday;
-                case "сб":
-                    return DayOfWeek.Saturday;
-                case "вс":
-                    return DayOfWeek.Sunday;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-        
         public async Task UpdateAsync(CancellationToken cancellationToken)
         {
             try
@@ -208,6 +173,40 @@ namespace StudentAssistant.Backend.Services.Implementation
             catch (Exception ex)
             {
                 _logger.LogError("UpdateAsync Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+        
+        public async Task InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _logger.LogInformation("InsertAsync: " + "Start");
+
+                var courseScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
+
+                await _examScheduleDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("InsertAsync Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+
+        public void MarkLikeDeleted()
+        {
+            try
+            {
+                _logger.LogInformation("MarkLikeDeleted: " + "Start");
+
+                _examScheduleDatabaseService.MarkLikeDeleted();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("MarkLikeDeleted Exception: " + ex);
                 throw new NotSupportedException();
             }
         }

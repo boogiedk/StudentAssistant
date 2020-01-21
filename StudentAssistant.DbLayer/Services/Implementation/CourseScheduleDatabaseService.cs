@@ -90,9 +90,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
-        public void MarkLikeDeleted(CancellationToken cancellationToken)
+        public void MarkLikeDeleted()
         {
-            var notDeletedList = _context.CourseScheduleDatabaseModels.Where(d => d.IsDeleted == false).ToList();
+            var notDeletedList = _context.CourseScheduleDatabaseModels
+                .Where(d => d.IsDeleted == false &&
+                            (d.CourseType == CourseType.Lecture
+                            || d.CourseType == CourseType.Practicte
+                            || d.CourseType == CourseType.LaboratoryWork
+                            || d.CourseType == CourseType.Other))
+                .ToList();
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
 
@@ -115,8 +121,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
-
-
+                
                 // преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 

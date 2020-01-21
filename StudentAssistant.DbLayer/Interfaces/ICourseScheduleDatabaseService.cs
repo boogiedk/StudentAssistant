@@ -32,7 +32,6 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// <summary>
         /// Помечает записи в базе данных как удаленные.
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        void MarkLikeDeleted(CancellationToken cancellationToken);
+        void MarkLikeDeleted();
     }
 }

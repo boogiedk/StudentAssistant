@@ -31,5 +31,18 @@ namespace StudentAssistant.Backend.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task UpdateAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновляет данные в базе данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task InsertAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновляет данные в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        void MarkLikeDeleted();
     }
 }

@@ -177,10 +177,10 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                await _courseScheduleService.UpdateAsync(cancellationToken);
+              var response =  await _courseScheduleService.UpdateAsync(cancellationToken);
 
                 _logger.LogInformation("Response: " + "Данные обновлены!");
-                return Ok("Данные обновлены!");
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -202,6 +202,51 @@ namespace StudentAssistant.Backend.Controllers
 
                 _logger.LogInformation("Response: " + result.UpdateDatetime);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+        
+        /// <summary>
+        /// Метод для добавления расписания в базу данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("insert")]
+        public async Task<IActionResult> InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _courseScheduleService.InsertAsync(cancellationToken);
+
+                _logger.LogInformation("Response: " + "Данные вставлены!");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для пометки как удаленное в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("marklikedeleted")]
+        public IActionResult MarkLikeDeleted()
+        {
+            try
+            {
+                _courseScheduleService.MarkLikeDeleted();
+
+                _logger.LogInformation("Response: " + "Данные помечены!");
+
+                return Ok();
             }
             catch (Exception ex)
             {

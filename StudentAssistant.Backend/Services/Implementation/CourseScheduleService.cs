@@ -13,6 +13,7 @@ using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
+using StudentAssistant.Backend.Models.UpdateAsync;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -73,10 +74,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleDatabaseModel =
                     await _courseScheduleDatabaseService.GetByParameters(courseScheduleParameters);
-
-//                // на данным момент расписание берется из Excel файла.
-//                var courseScheduleDatabaseModel2 = _courseScheduleFileService
-//                    .GetFromExcelFileByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
@@ -247,7 +244,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public async Task UpdateAsync(CancellationToken cancellationToken)
+        public async Task<UpdateAsyncResponseModel> UpdateAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -257,11 +254,16 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
 
-                courseScheduleList.Where(w => !string.Equals(w.CourseName, string.Empty));
+                var courseScheduleDatabaseModels = courseScheduleList.Where(w => string.IsNullOrEmpty(w.CourseName)).ToList();
 
-                 await  _courseScheduleDatabaseService.InsertAsync(courseScheduleList,cancellationToken);
+                await  _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels,cancellationToken);
 
-              //  await _courseScheduleDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+                var response = new UpdateAsyncResponseModel
+                {
+                    Message = "Данные обновлены!"
+                };
+
+                return response;
             }
             catch (Exception ex)
             {
@@ -295,5 +297,40 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         });
+        
+        public async Task InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _logger.LogInformation("InsertAsync: " + "Start");
+
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+
+                await _courseScheduleDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("InsertAsync Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+
+        public void MarkLikeDeleted()
+        {
+            try
+            {
+                _logger.LogInformation("MarkLikeDeleted: " + "Start");
+
+                _courseScheduleDatabaseService.MarkLikeDeleted();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("MarkLikeDeleted Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+        
     }
 }

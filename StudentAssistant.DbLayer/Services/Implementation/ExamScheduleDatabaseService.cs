@@ -62,7 +62,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 var result = examScheduleDatabaseModels.Where(f =>
                         (f.CourseType == parameters.CourseType
-                        || f.CourseType==CourseType.СonsultationCourse)
+                         || f.CourseType == CourseType.СonsultationCourse)
                         && string.Equals(f.StudyGroupModel?.Name, parameters.StudyGroupModel.Name)
                         && f.IsDeleted == false)
                     .ToList();
@@ -75,9 +75,16 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             }
         }
 
-        public void MarkLikeDeleted(CancellationToken cancellationToken)
+        public void MarkLikeDeleted()
         {
-            var notDeletedList = _context.ExamScheduleDatabaseModels.Where(d => d.IsDeleted == false).ToList();
+            var notDeletedList = _context.ExamScheduleDatabaseModels
+                .Where(d => d.IsDeleted == false
+                            & (d.CourseType ==
+                               CourseType.ExamCourse
+                               || d.CourseType ==
+                               CourseType.СonsultationCourse)
+                )
+                .ToList();
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
 
@@ -127,7 +134,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     model.TeacherModel = teachersDbAll
                         .FirstOrDefault(s => string.Equals(s.FullName, model.TeacherModel.FullName));
                 }
-                
+
 
                 var studyGroupDbAll = _context.StudyGroupDatabaseModels.ToList();
 

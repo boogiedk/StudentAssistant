@@ -15,11 +15,11 @@ namespace StudentAssistant.DbLayer.Interfaces
         Task InsertAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Возвращает данные с расписанием по указанными параметрам.
+        /// Возвращает данные с расписанием.
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<List<CourseScheduleDatabaseModel>> Get();
+        Task<List<CourseScheduleDatabaseModel>> Get(CancellationToken cancellationToken);
 
         /// <summary>
         /// Обновляет расписание в базе данных.
@@ -28,5 +28,10 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task UpdateAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Помечает записи в базе данных как удаленные.
+        /// </summary>
+        void MarkLikeDeleted();
     }
 }

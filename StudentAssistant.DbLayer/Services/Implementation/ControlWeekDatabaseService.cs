@@ -43,16 +43,19 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         }
 
 #pragma warning disable 1998
-        public async Task<List<CourseScheduleDatabaseModel>> Get()
+        public async Task<List<CourseScheduleDatabaseModel>> Get(CancellationToken cancellationToken)
 #pragma warning restore 1998
         {
             try
             {
-                return _context.CourseScheduleDatabaseModels
-                    .Include(d=>d.StudyGroupModel)
-                    .Include(d=>d.TeacherModel)
-                    .Where(w => w.CourseType == CourseType.ControlCourse)
-                    .ToList();
+                cancellationToken.ThrowIfCancellationRequested();
+
+                return await _context.CourseScheduleDatabaseModels
+                    .Include(d => d.StudyGroupModel)
+                    .Include(d => d.TeacherModel)
+                    .Where(w => w.CourseType == CourseType.ControlCourse
+                                && w.IsDeleted == false)
+                    .ToListAsync(cancellationToken: cancellationToken);
             }
             catch (Exception)
             {
@@ -67,14 +70,14 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var csd = _context.CourseScheduleDatabaseModels.Where
-                (w => w.CourseType == CourseType.ControlCourse);
+                    (w => w.CourseType == CourseType.ControlCourse);
 
                 _context.CourseScheduleDatabaseModels
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
 
-                   // преподы
+                // преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 
                 // сравниваем список из бд и входящих,
@@ -113,7 +116,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     model.StudyGroupModel = studyGroupDbAll
                         .FirstOrDefault(s => string.Equals(s.Name, model.StudyGroupModel?.Name));
                 }
-                
+
 
                 await InsertAsync(input, cancellationToken);
             }
@@ -122,6 +125,18 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public void MarkLikeDeleted()
+        {
+            var notDeletedList = _context.CourseScheduleDatabaseModels
+                .Where(d => d.IsDeleted == false
+                            && d.CourseType == CourseType.ControlCourse)
+                .ToList();
+
+            notDeletedList.ForEach(s => s.IsDeleted = true);
+            
+            _context.CourseScheduleDatabaseModels.UpdateRange(notDeletedList);
         }
     }
 }
