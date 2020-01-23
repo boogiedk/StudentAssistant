@@ -153,7 +153,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                var studyGroups = importDataExcelModels.GroupBy(g => g.CourseName)
+                var studyGroups = importDataExcelModels.GroupBy(g => g.GroupName)
                     .Select(y => y.First())
                     .Select(s => new StudyGroupModel
                     {
@@ -362,7 +362,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                var studyGroups = input.GroupBy(g => g.CourseName)
+                var studyGroups = input.GroupBy(g => g.GroupName)
                     .Select(y => y.First())
                     .Select(s => new StudyGroupModel
                     {

@@ -170,7 +170,9 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
 
                 var examScheduleDatabaseModels =
-                    examScheduleList.Where(w => !string.IsNullOrEmpty(w.CourseName)).ToList();
+                    examScheduleList
+                        .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                        .ToList();
 
                 await _examScheduleDatabaseService.UpdateAsync(examScheduleDatabaseModels, cancellationToken);
 

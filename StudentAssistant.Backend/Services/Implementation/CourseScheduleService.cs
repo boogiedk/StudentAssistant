@@ -254,7 +254,9 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
 
-                var courseScheduleDatabaseModels = courseScheduleList.Where(w => string.IsNullOrEmpty(w.CourseName)).ToList();
+                var courseScheduleDatabaseModels = courseScheduleList
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                    .ToList();
 
                 await  _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels,cancellationToken);
 
@@ -307,8 +309,12 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("InsertAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                
+                var courseScheduleDatabaseModels = courseScheduleList
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                    .ToList();
 
-                await _courseScheduleDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
+                await _courseScheduleDatabaseService.InsertAsync(courseScheduleDatabaseModels, cancellationToken);
             }
             catch (Exception ex)
             {
