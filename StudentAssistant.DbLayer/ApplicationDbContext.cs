@@ -13,6 +13,7 @@ namespace StudentAssistant.DbLayer
             : base(options)
         {
         }
+
         public DbSet<CourseScheduleDatabaseModel> CourseScheduleDatabaseModels { get; set; }
         public DbSet<ExamScheduleDatabaseModel> ExamScheduleDatabaseModels { get; set; }
         public DbSet<StudyGroupModel> StudyGroupDatabaseModels { get; set; }
@@ -21,14 +22,22 @@ namespace StudentAssistant.DbLayer
         public DbSet<StudentModel> StudentModels { get; set; }
 
         public DbSet<UserModel> UserModels { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // optionsBuilder.UseSqlServer(
+            //    "Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;MultipleActiveResultSets=true;Integrated Security=True");
+            optionsBuilder.UseSqlite("Filename=..\\StudentAssistant.Backend\\StudentAssistantDb.db");
+            base.OnConfiguring(optionsBuilder);
+        }
     }
+
 
     internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            builder.UseSqlServer("Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;MultipleActiveResultSets=true;Integrated Security=True");
             var context = new ApplicationDbContext(builder.Options);
             return context;
         }

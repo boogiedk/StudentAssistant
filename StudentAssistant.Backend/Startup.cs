@@ -66,7 +66,9 @@ namespace StudentAssistant.Backend
 
             env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
-            LogManager.Configuration.Variables["appdir"] = Path.Combine(env.ContentRootPath, "Storages", "Nlog"," "); // add empty path for create dir linux/windows
+            LogManager.Configuration.Variables["appdir"] =
+                Path.Combine(env.ContentRootPath, "Storages", "Nlog",
+                    " "); // add empty path for create dir linux/windows
 
             #endregion
         }
@@ -74,14 +76,34 @@ namespace StudentAssistant.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options=>
-                options.UseSqlServer("Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;MultipleActiveResultSets=true;Integrated Security=True"));
+            #region Authentication
+
+            services.AddDbContext<ApplicationDbContext>();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders()
                 .AddDefaultTokenProviders();
-
-
+            
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    const string key = "q7fs8DDw823hSyaNYCKsa02";
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                        ValidateIssuerSigningKey = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuer = false
+                    };
+                });
+            
+            #endregion
+            
             #region Mapper
 
             var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new AutoMapperConfiguration()); });
@@ -102,12 +124,12 @@ namespace StudentAssistant.Backend
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IJwtTokenFactory, JwtTokenFactory>();
             services.AddScoped<ILogService, LogService>();
-            services.AddScoped<IControlWeekService,ControlWeekService>();
-            services.AddScoped<IExamScheduleService,ExamScheduleService>();
+            services.AddScoped<IControlWeekService, ControlWeekService>();
+            services.AddScoped<IExamScheduleService, ExamScheduleService>();
             services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
             services.AddScoped<IControlWeekDatabaseService, ControlWeekDatabaseService>();
             services.AddScoped<IExamScheduleDatabaseService, ExamScheduleDatabaseService>();
-            
+
             services.AddSingleton(mapper);
 
             #endregion
@@ -120,25 +142,6 @@ namespace StudentAssistant.Backend
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             #endregion
-
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    const string key = "q7fs8DDw823hSyaNYCKsa02";
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
-                        ValidateIssuerSigningKey = true,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuer = false
-                    };
-                });
 
             services.AddCors(options =>
             {

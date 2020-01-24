@@ -30,12 +30,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 try
                 {
-                    foreach (var courseScheduleDatabaseModel in input)
-                    {
-                        _context.CourseScheduleDatabaseModels.Add(courseScheduleDatabaseModel);
+                    _context.CourseScheduleDatabaseModels.AddRange(input);
 
-                        await _context.SaveChangesAsync(cancellationToken);
-                    }
+                    _context.SaveChanges();
 
                     transaction.Commit();
                 }
@@ -95,9 +92,9 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             var notDeletedList = _context.CourseScheduleDatabaseModels
                 .Where(d => d.IsDeleted == false &&
                             (d.CourseType == CourseType.Lecture
-                            || d.CourseType == CourseType.Practicte
-                            || d.CourseType == CourseType.LaboratoryWork
-                            || d.CourseType == CourseType.Other))
+                             || d.CourseType == CourseType.Practicte
+                             || d.CourseType == CourseType.LaboratoryWork
+                             || d.CourseType == CourseType.Other))
                 .ToList();
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
@@ -121,7 +118,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
-                
+
                 // преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 
