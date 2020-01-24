@@ -51,14 +51,14 @@ export class examSchedule extends Component {
                     </thead>
                     <tbody>
                     {examScheduleModel.examCourseViewModel.map(courseViewModel =>
-                        <tr key={courseViewModel.numberDate}>
+                        <tr key={courseViewModel.id}>
                             <td>{courseViewModel.numberDate + " " + courseViewModel.dayOfWeek}</td>
                             <td>{courseViewModel.startOfClasses}</td>
                             <td>
                                 <div className="courseNameStyle"> {courseViewModel.courseName} </div>
                                 <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
                                 <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
-                                <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
+                                <div className="teacherFullNameStyle"> {courseViewModel.teacherModel.fullName}</div>
                             </td>
                         </tr>
                     )}

@@ -35,7 +35,7 @@ export default class CourseScheduleService {
     }
 
     update() {
-        let path = '/api/v1/schedule/download';
+        let path = '/api/v1/schedule/update';
 
         restService.get(path)
             .then(response => {

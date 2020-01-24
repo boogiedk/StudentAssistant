@@ -34,7 +34,7 @@ export default class ControlWeekService {
     }
 
     update() {
-        let path = '/api/v1/controlWeek/download';
+        let path = '/api/v1/controlWeek/update';
 
         restService.get(path)
             .then(response => {

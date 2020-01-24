@@ -37,13 +37,15 @@ namespace StudentAssistant.Backend.Controllers
         /// <para name="requestModel">Модель запроса для получения расписания.</para>
         /// <returns><see cref="ControlWeekViewModel"/> Модель представления расписания.</returns>
         [HttpPost("Get")]
-        public async Task<IActionResult> GetControlWeek([FromBody] ControlWeekRequestModel requestModel)
+        public async Task<IActionResult> GetControlWeek(
+            [FromBody] ControlWeekRequestModel requestModel,
+            CancellationToken cancellationToken)
         {
             try
             {
                 _logger.LogInformation("Request: " + requestModel);
 
-                var result = await _controlWeekService.Get(requestModel);
+                var result = await _controlWeekService.Get(requestModel, cancellationToken);
 
                 _logger.LogInformation("Response: " + requestModel);
 
@@ -75,6 +77,74 @@ namespace StudentAssistant.Backend.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для обновления расписания в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("update")]
+        public async Task<IActionResult> UpdateAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await _controlWeekService.UpdateAsync(cancellationToken);
+
+                _logger.LogInformation("Response: " + "Данные обновлены!");
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для добавления расписания в базу данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("insert")]
+        public async Task<IActionResult> InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _controlWeekService.InsertAsync(cancellationToken);
+
+                _logger.LogInformation("Response: " + "Данные вставлены!");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+        
+        /// <summary>
+        /// Метод для пометки как удаленное в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("marklikedeleted")]
+        public IActionResult MarkLikeDeleted()
+        {
+            try
+            {
+                _controlWeekService.MarkLikeDeleted();
+
+                _logger.LogInformation("Response: " + "Данные помечены!");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
                 return BadRequest(ex);
             }
         }

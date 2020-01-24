@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
 using StudentAssistant.DbLayer.Services.Implementation;
 
@@ -14,7 +16,7 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// Импортирует данные расписания из Excel файла.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName);
+       IEnumerable<CourseScheduleDatabaseModel> GetCourseScheduleDatabaseModels(string fileName);
 
         /// <summary>
         /// Импортирует данные расписания экзаменов из Excel файла.
@@ -22,5 +24,12 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// <param name="fileName"></param>
         /// <returns></returns>
         IEnumerable<ExamScheduleDatabaseModel> GetExamScheduleDatabaseModels(string fileName);
+
+        /// <summary>
+        /// Парсит строку со списком даты и возращает лист с данными.
+        /// </summary>
+        /// <param name="numberWeek"></param>
+        /// <returns></returns>
+        List<int> ParseNumberWeek(string numberWeek);
     }
 }

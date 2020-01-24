@@ -52,7 +52,7 @@ export class controlWeek extends Component {
                     </thead>
                     <tbody>
                     {controlWeekModel.controlCourseViewModel.map(courseViewModel =>
-                        <tr key={courseViewModel.courseName}>
+                        <tr key={courseViewModel.id}>
                             <td>{controlWeekService.prepareNameOfDayWeek(courseViewModel.nameOfDayWeek)}</td>
                             <td>{courseViewModel.courseNumber}</td>
                             <td>{courseViewModel.startOfClasses}</td>
@@ -60,7 +60,7 @@ export class controlWeek extends Component {
                                 <div className="courseNameStyle"> {courseViewModel.courseName} </div>
                                 <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
                                 <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
-                                <div className="teacherFullNameStyle"> {courseViewModel.teacherFullName}</div>
+                                <div className="teacherFullNameStyle"> {courseViewModel.teacherModel.fullName}</div>
                             </td>
                         </tr>
                     )}

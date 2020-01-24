@@ -7,19 +7,23 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
+using StudentAssistant.Backend.Models.UpdateAsync;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using CourseScheduleDtoModel = StudentAssistant.Backend.Models.CourseSchedule.CourseScheduleDtoModel;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
     public class CourseScheduleService : ICourseScheduleService
     {
-        private readonly ICourseScheduleMongoDbService _courseScheduleMongoDbService;
+        private readonly ICourseScheduleDatabaseService _courseScheduleDatabaseService;
         private readonly ICourseScheduleFileService _courseScheduleFileService;
         private readonly IParityOfTheWeekService _parityOfTheWeekService;
         private readonly ILogger<CourseScheduleService> _logger;
@@ -29,25 +33,24 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "scheduleFile.xlsx");
 
         public CourseScheduleService(
-            ICourseScheduleMongoDbService courseScheduleMongoDbService,
+            ICourseScheduleDatabaseService courseScheduleDatabaseService,
             ICourseScheduleFileService courseScheduleFileService,
             IParityOfTheWeekService parityOfTheWeekService,
             ILogger<CourseScheduleService> logger,
             IFileService fileService,
             IMapper mapper)
         {
-            _courseScheduleMongoDbService = courseScheduleMongoDbService ??
-                                            throw new ArgumentNullException(nameof(courseScheduleMongoDbService));
             _courseScheduleFileService = courseScheduleFileService ??
                                          throw new ArgumentNullException(nameof(courseScheduleFileService));
             _parityOfTheWeekService =
                 parityOfTheWeekService ?? throw new ArgumentNullException(nameof(parityOfTheWeekService));
             _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _courseScheduleDatabaseService = courseScheduleDatabaseService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public CourseScheduleViewModel Get(CourseScheduleDtoModel input)
+        public async Task<CourseScheduleViewModel> Get(CourseScheduleDtoModel input)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
@@ -69,15 +72,15 @@ namespace StudentAssistant.Backend.Services.Implementation
                     FileName = _fileName
                 };
 
-                // на данным момент расписание берется из Excel файла.
-                var courseScheduleDatabaseModel = _courseScheduleFileService
-                    .GetFromExcelFileByParameters(courseScheduleParameters);
+                var courseScheduleDatabaseModel =
+                    await _courseScheduleDatabaseService.GetByParameters(courseScheduleParameters);
 
                 var courseScheduleModel = _mapper.Map<List<CourseScheduleModel>>(courseScheduleDatabaseModel);
 
                 var result = PrepareViewModel(courseScheduleModel, courseScheduleParameters);
 
                 _logger.LogInformation("Get: " + result);
+
                 return result;
             }
             catch (Exception ex)
@@ -191,8 +194,6 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
 
-                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
-
                 var result = new DownloadAsyncResponseModel
                 {
                     IsNewFile = await isNewFile
@@ -243,7 +244,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             }
         }
 
-        public async Task UpdateAsync(CancellationToken cancellationToken)
+        public async Task<UpdateAsyncResponseModel> UpdateAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -253,7 +254,18 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
 
-                await _courseScheduleMongoDbService.UpdateAsync(courseScheduleList, cancellationToken);
+                var courseScheduleDatabaseModels = courseScheduleList
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                    .ToList();
+
+                await  _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels,cancellationToken);
+
+                var response = new UpdateAsyncResponseModel
+                {
+                    Message = "Данные обновлены!"
+                };
+
+                return response;
             }
             catch (Exception ex)
             {
@@ -287,5 +299,44 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         });
+        
+        public async Task InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _logger.LogInformation("InsertAsync: " + "Start");
+
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                
+                var courseScheduleDatabaseModels = courseScheduleList
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                    .ToList();
+
+                await _courseScheduleDatabaseService.InsertAsync(courseScheduleDatabaseModels, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("InsertAsync Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+
+        public void MarkLikeDeleted()
+        {
+            try
+            {
+                _logger.LogInformation("MarkLikeDeleted: " + "Start");
+
+                _courseScheduleDatabaseService.MarkLikeDeleted();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("MarkLikeDeleted Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+        
     }
 }

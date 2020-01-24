@@ -10,18 +10,17 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
     /// <summary>
     /// Модель с учебным расписанием.
     /// </summary>
-    public class CourseScheduleDatabaseModel
+    public class CourseScheduleDtoModel
     {
         public Guid Id { get; set; }
-
         /// <summary>
         /// Номер недели.
         /// </summary>
+        /// 
         [NotMapped]
         public List<int> NumberWeek { get; set; }
 
         public string NumberWeekString { get; set; }
-
         /// <summary>
         /// Чётность недели.
         /// </summary>
@@ -71,34 +70,34 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// Окончание Занятий.
         /// </summary>
         public string EndOfClasses { get; set; }
-
+        
         /// <summary>
         /// Группы, с которыми объединенные пары.
         /// </summary>
         public List<StudyGroupModel> CombinedGroup { get; set; }
-
+        
         /// <summary>
         /// Удалена ли запись.
         /// </summary>
         public bool IsDeleted { get; set; }
-
+        
         /// <summary>
         /// Время создания записи.
         /// </summary>
-        public DateTimeOffset DateTimeCreate { get; set; }
-
+        public DateTimeOffset  DateTimeCreate { get; set; }
+        
         /// <summary>
         /// Время обновления записи.
         /// </summary>
         public DateTimeOffset DateTimeUpdate { get; set; }
-
+        
         /// <summary>
         /// Версия записи.
         /// </summary>
         public string Version { get; set; }
 
 
-        public CourseScheduleDatabaseModel()
+        public CourseScheduleDtoModel()
         {
             CombinedGroup = new List<StudyGroupModel>();
             TeacherModel = new TeacherModel();

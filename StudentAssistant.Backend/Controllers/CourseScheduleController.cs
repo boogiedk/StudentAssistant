@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
+using StudentAssistant.DbLayer.Interfaces;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -38,7 +39,7 @@ namespace StudentAssistant.Backend.Controllers
         /// <para name="requestModel">Модель запроса для получения расписания.</para>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
         [HttpPost("selected")]
-        public IActionResult GetCourseScheduleSelected(
+        public async Task<IActionResult> GetCourseScheduleSelected(
             [FromBody] CourseScheduleRequestModel requestModel)
         {
             try
@@ -62,7 +63,7 @@ namespace StudentAssistant.Backend.Controllers
                 };
 
                 // подготавливаем ViewModel для отображения
-                var courseScheduleViewModel = _courseScheduleService.Get(courseScheduleDtoModel);
+                var courseScheduleViewModel = await _courseScheduleService.Get(courseScheduleDtoModel);
 
                 _logger.LogInformation("Response: " + courseScheduleViewModel);
                 return Ok(courseScheduleViewModel);
@@ -176,10 +177,10 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-                await _courseScheduleService.UpdateAsync(cancellationToken);
+              var response =  await _courseScheduleService.UpdateAsync(cancellationToken);
 
                 _logger.LogInformation("Response: " + "Данные обновлены!");
-                return Ok("Данные обновлены!");
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -201,6 +202,51 @@ namespace StudentAssistant.Backend.Controllers
 
                 _logger.LogInformation("Response: " + result.UpdateDatetime);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+        
+        /// <summary>
+        /// Метод для добавления расписания в базу данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet("insert")]
+        public async Task<IActionResult> InsertAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _courseScheduleService.InsertAsync(cancellationToken);
+
+                _logger.LogInformation("Response: " + "Данные вставлены!");
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception: " + ex);
+                return BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Метод для пометки как удаленное в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("marklikedeleted")]
+        public IActionResult MarkLikeDeleted()
+        {
+            try
+            {
+                _courseScheduleService.MarkLikeDeleted();
+
+                _logger.LogInformation("Response: " + "Данные помечены!");
+
+                return Ok();
             }
             catch (Exception ex)
             {

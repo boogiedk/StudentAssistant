@@ -1,7 +1,11 @@
+using System;
+using StudentAssistant.DbLayer.Models;
+
 namespace StudentAssistant.Backend.Models.ExamSchedule.ViewModels
 {
     public class ExamCourseViewModel
     {
+        public Guid Id { get; set; }
         /// <summary>
         /// Название предмета.
         /// </summary>
@@ -30,7 +34,7 @@ namespace StudentAssistant.Backend.Models.ExamSchedule.ViewModels
         /// <summary>
         /// Полное имя преподавателя.
         /// </summary>
-        public string TeacherFullName { get; set; }
+        public TeacherModel TeacherModel { get; set; }
 
         /// <summary>
         /// Место проведения.
@@ -40,7 +44,7 @@ namespace StudentAssistant.Backend.Models.ExamSchedule.ViewModels
         /// <summary>
         /// Название группы.
         /// </summary>
-        public string GroupName { get; set; }
+        public StudyGroupModel StudyGroupModel { get; set; }
 
         /// <summary>
         /// Нач. Занятий.

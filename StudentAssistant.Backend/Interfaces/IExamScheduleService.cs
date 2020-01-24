@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.ExamSchedule;
 using StudentAssistant.Backend.Models.ExamSchedule.ViewModels;
+using StudentAssistant.Backend.Models.UpdateAsync;
 
 namespace StudentAssistant.Backend.Interfaces
 {
@@ -24,5 +25,25 @@ namespace StudentAssistant.Backend.Interfaces
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task<DownloadAsyncResponseModel> DownloadAsync(CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Обновить расписание экзаменов в базе данных.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<UpdateAsyncResponseModel> UpdateAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновляет данные в базе данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task InsertAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновляет данные в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        void MarkLikeDeleted();
     }
 }

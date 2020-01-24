@@ -7,11 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using StudentAssistant.Backend.Helpers;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.ControlWeek;
 using StudentAssistant.Backend.Models.ControlWeek.ViewModels;
 using StudentAssistant.Backend.Models.DownloadAsync;
 using StudentAssistant.Backend.Models.DownloadFileService;
+using StudentAssistant.Backend.Models.UpdateAsync;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 
@@ -20,6 +22,7 @@ namespace StudentAssistant.Backend.Services.Implementation
     public class ControlWeekService : IControlWeekService
     {
         private readonly ICourseScheduleFileService _courseScheduleFileService;
+        private readonly IControlWeekDatabaseService _controlWeekDatabaseService;
         private readonly ILogger<CourseScheduleService> _logger;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
@@ -27,25 +30,29 @@ namespace StudentAssistant.Backend.Services.Implementation
         private readonly string _fileName = Path.Combine("Infrastructure", "ScheduleFile", "controlWeek.xlsx");
 
         public ControlWeekService(
+            IControlWeekDatabaseService controlWeekDatabaseService,
             ICourseScheduleFileService courseScheduleFileService,
             ILogger<CourseScheduleService> logger,
             IFileService fileService,
             IMapper mapper)
         {
-            _courseScheduleFileService = courseScheduleFileService ??
-                                         throw new ArgumentNullException(nameof(courseScheduleFileService));
-            _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _controlWeekDatabaseService = controlWeekDatabaseService;
+            _courseScheduleFileService = courseScheduleFileService;
+            _fileService = fileService;
+            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<ControlWeekViewModel> Get(ControlWeekRequestModel requestModel)
+        public async Task<ControlWeekViewModel> Get(ControlWeekRequestModel requestModel,
+            CancellationToken cancellationToken)
         {
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 _logger.LogInformation("Get: " + $"{requestModel?.GroupName}");
 
-                var controlWeekList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                var controlWeekList = await _controlWeekDatabaseService.Get(cancellationToken);
 
                 var controlWeekControlModel = PrepareViewModel(controlWeekList, requestModel);
 
@@ -69,14 +76,14 @@ namespace StudentAssistant.Backend.Services.Implementation
             var sortedControlCourseViewModel = controlCourseViewModel
                 .Where(w => !string.IsNullOrEmpty(w.CourseName)
                             && w.CourseName != "Военная кафедра"
-                            && string.Equals(w.GroupName, requestModel.GroupName)
+                            && string.Equals(w.StudyGroupModel?.Name, requestModel.GroupName)
                 )
                 .Select(s =>
                 {
-                    s.NameOfDayWeek = UppercaseFirst(s.NameOfDayWeek);
+                    s.NameOfDayWeek = StringConverterHelper.UppercaseFirst(s.NameOfDayWeek);
                     return s;
                 })
-                .OrderBy(o => ToDayOfWeek(o.NameOfDayWeek))
+                .OrderBy(o => StringConverterHelper.ToDayOfWeek(o.NameOfDayWeek))
                 .ToList();
 
             // создаем результирующую модель представления
@@ -125,7 +132,6 @@ namespace StudentAssistant.Backend.Services.Implementation
                     IsNewFile = await isNewFile
                 };
 
-
                 // если не свежий => качаем новый (1 сутки)
                 if (!(await isNewFile))
                 {
@@ -147,57 +153,65 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         }
-
-        /// <summary>
-        /// Парсит строку с названием дня недели в DayOfWeek енум.
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        /// <exception cref="NullReferenceException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        private DayOfWeek ToDayOfWeek(string str)
+        
+        public async Task<UpdateAsyncResponseModel> UpdateAsync(CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(str))
+            try
             {
-                throw new NullReferenceException();
-            }
+                cancellationToken.ThrowIfCancellationRequested();
 
-            switch (str.ToLower())
+                _logger.LogInformation("UpdateAsync: " + "Start");
+
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+
+                await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+
+                var response = new UpdateAsyncResponseModel
+                {
+                    Message = "Данные обновлены!"
+                };
+
+                return response;
+            }
+            catch (Exception ex)
             {
-                case "понедельник":
-                    return DayOfWeek.Monday;
-                case "вторник":
-                    return DayOfWeek.Tuesday;
-                case "среда":
-                    return DayOfWeek.Wednesday;
-                case "четверг":
-                    return DayOfWeek.Thursday;
-                case "пятница":
-                    return DayOfWeek.Friday;
-                case "суббота":
-                    return DayOfWeek.Saturday;
-                case "воскресенье":
-                    return DayOfWeek.Sunday;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                _logger.LogError("UpdateAsync Exception: " + ex);
+                throw new NotSupportedException();
             }
         }
 
-        /// <summary>
-        /// Делает заглавной первую букву в слове (строке).
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        private string UppercaseFirst(string s)
+        public async Task InsertAsync(CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(s))
+            try
             {
-                return string.Empty;
-            }
+                cancellationToken.ThrowIfCancellationRequested();
 
-            char[] a = s.ToCharArray();
-            a[0] = char.ToUpper(a[0]);
-            return new string(a);
+                _logger.LogInformation("InsertAsync: " + "Start");
+
+                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+
+                await _controlWeekDatabaseService.InsertAsync(courseScheduleList, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("InsertAsync Exception: " + ex);
+                throw new NotSupportedException();
+            }
+        }
+
+        public void MarkLikeDeleted()
+        {
+            try
+            {
+                _logger.LogInformation("MarkLikeDeleted: " + "Start");
+
+                _controlWeekDatabaseService.MarkLikeDeleted();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("MarkLikeDeleted Exception: " + ex);
+                throw new NotSupportedException();
+            }
         }
     }
 }

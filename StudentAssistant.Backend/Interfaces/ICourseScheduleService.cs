@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using StudentAssistant.Backend.Models.CourseSchedule;
 using StudentAssistant.Backend.Models.CourseSchedule.ViewModels;
 using StudentAssistant.Backend.Models.DownloadAsync;
+using StudentAssistant.Backend.Models.UpdateAsync;
 using StudentAssistant.Backend.Services.Implementation;
 
 namespace StudentAssistant.Backend.Interfaces
@@ -17,7 +18,7 @@ namespace StudentAssistant.Backend.Interfaces
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-       CourseScheduleViewModel Get(CourseScheduleDtoModel input);
+       Task<CourseScheduleViewModel> Get(CourseScheduleDtoModel input);
 
         /// <summary>
         /// Отправляет запрос на обновление расписания в базе данных.
@@ -46,6 +47,19 @@ namespace StudentAssistant.Backend.Interfaces
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task UpdateAsync(CancellationToken cancellationToken);
+        Task<UpdateAsyncResponseModel> UpdateAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновляет данные в базе данных. (временно)
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task InsertAsync(CancellationToken cancellationToken);
+        
+        /// <summary>
+        /// Обновляет данные в базе данных. (временно)
+        /// </summary>
+        /// <returns></returns>
+        void MarkLikeDeleted();
     }
 }

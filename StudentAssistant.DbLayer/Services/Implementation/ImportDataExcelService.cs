@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Newtonsoft.Json;
@@ -11,7 +13,9 @@ using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using StudentAssistant.DbLayer.Interfaces;
+using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
+using StudentAssistant.DbLayer.Models.Exam;
 using StudentAssistant.DbLayer.Models.ImportData;
 
 namespace StudentAssistant.DbLayer.Services.Implementation
@@ -149,21 +153,52 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                return importDataExcelModels.Select(importDataExcelModel => new CourseScheduleDatabaseModel
+                var studyGroups = importDataExcelModels.GroupBy(g => g.GroupName)
+                    .Select(y => y.First())
+                    .Select(s => new StudyGroupModel
                     {
+                        Id = Guid.NewGuid(),
+                        Name = ParseGroupName(s.GroupName)
+                    })
+                    .ToList();
+
+                var teachers = importDataExcelModels.GroupBy(g => g.TeacherFullName)
+                    .Select(y => y.First())
+                    .Select(s => new TeacherModel
+                    {
+                        Id = Guid.NewGuid(),
+                        FullName = s.TeacherFullName
+                    })
+                    .ToList();
+
+                var result = importDataExcelModels.Select(importDataExcelModel => new CourseScheduleDatabaseModel
+                    {
+                        Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = PrepareCourseName(importDataExcelModel.CourseName),
                         CourseNumber = (int) importDataExcelModel.CourseNumber,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
                         NameOfDayWeek = importDataExcelModel.DayOfTheWeek,
+
                         NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
+                        NumberWeekString = String.Join(",",
+                            ParseNumberWeek(importDataExcelModel.CourseName).Select(p => p.ToString())),
+
                         ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
-                        TeacherFullName = importDataExcelModel.TeacherFullName,
-                        GroupName = ParseGroupName(importDataExcelModel.GroupName),
+                        TeacherModel = teachers.FirstOrDefault(w => w.FullName == importDataExcelModel.TeacherFullName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w => string.Equals(w.Name,ParseGroupName(importDataExcelModel.GroupName))),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
-                        EndOfClasses = importDataExcelModel.EndOfClasses
+                        EndOfClasses = importDataExcelModel.EndOfClasses,
+                        DateTimeCreate = DateTimeOffset.UtcNow,
+                        DateTimeUpdate = DateTimeOffset.UtcNow,
+                        IsDeleted = false,
+                        //TODO: исправить
+                        Version = DateTimeOffset.UtcNow.Minute.ToString()
                     })
                     .ToList();
+
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -179,6 +214,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
             var courseScheduleDatabaseModel =
                 PrepareImportDataExcelModelToDatabaseModel(importDataExcelModels);
+
 
             return courseScheduleDatabaseModel;
         }
@@ -254,15 +290,21 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                                 {
                                     Month = sheet.GetRow(2).GetCell(1)?.StringCellValue,
 
-                                    StartOfClasses = sheet.GetRow(2 + firstIterator).GetCell(4+fourthIterator)?.StringCellValue,
-                                    CoursePlace = sheet.GetRow(2 + firstIterator).GetCell(5+fourthIterator)?.StringCellValue,
+                                    StartOfClasses = sheet.GetRow(2 + firstIterator).GetCell(4 + fourthIterator)
+                                        ?.StringCellValue,
+                                    CoursePlace = sheet.GetRow(2 + firstIterator).GetCell(5 + fourthIterator)
+                                        ?.StringCellValue,
 
-                                    CourseType = sheet.GetRow(2 + 0 + secondIterator).GetCell(3+fourthIterator)?.StringCellValue,
-                                    CourseName = sheet.GetRow(2 + 1 + secondIterator).GetCell(3+fourthIterator)?.StringCellValue,
+                                    CourseType = sheet.GetRow(2 + 0 + secondIterator).GetCell(3 + fourthIterator)
+                                        ?.StringCellValue,
+                                    CourseName = sheet.GetRow(2 + 1 + secondIterator).GetCell(3 + fourthIterator)
+                                        ?.StringCellValue,
                                     TeacherFullName =
-                                        sheet.GetRow(2 + 2 + secondIterator).GetCell(3+fourthIterator)?.StringCellValue,
+                                        sheet.GetRow(2 + 2 + secondIterator).GetCell(3 + fourthIterator)
+                                            ?.StringCellValue,
 
-                                    GroupName = sheet.GetRow(1 + thirdIterator).GetCell(3+fourthIterator)?.StringCellValue,
+                                    GroupName = sheet.GetRow(1 + thirdIterator).GetCell(3 + fourthIterator)
+                                        ?.StringCellValue,
                                 };
 
                                 var (cellValue, isNumeric) = getCellValue.Invoke();
@@ -320,19 +362,46 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         {
             try
             {
-                return input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
+                var studyGroups = input.GroupBy(g => g.GroupName)
+                    .Select(y => y.First())
+                    .Select(s => new StudyGroupModel
                     {
+                        Id = Guid.NewGuid(),
+                        Name = ParseGroupName(s.GroupName)
+                    })
+                    .ToList();
+
+                var teachers = input.GroupBy(g => g.TeacherFullName)
+                    .Select(y => y.First())
+                    .Select(s => new TeacherModel
+                    {
+                        Id = Guid.NewGuid(),
+                        FullName = s.TeacherFullName
+                    })
+                    .ToList();
+                
+                var result = input.Select(importDataExcelModel => new ExamScheduleDatabaseModel
+                    {
+                        Id = Guid.NewGuid(),
                         CoursePlace = importDataExcelModel.CoursePlace,
                         CourseName = importDataExcelModel.CourseName,
                         CourseType = ParseCourseType(importDataExcelModel.CourseType),
-                        TeacherFullName = importDataExcelModel.TeacherFullName,
-                        GroupName = ParseGroupName(importDataExcelModel.GroupName),
+                        TeacherModel = teachers.FirstOrDefault(w => w.FullName == importDataExcelModel.TeacherFullName),
+                        StudyGroupModel = studyGroups.FirstOrDefault(w => string.Equals(w.Name,ParseGroupName(importDataExcelModel.GroupName))),
                         StartOfClasses = importDataExcelModel.StartOfClasses,
                         NumberDate = PrepareDate(importDataExcelModel.Date).Item1, // число
                         DayOfWeek = PrepareDate(importDataExcelModel.Date).Item2, // день недели 
-                        Month = importDataExcelModel?.Month.Replace(" ", "") 
+                        Month = importDataExcelModel?.Month.Replace(" ", ""),
+                        
+                        DateTimeCreate = DateTimeOffset.UtcNow,
+                        DateTimeUpdate = DateTimeOffset.UtcNow,
+                        IsDeleted = false,
+                        //TODO: исправить
+                        Version = DateTimeOffset.UtcNow.Minute.ToString()
                     })
                     .ToList();
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -444,7 +513,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="numberWeek"></param>
         /// <returns></returns>
-        private List<int> ParseNumberWeek(string numberWeek)
+        public List<int> ParseNumberWeek(string numberWeek)
         {
             try
             {
@@ -460,12 +529,11 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     return new List<int>();
                 }
 
-                List<int> numbers = new List<int>();
+                var numbers = new List<int>();
 
                 if (IsNumberContains(stringNumbers))
                 {
-                    numbers = stringNumbers
-                        .Split(',').Select(int.Parse)
+                    numbers = stringNumbers.Split(',').ToList().Select(int.Parse)
                         .Where(n => n != 0).ToList();
                 }
 
