@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.IO;
+using System.Security.Policy;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using StudentAssistant.DbLayer.Models;
@@ -25,9 +27,10 @@ namespace StudentAssistant.DbLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var pathDb = Path.Combine(@"..\", "StudentAssistant.Backend", "StudentAssistantDb.Db");
             // optionsBuilder.UseSqlServer(
             //    "Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;MultipleActiveResultSets=true;Integrated Security=True");
-            optionsBuilder.UseSqlite("Filename=..\\StudentAssistant.Backend\\StudentAssistantDb.db");
+            optionsBuilder.UseSqlite($"Filename={pathDb}");
             base.OnConfiguring(optionsBuilder);
         }
     }
