@@ -1,4 +1,3 @@
-
 jobs:
 - job: Linux
   pool:
@@ -9,9 +8,12 @@ jobs:
   - task: DotNetCoreInstaller@0
     inputs:
       version: '2.2.203'
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: 'Linux Build'
+  - script: cd $(Build.SourcesDirectory) && bash ./build.sh
+    displayName: 'Linux Build and Tests'
   - task: PublishTestResults@2
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
 
 - job: Windows
   pool:
@@ -22,5 +24,14 @@ jobs:
   - task: DotNetCoreInstaller@0
     inputs:
       version: '2.2.203'
-  - script: dotnet build --configuration $(buildConfiguration)
-    displayName: 'Windows Full Build'
+  - script: cd $(Build.SourcesDirectory) && powershell -ExecutionPolicy Unrestricted ./build.ps1 --full
+    displayName: 'Windows Full Build and Tests'
+  - task: PublishTestResults@2
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      summaryFileLocation: $(Build.SourcesDirectory)\artifacts\coverage.cobertura.xml
+      reportDirectory: $(Build.SourcesDirectory)\artifacts
+      codecoverageTool: cobertura
