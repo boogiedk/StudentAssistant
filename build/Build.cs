@@ -1,12 +1,17 @@
 using System;
+using System.IO;
 using System.Linq;
 using Nuke.Common;
+using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.Coverlet;
+using Nuke.Common.Tools.DotCover;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -22,8 +27,7 @@ class Build : NukeBuild
     ///   - JetBrains Rider            https://nuke.build/rider
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
-
-    public static int Main () => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.RunInteractive);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -32,10 +36,19 @@ class Build : NukeBuild
     [GitRepository] readonly GitRepository GitRepository;
     [GitVersion] readonly GitVersion GitVersion;
 
+    [Parameter] readonly bool Interactive;
+
+    AbsolutePath TestsDirectory => RootDirectory / "StudentAssistant.Tests";
+    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+
+    const string CoverageFileName = "coverage.cobertura.xml";
+
     Target Clean => _ => _
-        .Before(Restore)
+        .Before(RunUnitTests)
         .Executes(() =>
         {
+            TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+            EnsureCleanDirectory(ArtifactsDirectory);
         });
 
     Target Restore => _ => _
@@ -45,8 +58,25 @@ class Build : NukeBuild
                 .SetProjectFile(Solution));
         });
 
-    Target Compile => _ => _
-        .DependsOn(Restore)
+    Target RunUnitTests => _ => _
+        .DependsOn(Clean)
+        .Executes(() =>
+            RootDirectory
+                .GlobFiles("**/*.Tests.csproj")
+                .ForEach(path =>
+                    DotNetTest(settings => settings
+                        .SetProjectFile(path)
+                        .SetConfiguration(Configuration)
+                        .SetLogger($"trx;LogFileName={ArtifactsDirectory / "report.trx"}")
+                        .SetLogOutput(true)
+                        .SetResultsDirectory(ArtifactsDirectory)
+                        .AddProperty("CollectCoverage", true)
+                        .AddProperty("CoverletOutputFormat", "cobertura")
+                        .AddProperty("Exclude", "[xunit.*]*")
+                        .AddProperty("CoverletOutput", ArtifactsDirectory / CoverageFileName))));
+
+    Target CompileStudentAssistant => _ => _
+        .DependsOn(RunUnitTests)
         .Executes(() =>
         {
             DotNetBuild(_ => _
@@ -58,4 +88,15 @@ class Build : NukeBuild
                 .EnableNoRestore());
         });
 
+    Target RunInteractive => _ => _
+        .DependsOn(CompileStudentAssistant)
+        .Executes(() => RootDirectory
+            .GlobFiles($"**/StudentAssistant.Backend.csproj")
+            .Where(x => Interactive)
+            .ForEach(path =>
+                DotNetRun(settings => settings
+                    .SetProjectFile(path)
+                    .SetConfiguration(Configuration)
+                    .EnableNoRestore()
+                    .EnableNoBuild())));
 }
