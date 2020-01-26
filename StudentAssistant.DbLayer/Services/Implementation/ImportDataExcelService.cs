@@ -486,7 +486,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 return CourseType.Other;
             }
 
-            switch (courseType)
+            switch (courseType.ToLower())
             {
                 case "пр":
                     return CourseType.Practicte;
@@ -498,10 +498,12 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     return CourseType.Lecture;
                 case "зач":
                     return CourseType.ControlCourse;
-                case "Консультация":
+                case "консультация":
                     return CourseType.СonsultationCourse;
-                case "Экзамен":
+                case "экзамен":
                     return CourseType.ExamCourse;
+                case "лк":
+                    return CourseType.Lecture;
 
                 default:
                     return CourseType.Other;

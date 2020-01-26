@@ -69,15 +69,15 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var csd = _context.CourseScheduleDatabaseModels.Where
-                    (w => w.CourseType == CourseType.ControlCourse);
+                var csd = _context.CourseScheduleDatabaseModels
+                    .Where(w => w.CourseType == CourseType.ControlCourse);
 
                 _context.CourseScheduleDatabaseModels
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
 
-                // преподы
+                /*// преподы
                 var teachersDb = _context.TeacherDatabaseModels.ToList();
 
                 // сравниваем список из бд и входящих,
@@ -95,7 +95,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         Id = Guid.NewGuid(),
                         FullName = teacherModel.FullName
                     });
-                }
+                }*/
 
                 // берем из бд всех преподов
                 var teachersDbAll = _context.TeacherDatabaseModels.ToList();

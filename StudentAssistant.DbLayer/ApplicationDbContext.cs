@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.IO;
+using System.Security.Policy;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using StudentAssistant.DbLayer.Models;
@@ -9,11 +11,7 @@ namespace StudentAssistant.DbLayer
 {
     public sealed class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-
+        public ApplicationDbContext() => Database.EnsureCreated();
         public DbSet<CourseScheduleDatabaseModel> CourseScheduleDatabaseModels { get; set; }
         public DbSet<ExamScheduleDatabaseModel> ExamScheduleDatabaseModels { get; set; }
         public DbSet<StudyGroupModel> StudyGroupDatabaseModels { get; set; }
@@ -25,20 +23,19 @@ namespace StudentAssistant.DbLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var pathDb = Path.Combine(@"Infrastructure", "StudentAssistantDb.Db");
             // optionsBuilder.UseSqlServer(
             //    "Data Source=DESKTOP-G847LFJ;Initial Catalog=StudentAssistantDb;MultipleActiveResultSets=true;Integrated Security=True");
-            optionsBuilder.UseSqlite("Filename=..\\StudentAssistant.Backend\\StudentAssistantDb.db");
+            optionsBuilder.UseSqlite($"Filename={pathDb}");
             base.OnConfiguring(optionsBuilder);
         }
     }
-
-
+    
     internal class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var context = new ApplicationDbContext(builder.Options);
+            var context = new ApplicationDbContext();
             return context;
         }
     }

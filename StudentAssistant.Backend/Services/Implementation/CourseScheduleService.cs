@@ -18,6 +18,7 @@ using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using CourseScheduleDtoModel = StudentAssistant.Backend.Models.CourseSchedule.CourseScheduleDtoModel;
+using CourseType = StudentAssistant.Backend.Models.CourseSchedule.CourseType;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -311,6 +312,15 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
                 
                 var courseScheduleDatabaseModels = courseScheduleList
+                    .Select(s =>
+                    {
+                        if (string.Equals(s.CourseName,"Военная кафедра"))
+                        {
+                            s.CourseType = DbLayer.Models.CourseSchedule.CourseType.ControlCourse;
+                        }
+
+                        return s;
+                    })
                     .Where(w => !string.IsNullOrEmpty(w.CourseName))
                     .ToList();
 
