@@ -163,8 +163,21 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                
+                var courseScheduleDatabaseModels = courseScheduleList
+                    .Select(s =>
+                    {
+                        if (string.Equals(s.CourseName,"Военная кафедра"))
+                        {
+                            s.CourseType = CourseType.ControlCourse;
+                        }
 
-                await _controlWeekDatabaseService.UpdateAsync(courseScheduleList, cancellationToken);
+                        return s;
+                    })
+                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                    .ToList();
+
+                await _controlWeekDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
 
                 var response = new UpdateAsyncResponseModel
                 {

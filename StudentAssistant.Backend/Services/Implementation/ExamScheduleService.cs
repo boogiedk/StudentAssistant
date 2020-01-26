@@ -171,6 +171,15 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 var examScheduleDatabaseModels =
                     examScheduleList
+                        .Select(s =>
+                        {
+                            if (string.Equals(s.CourseName,"Военная кафедра"))
+                            {
+                                s.CourseType = CourseType.ControlCourse;
+                            }
+
+                            return s;
+                        })
                         .Where(w => !string.IsNullOrEmpty(w.CourseName))
                         .ToList();
 

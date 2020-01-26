@@ -119,26 +119,6 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 _context.SaveChanges();
 
-                // преподы
-                var teachersDb = _context.TeacherDatabaseModels.ToList();
-
-                // сравниваем список из бд и входящих,
-                // чтобы найти преподов, которых нет в бд
-                var teachersNew = teachersDb
-                    .Where(p => input
-                        .Select(s => s.TeacherModel)
-                        .All(f => !string.Equals(f.FullName, p.FullName)));
-
-                // добавляем новых преподов в бд
-                foreach (var teacherModel in teachersNew)
-                {
-                    _context.TeacherDatabaseModels.Add(new TeacherModel
-                    {
-                        Id = Guid.NewGuid(),
-                        FullName = teacherModel.FullName
-                    });
-                }
-
                 // берем из бд всех преподов
                 var teachersDbAll = _context.TeacherDatabaseModels.ToList();
 
