@@ -101,7 +101,6 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         public CourseScheduleDatabaseModel()
         {
             CombinedGroup = new List<StudyGroupModel>();
-            TeacherModel = new TeacherModel();
         }
     }
 }
