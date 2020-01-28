@@ -167,28 +167,34 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
-                var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
+                var response = new UpdateAsyncResponseModel();
 
-                var examScheduleDatabaseModels =
-                    examScheduleList
-                        .Select(s =>
-                        {
-                            if (string.Equals(s.CourseName,"Военная кафедра"))
-                            {
-                                s.CourseType = CourseType.ControlCourse;
-                            }
+                // проверяем свежесть файла
+                var isNewFile = await _fileService.CheckExcelFile(DateTime.UtcNow, _fileName);
 
-                            return s;
-                        })
-                        .Where(w => !string.IsNullOrEmpty(w.CourseName))
-                        .ToList();
-
-                await _examScheduleDatabaseService.UpdateAsync(examScheduleDatabaseModels, cancellationToken);
-
-                var response = new UpdateAsyncResponseModel
+                if (!isNewFile)
                 {
-                    Message = "Данные обновлены"
-                };
+                    await DownloadAsync(cancellationToken);
+
+                    var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
+
+                    var examScheduleDatabaseModels =
+                        examScheduleList
+                            .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                            .ToList();
+
+                    await _examScheduleDatabaseService.UpdateAsync(examScheduleDatabaseModels, cancellationToken);
+
+
+                    response = new UpdateAsyncResponseModel
+                    {
+                        Message = "Данные обновлены"
+                    };
+                }
+                else
+                {
+                    response.Message = "Обновление недоступно. Попробуйте позже.";
+                }
 
                 return response;
             }

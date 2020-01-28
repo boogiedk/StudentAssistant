@@ -57,6 +57,10 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 var courseScheduleDatabaseModel = _context.CourseScheduleDatabaseModels
                     .Include(i => i.TeacherModel)
                     .Include(d => d.StudyGroupModel)
+                    .Where(d => (d.CourseType == CourseType.Lecture
+                                 || d.CourseType == CourseType.Practicte
+                                 || d.CourseType == CourseType.LaboratoryWork
+                                 || d.CourseType == CourseType.Other))
                     .ToList();
 
                 var list = new List<CourseScheduleDatabaseModel>();

@@ -17,8 +17,6 @@ using StudentAssistant.Backend.Models.UpdateAsync;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
-using CourseScheduleDtoModel = StudentAssistant.Backend.Models.CourseSchedule.CourseScheduleDtoModel;
-using CourseType = StudentAssistant.Backend.Models.CourseSchedule.CourseType;
 
 namespace StudentAssistant.Backend.Services.Implementation
 {
@@ -253,18 +251,41 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 _logger.LogInformation("UpdateAsync: " + "Start");
 
-                var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                var response = new UpdateAsyncResponseModel();
 
-                var courseScheduleDatabaseModels = courseScheduleList
-                    .Where(w => !string.IsNullOrEmpty(w.CourseName))
-                    .ToList();
+                // проверяем свежесть файла
+                var isNewFile = await _fileService.CheckExcelFile(DateTime.UtcNow, _fileName);
 
-                await  _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels,cancellationToken);
-
-                var response = new UpdateAsyncResponseModel
+                if (!isNewFile)
                 {
-                    Message = "Данные обновлены!"
-                };
+                    await DownloadAsync(cancellationToken);
+                    
+                    var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
+                    
+                    var courseScheduleDatabaseModels = courseScheduleList
+                        .Select(s =>
+                        {
+                            if (string.Equals(s.CourseName, "Военная кафедра"))
+                            {
+                                s.CourseType = CourseType.Other;
+                            }
+
+                            return s;
+                        })
+                        .Where(w => !string.IsNullOrEmpty(w.CourseName))
+                        .ToList();
+
+                    await _courseScheduleDatabaseService.UpdateAsync(courseScheduleDatabaseModels, cancellationToken);
+
+                    response = new UpdateAsyncResponseModel
+                    {
+                        Message = "Данные обновлены!"
+                    };
+                }
+                else
+                {
+                    response.Message = "Обновление недоступно. Попробуйте позже.";
+                }
 
                 return response;
             }
@@ -300,7 +321,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException("Ошибка во время выполнения." + ex);
             }
         });
-        
+
         public async Task InsertAsync(CancellationToken cancellationToken)
         {
             try
@@ -310,13 +331,13 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("InsertAsync: " + "Start");
 
                 var courseScheduleList = await _courseScheduleFileService.GetFromExcelFile(_fileName);
-                
+
                 var courseScheduleDatabaseModels = courseScheduleList
                     .Select(s =>
                     {
-                        if (string.Equals(s.CourseName,"Военная кафедра"))
+                        if (string.Equals(s.CourseName, "Военная кафедра"))
                         {
-                            s.CourseType = DbLayer.Models.CourseSchedule.CourseType.ControlCourse;
+                            s.CourseType = CourseType.Other;
                         }
 
                         return s;
@@ -347,6 +368,5 @@ namespace StudentAssistant.Backend.Services.Implementation
                 throw new NotSupportedException();
             }
         }
-        
     }
 }
