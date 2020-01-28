@@ -1,6 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
 using AutoMapper;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +14,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using NLog;
 using NLog.Extensions.Logging;
@@ -31,8 +32,8 @@ using StudentAssistant.DbLayer;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
-using StudentAssistant.DbLayer.Models.Exam;
 using Swashbuckle.AspNetCore.Swagger;
+
 
 namespace StudentAssistant.Backend
 {
@@ -40,7 +41,7 @@ namespace StudentAssistant.Backend
     {
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
 
@@ -49,22 +50,14 @@ namespace StudentAssistant.Backend
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddJsonFile("EmailServiceConfigurationModel.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("ParityOfTheWeekConfigurationModel.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("CourseScheduleDataServiceConfigurationModel.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("MongoDbSettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
 
             _configuration = builder.Build();
 
             #region Logger
-
-            env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
+            
+            NLogBuilder.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
             LogManager.Configuration.Variables["appdir"] =
                 Path.Combine(env.ContentRootPath, "Storages", "Nlog",
@@ -82,7 +75,7 @@ namespace StudentAssistant.Backend
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -101,9 +94,9 @@ namespace StudentAssistant.Backend
                         ValidateIssuer = false
                     };
                 });
-            
+
             #endregion
-            
+
             #region Mapper
 
             var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new AutoMapperConfiguration()); });
@@ -143,14 +136,19 @@ namespace StudentAssistant.Backend
 
             #endregion
 
+            #region Cors
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder.AllowAnyOrigin()
+                        .SetIsOriginAllowed((host) => true)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials());
+                );
             });
+            
+            #endregion
 
             #region Configure
 
@@ -160,55 +158,37 @@ namespace StudentAssistant.Backend
                 _configuration.GetSection("ParityOfTheWeekConfigurationModel").Bind(options));
             services.Configure<CourseScheduleDataServiceConfigurationModel>(
                 _configuration.GetSection("ListCourseSchedule"));
-            services.Configure<MongoDbSettings>(options =>
-                _configuration.GetSection("MongoConnectionTest").Bind(options));
-
-            //            services.Configure<MongoDbSettings>(options =>
-            //            {
-            //                options.ConnectionString = _configuration.GetSection("MongoConnectionTest:ConnectionString").Value;
-            //                options.Database = _configuration.GetSection("MongoConnectionTest:Database").Value;
-            //                options.CourseScheduleCollectionName =
-            //                    _configuration.GetSection("MongoConnectionTest:CourseScheduleCollectionName").Value;
-            //            });
 
             #endregion
 
+            #region Swagger
+            
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "StudentAssistant API",
                     Description = "A StudentAssistant ASP.NET Core Web API",
-                    License = new License
-                    {
-                        Name = "MIT License",
-                        Url = "https://github.com/boogiedk/StudentAssistant/blob/master/LICENSE"
-                    }
                 });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-
-            services.AddMvc().AddJsonOptions(options =>
-            {
-                var camelResolver = new CamelCasePropertyNamesContractResolver();
-                options.SerializerSettings.ContractResolver = camelResolver;
-            });
+            
+            #endregion
+            
+            services.AddMvc();
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env
+            IWebHostEnvironment env
         )
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-
-            app.UseCors("CorsPolicy");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -217,8 +197,20 @@ namespace StudentAssistant.Backend
                 c.RoutePrefix = string.Empty;
             });
 
+            app.UseRouting();
+
+            app.UseCors("CorsPolicy");
+            
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
         }
     }
 }

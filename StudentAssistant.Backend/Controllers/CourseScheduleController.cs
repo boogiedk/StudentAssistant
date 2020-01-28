@@ -130,10 +130,10 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-               var response = await _courseScheduleService.DownloadAsync(cancellationToken);
+                var response = await _courseScheduleService.DownloadAsync(cancellationToken);
 
                 _logger.LogInformation($"Response: " + "Данные обновлены!");
-                
+
                 return Ok(response);
             }
             catch (Exception ex)
@@ -177,7 +177,7 @@ namespace StudentAssistant.Backend.Controllers
         {
             try
             {
-              var response =  await _courseScheduleService.UpdateAsync(cancellationToken);
+                var response = await _courseScheduleService.UpdateAsync(cancellationToken);
 
                 _logger.LogInformation("Response: " + "Данные обновлены!");
                 return Ok(response);
@@ -209,7 +209,7 @@ namespace StudentAssistant.Backend.Controllers
                 return BadRequest(ex);
             }
         }
-        
+
         /// <summary>
         /// Метод для добавления расписания в базу данных. (временно)
         /// </summary>
