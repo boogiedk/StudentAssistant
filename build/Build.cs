@@ -75,8 +75,7 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetFileVersion(GitVersion.AssemblySemFileVer)
-                .SetInformationalVersion(GitVersion.InformationalVersion)
-                .EnableNoRestore());
+                .SetInformationalVersion(GitVersion.InformationalVersion));
         });
 
     Target RunInteractive => _ => _
@@ -87,7 +86,5 @@ class Build : NukeBuild
             .ForEach(path =>
                 DotNetRun(settings => settings
                     .SetProjectFile(path)
-                    .SetConfiguration(Configuration)
-                    .EnableNoRestore()
-                    .EnableNoBuild())));
+                    .SetConfiguration(Configuration))));
 }
