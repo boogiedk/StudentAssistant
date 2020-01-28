@@ -56,12 +56,12 @@ namespace StudentAssistant.Backend
             _configuration = builder.Build();
 
             #region Logger
+            
+            NLogBuilder.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
-            //env.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
-
-//            LogManager.Configuration.Variables["appdir"] =
-//                Path.Combine(env.ContentRootPath, "Storages", "Nlog",
-//                    " "); // add empty path for create dir linux/windows
+            LogManager.Configuration.Variables["appdir"] =
+                Path.Combine(env.ContentRootPath, "Storages", "Nlog",
+                    " "); // add empty path for create dir linux/windows
 
             #endregion
         }
@@ -136,6 +136,8 @@ namespace StudentAssistant.Backend
 
             #endregion
 
+            #region Cors
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -145,6 +147,8 @@ namespace StudentAssistant.Backend
                         .AllowAnyHeader()
                 );
             });
+            
+            #endregion
 
             #region Configure
 
@@ -157,7 +161,8 @@ namespace StudentAssistant.Backend
 
             #endregion
 
-
+            #region Swagger
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -171,11 +176,12 @@ namespace StudentAssistant.Backend
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-
+            
+            #endregion
+            
             services.AddMvc();
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env
@@ -194,8 +200,7 @@ namespace StudentAssistant.Backend
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
-
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
