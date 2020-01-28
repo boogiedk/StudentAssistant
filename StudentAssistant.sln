@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentAssistant.Backend", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentAssistant.Frontend", "StudentAssistant.Frontend\StudentAssistant.Frontend.csproj", "{CCE80412-FEE2-4A64-86F3-C68C99FA56E6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{266714E7-2AA9-4BB2-94A5-461C72EC59A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{00DBF69A-48DB-4127-A9D7-201BF3142A3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,8 +24,8 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{266714E7-2AA9-4BB2-94A5-461C72EC59A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{266714E7-2AA9-4BB2-94A5-461C72EC59A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00DBF69A-48DB-4127-A9D7-201BF3142A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00DBF69A-48DB-4127-A9D7-201BF3142A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD200476-83D3-4395-A01C-58047CEB1343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD200476-83D3-4395-A01C-58047CEB1343}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD200476-83D3-4395-A01C-58047CEB1343}.Release|Any CPU.ActiveCfg = Release|Any CPU
