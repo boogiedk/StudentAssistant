@@ -13,6 +13,8 @@ using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
+
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -59,8 +61,6 @@ class Build : NukeBuild
                         .SetProjectFile(path)
                         .SetConfiguration(Configuration)
                         .SetLogger($"trx;LogFileName={ArtifactsDirectory / "report.trx"}")
-                        .SetLogOutput(true)
-                        .SetResultsDirectory(ArtifactsDirectory)
                         .AddProperty("CollectCoverage", true)
                         .AddProperty("CoverletOutputFormat", "cobertura")
                         .AddProperty("Exclude", "[xunit.*]*")
