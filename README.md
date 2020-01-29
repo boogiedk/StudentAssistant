@@ -1,9 +1,10 @@
 # [StudentAssistant](https://trello.com/b/TXtoDDO0/student-assistant-kanban)
 
-[![Build Status](https://dev.azure.com/boogiedkcore/StudentAssistant/_apis/build/status/boogiedk.StudentAssistant?branchName=master)](https://dev.azure.com/boogiedkcore/StudentAssistant/_build/latest?definitionId=13&branchName=master)
+[![Build Status](https://dev.azure.com/boogiedkcore/StudentAssistant/_apis/build/status/boogiedk.StudentAssistant?branchName=master)](https://dev.azure.com/boogiedkcore/StudentAssistant/_build/latest?definitionId=13&branchName=master) 
 [![Pull Requests](https://img.shields.io/github/issues-pr/boogiedk/studentassistant.svg)](https://github.com/boogiedk/studentassistant/pulls) 
 [![Issues](https://img.shields.io/github/issues/boogiedk/studentassistant.svg)](https://github.com/boogiedk/studentassistant/issues) 
-![License](https://img.shields.io/github/license/boogiedk/studentassistant.svg) ![Size](https://img.shields.io/github/repo-size/boogiedk/studentassistant.svg) 
+![License](https://img.shields.io/github/license/boogiedk/studentassistant.svg) ![Size](https://img.shields.io/github/repo-size/boogiedk/studentassistant.svg)
+[![Code Coverage](https://img.shields.io/azure-devops/coverage/boogiedkcore/StudentAssistant/13)](https://dev.azure.com/boogiedkcore/StudentAssistant/_build/latest?definitionId=13&branchName=master)
 
 ## Project
 
@@ -35,19 +36,21 @@ Supports all browsers, including an Internet Explorer (not without problems, but
 1) To compile and run the application on Linux (similar to Windows), you need to [download and install latest .NET Core SDK](https://www.microsoft.com/net/learn/dotnet/hello-world-tutorial). Clone the repository using [Git](https://git-scm.com/). Then, go into `StudentAssistant.Backend` directory and run `dotnet run` command.
 
 ```sh
-# Remember to install .NET Core SDK, .NET Core Runtime and git before executing this.
+# Linux or MacOS shell.
 
 git clone https://github.com/boogiedk/StudentAssistant
-cd ./StudentAssistant.Backend/
-dotnet restore
-dotnet run
+cd ./StudentAssistant && bash ./build.sh
+
 ```
 2) To get started with Reactjs and build app you need install [Node.js](https://github.com/nodesource/distributions/blob/master/README.md)
 
 ```sh
-# Remember to install Nodejs, .NET Core SDK, .NET Core Runtime and git before executing this.
-
+# Windows command line.
+# Use the '--configuration Release' option to generate app packages.
 git clone https://github.com/boogiedk/StudentAssistant
+cd ./StudentAssistant && powershell -ExecutionPolicy Unrestricted ./build.ps1
+
+# Use it for download npm-packages
 cd StudentAssistant.Frontend/ClientApp
 npm install
 
@@ -64,3 +67,7 @@ Also you can visit kanban board [Trello](https://trello.com/b/TXtoDDO0/student-a
 
 * [.NET Core](https://github.com/dotnet)
 * [React](https://reactjs.org/)
+* [EF Core](https://github.com/dotnet/efcore)
+* [SQLite](https://www.sqlite.org/index.html)
+* [Nuke](https://nuke.build/)
+
