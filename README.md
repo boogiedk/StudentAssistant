@@ -33,20 +33,28 @@ Supports all browsers, including an Internet Explorer (not without problems, but
 
 ## Compiling
 
-1) To compile and run the application on Linux (similar to Windows), you need to [download and install latest .NET Core SDK](https://www.microsoft.com/net/learn/dotnet/hello-world-tutorial). Clone the repository using [Git](https://git-scm.com/). Then, go into `StudentAssistant.Backend` directory and run `dotnet run` command.
+ To compile and run the application on Linux or Windows, you need to [download and install latest .NET Core SDK](https://www.microsoft.com/net/learn/dotnet/hello-world-tutorial), install [Node.js](https://github.com/nodesource/distributions/blob/master/README.md) and clone the repository using [Git](https://git-scm.com/). Then, go into `StudentAssistant.Backend` and `StudentAssistant.Frontend` directory and run `dotnet run` command. 
+Or you can use build scripts:
 
+1) For Linux or MacOS shell:
 ```sh
 # Linux or MacOS shell.
 
 git clone https://github.com/boogiedk/StudentAssistant
 cd ./StudentAssistant && bash ./build.sh
 
-```
-2) To get started with Reactjs and build app you need install [Node.js](https://github.com/nodesource/distributions/blob/master/README.md)
+# Use it for download npm-packages
+cd StudentAssistant.Frontend/ClientApp
+npm install
 
+# Go into `StudentAssistant.Backend` and `StudentAssistant.Frontend` directory and run `dotnet run` command
+```
+
+2) For Windows command line:
 ```sh
 # Windows command line.
 # Use the '--configuration Release' option to generate app packages.
+
 git clone https://github.com/boogiedk/StudentAssistant
 cd ./StudentAssistant && powershell -ExecutionPolicy Unrestricted ./build.ps1
 
@@ -54,8 +62,7 @@ cd ./StudentAssistant && powershell -ExecutionPolicy Unrestricted ./build.ps1
 cd StudentAssistant.Frontend/ClientApp
 npm install
 
-cd ../
-dotnet run
+# Go into `StudentAssistant.Backend` and `StudentAssistant.Frontend` directory and run `dotnet run` command
 ```
 
 ## Contributing
