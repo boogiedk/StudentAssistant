@@ -174,7 +174,7 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 if (!isNewFile)
                 {
-                    await DownloadAsync(cancellationToken);
+                    // await DownloadAsync(cancellationToken);
 
                     var examScheduleList = await _courseScheduleFileService.GetExamScheduleFromExcelFile(_fileName);
 

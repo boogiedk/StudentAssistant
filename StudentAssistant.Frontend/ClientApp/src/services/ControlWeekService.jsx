@@ -49,7 +49,8 @@ export default class ControlWeekService {
 
     validateControlWeekModel(controlWeekModel) {
         if ((typeof controlWeekModel === "undefined") ||
-            (controlWeekModel === null))
+            (controlWeekModel === null)
+            || controlWeekModel.teacherModel === null)
             return false;
 
         return true;
