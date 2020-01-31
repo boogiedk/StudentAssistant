@@ -43,10 +43,6 @@ Or you can use build scripts:
 git clone https://github.com/boogiedk/StudentAssistant
 cd ./StudentAssistant && bash ./build.sh
 
-# Use it for download npm-packages
-cd StudentAssistant.Frontend/ClientApp
-npm install
-
 # Go into `StudentAssistant.Backend` and `StudentAssistant.Frontend` directory and run `dotnet run` command
 ```
 
@@ -57,10 +53,6 @@ npm install
 
 git clone https://github.com/boogiedk/StudentAssistant
 cd ./StudentAssistant && powershell -ExecutionPolicy Unrestricted ./build.ps1
-
-# Use it for download npm-packages
-cd StudentAssistant.Frontend/ClientApp
-npm install
 
 # Go into `StudentAssistant.Backend` and `StudentAssistant.Frontend` directory and run `dotnet run` command
 ```
