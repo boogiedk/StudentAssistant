@@ -181,13 +181,14 @@ namespace StudentAssistant.Backend.Services.Implementation
                 var isNewFile = _fileService.CheckExcelFile(DateTime.UtcNow, _fileName);
 
                 // TODO: вынести в конфиг
+                // TODO: ссылки хранить в бд
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
-                    //https://www.mirea.ru/upload/medialibrary/a72/KBiSP-4-kurs-1-sem.xlsx
+                    //https://www.mirea.ru/upload/medialibrary/892/KBiSP-4-kurs-2-sem.xlsx
                     PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
-                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/0b8/"),
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/892/"),
                     FileNameLocal = "scheduleFile",
-                    FileNameRemote = "KBiSP-4-kurs-1-sem",
+                    FileNameRemote = "KBiSP-4-kurs-2-sem",
                     FileFormat = "xlsx"
                 };
 
