@@ -13,7 +13,7 @@ export default class RestService {
                 return response;
             }) 
             .catch((error) => {
-                console.log(error);
+                error.response;
             });
     }
 
@@ -25,7 +25,7 @@ export default class RestService {
                 return response;
             })
             .catch(function (error) {
-                console.log(error);
+               return error.response;
             });
     }
 

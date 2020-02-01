@@ -17,6 +17,7 @@
     <Content Include="ClientApp\src\components\Account\account.jsx" />
     <Content Include="ClientApp\src\components\ControlWeek\controlWeek.jsx" />
     <Content Include="ClientApp\src\components\ExamSchedule\examSchedule.jsx" />
+    <Content Include="ClientApp\src\components\Register\registerPage.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />

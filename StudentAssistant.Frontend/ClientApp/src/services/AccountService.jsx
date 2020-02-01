@@ -13,69 +13,37 @@ export default class AccountService {
             Password: password
         };
 
-        if (!this.validate(requestModel)) {
-            return "error";
+        if (!this.validateRequest(requestModel)) {
+            toastNotificationService.notify(400, "Некорректные данные.");
         }
 
         let path = '/api/v1/account/login';
 
-        let token = null;
-
         return restService.post(path, requestModel).then(response => {
-
-            if (this.validate(response)) {
-                //если ок
+            if (this.validateResponse(response)) {
                 return {
                     token: response.data
                 };
-
             } else {
-                //если с ошибкой
-                toastNotificationService.notify(500, "Произошла какая-то ошибка :(");
-                return {
-                    token: {},
-                };
+                toastNotificationService.notify(400, "Что-то пошло не так :C");
             }
+            console.log(response)
         });
-
-
     }
 
-    register(login, password) {
-
-        let requestModel = {
-            Login: login,
-            Password: password
-        };
-
-        if (!this.validate(requestModel)) {
-            return "error";
-        }
+    register(registerUser) {
+        console.log(registerUser);
 
         let path = '/api/v1/account/register';
 
-        return restService.post(path, requestModel).then(response => {
-
-            if (this.validate(response)) {
-                //если ок
-                return {
-                    token: response.data
-                };
-
-            } else {
-                //если с ошибкой
-                toastNotificationService.notify(500, "Произошла какая-то ошибка :(");
-                return {
-                    token: {},
-                };
-            }
+        return restService.post(path, registerUser).then(function (response) {
+           toastNotificationService.notifyErrorList(404,response.data);
+           // console.log(response.data)
         });
-
-
     }
 
 
-    validate(user) {
+    validateRequest(user) {
         if (user === null || typeof user === 'undefined') {
             return false;
         }
@@ -90,4 +58,26 @@ export default class AccountService {
 
         return true;
     }
+
+    validateResponse(response) {
+        if (response === null || typeof response === 'undefined') {
+            return false;
+        }
+
+        if (response.status === 401) {
+            return false;
+        }
+
+        if (response.status === 400) {
+            return false;
+        }
+
+        if (response.status === 500) {
+            return false;
+        }
+
+
+        return true;
+    }
+
 }

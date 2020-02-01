@@ -1,4 +1,4 @@
-﻿import {toast} from 'react-toastify';
+﻿ import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -37,6 +37,17 @@ export default class ToastNotificationService {
                     draggable: true,
                 });
                 break;
+            case 400:
+                toast.error(message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                break;
+                
                 
             default:
                 toast.info(message, {
@@ -49,6 +60,14 @@ export default class ToastNotificationService {
                 });
                 break;
         }
+    }
+    
+    notifyErrorList(status,errorList)
+    {
+        console.log(status,errorList);
+        errorList.map((item)=>{
+            this.notify(status,item.description)
+        })
     }
     
     notifyInfo(message) {

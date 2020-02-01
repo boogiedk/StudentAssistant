@@ -7,6 +7,8 @@ import {logProvider} from './components/LogProvider/logProvider'
 import {controlWeek} from "./components/ControlWeek/controlWeek";
 import {examSchedule} from "./components/ExamSchedule/examSchedule";
 import {ToastContainer} from "react-toastify";
+import {account} from "./components/Account/account";
+import {RegisterPage} from "./components/Register/registerPage";
 
 export default class App extends Component {
     static displayName = 'App.name';
@@ -21,6 +23,8 @@ export default class App extends Component {
                 <Route path='/logs' component={logProvider}/>
                 <Route path='/controlWeek' component={controlWeek}/>
                 <Route path='/examSchedule' component={examSchedule}/>
+                <Route path='/account' component={account}/>
+                <Route path='/register' component={RegisterPage}/>
             </Layout>
         );
     }

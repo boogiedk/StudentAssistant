@@ -1,158 +1,70 @@
-﻿import moment from "moment";
-import React, {Component} from 'react';
-import ControlWeekService from "../../services/ControlWeekService";
-import {TitleComponent} from "../TitleComponent/TitleComponent";
+﻿import React from "react";
+
+import { Link } from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
+import AccountService from "../../services/AccountService";
 
-const title = "Войти - Student Assistant";
+const accountService = new AccountService();
 
-const controlWeekService = new ControlWeekService();
-
-export class account extends Component {
-
+export class account extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            controlWeekModel: [],
-            selectedDate: moment(new Date()).format('YYYY-MM-DD'),
-            loading: true,
-            groupName: 'БББО-01-16'
+            username: '',
+            password: '',
+            submitted: false
         };
-        this.updateControlWeek = this.updateControlWeek.bind(this);
-        this.handleChangeSelect = this.handleChangeSelect.bind(this);
 
-        // по дефолту отправляем Date.Now()
-        this.getControlWeek();
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    getControlWeek() {
-        controlWeekService.get(this.state.groupName)
-            .then(response => {
-                this.setState(
-                    {
-                        controlWeekModel: response.controlWeekModel,
-                        loading: response.loading
-                    });
-            });
+    handleChange(e) {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
-    static renderControlWeek(controlWeekModel) {
+    handleSubmit(e) {
+        e.preventDefault();
 
-        if (controlWeekService.validateControlWeekModel(controlWeekModel)) {
-            return (
-                <table className='table table-striped'>
-                    <thead>
-                    <tr>
-                        <th>День недели</th>
-                        <th>№</th>
-                        <th>Начало</th>
-                        <th>Название</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {controlWeekModel.controlCourseViewModel.map(courseViewModel =>
-                        <tr key={courseViewModel.id}>
-                            <td>{controlWeekService.prepareNameOfDayWeek(courseViewModel.nameOfDayWeek)}</td>
-                            <td>{courseViewModel.courseNumber}</td>
-                            <td>{courseViewModel.startOfClasses}</td>
-                            <td>
-                                <div className="courseNameStyle"> {courseViewModel.courseName} </div>
-                                <div className="coursePlaceStyle"> Аудитория {courseViewModel.coursePlace}</div>
-                                <div className="courseTypeStyle"> {courseViewModel.courseType}</div>
-                                <div className="teacherFullNameStyle"> {courseViewModel.teacherModel.fullName}</div>
-                            </td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
-            );
-        } else {
-            return (
-                <p className="infoMessage"><em>Идет загрузка расписания...</em>
-                </p>
-            );
+        this.setState({ 
+            submitted: true });
+        const { username, password } = this.state;
+        if (username && password) {
+            accountService.login(username, password);
         }
-    }
-
-    static getTitle() {
-        return (
-            <React.Fragment>
-                <TitleComponent title={title}/>
-            </React.Fragment>
-        );
-    }
-
-    // обновить расписание (скачать новый файл на сервер)
-    updateControlWeek() {
-        controlWeekService.update();
-    }
-
-    //изменение селектора групп
-    handleChangeSelect(event) {
-        this.setState({
-            groupName: event.target.value,
-        }, () => {
-            this.getControlWeek();
-        });
     }
 
     render() {
-
-        let contents = this.state.loading
-            ? <p className="infoMessage"><em>Идет загрузка расписания...</em></p>
-            : controlWeek.renderControlWeek(this.state.controlWeekModel);
-
-        controlWeek.getTitle();
-
-        if (contents != null) {
-            return (
-                <div>
-                    <React.Fragment>
-                        <TitleComponent title={title}/>
-                    </React.Fragment>
-
-                    <h1>Расписание</h1>
-
-                    <p>
-                        <label className="labelChooseGroup">Выберите группу: </label>
-                        <select name="GroupNames" value={this.state.groupName} onChange={this.handleChangeSelect}>
-                            <option value="БББО-01-16">БББО-01-16</option>
-                            <option value="БББО-02-16">БББО-02-16</option>
-                            <option value="БББО-03-16">БББО-03-16</option>
-                        </select>
-                    </p>
-
-                    {contents}
-
-                    <i className="bottom">Последнее обновление
-                        расписания: {this.state.controlWeekModel.updateDatetime}.</i>
-
-                    <img
-                        src="https://image.flaticon.com/icons/svg/60/60961.svg"
-                        title="Обновить расписание"
-                        onClick={this.updateControlWeek}
-                        className="iconLoad"
-                        alt="iconUpdate"/>
-
-
-                    <a href="https://www.mirea.ru/upload/medialibrary/28e/zach_KBiSP_4-kurs_zima.xlsx">
-                        <img
-                            src="https://image.flaticon.com/icons/svg/152/152555.svg"
-                            title="Скачать расписание"
-                            className="iconDownload"
-                            alt="Download"
-                        /></a>
-
-                </div>
-            );
-        } else {
-            return (
-                <p className="infoMessage"><em>Идет загрузка расписания...</em>
-                </p>
-            );
-        }
-
+        const { loggingIn } = this.props;
+        const { username, password, submitted } = this.state;
+        return (
+            <div className="col-md-6 col-md-offset-3">
+                <h2>Login</h2>
+                <form name="form" onSubmit={this.handleSubmit}>
+                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
+                        <label htmlFor="username">Username</label>
+                        <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
+                        {submitted && !username &&
+                        <div className="help-block">Username is required</div>
+                        }
+                    </div>
+                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
+                        {submitted && !password &&
+                        <div className="help-block">Password is required</div>
+                        }
+                    </div>
+                    <div className="form-group">
+                        <button className="btn btn-primary">Login</button>
+                        {loggingIn}
+                        <Link to="/register" className="btn btn-link">Register</Link>
+                    </div>
+                </form>
+            </div>
+        );
     }
-
 }
