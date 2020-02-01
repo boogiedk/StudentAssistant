@@ -14,7 +14,7 @@ export default class CourseScheduleService {
             groupName: groupName
         };
 
-      return restService.post(path, requestModel).then(response => {
+        return restService.post(path, requestModel).then(response => {
 
             if (this.validateResponse(response)) {
                 //если ок
@@ -52,7 +52,9 @@ export default class CourseScheduleService {
         if ((typeof courseScheduleModel === "undefined") ||
             (courseScheduleModel === null) || (
                 courseScheduleModel.coursesViewModel.length === 1 &
-                courseScheduleModel.coursesViewModel[0].courseName === ""))
+                courseScheduleModel.coursesViewModel[0].courseName === ""
+                || courseScheduleModel.teacherModel === null
+            ))
             return false;
 
         return true;

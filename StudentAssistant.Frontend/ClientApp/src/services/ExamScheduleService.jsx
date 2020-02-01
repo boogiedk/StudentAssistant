@@ -49,7 +49,8 @@ export default class ExamScheduleService {
 
     validateExamScheduleModel(examScheduleModel) {
         if ((typeof examScheduleModel === "undefined") ||
-            (examScheduleModel === null))
+            (examScheduleModel === null)
+            || examScheduleModel.teacherModel === null)
             return false;
 
         return true;
