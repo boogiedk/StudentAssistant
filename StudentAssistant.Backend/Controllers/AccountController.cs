@@ -39,7 +39,7 @@ namespace StudentAssistant.Backend.Controllers
             [FromBody] AccountRegisterRequest model,
             CancellationToken cancellationToken)
         {
-            var user = new IdentityUser(model?.UserName);
+            var user = new IdentityUser(model?.Login);
             var result = await _userManager.CreateAsync(user, model?.Password);
 
             if (!result.Succeeded) return BadRequest(result.Errors);

@@ -9,37 +9,49 @@ export default class AccountService {
     login(login, password) {
 
         let requestModel = {
-            Login: login,
-            Password: password
+            login: login,
+            password: password
         };
 
         if (!this.validateRequest(requestModel)) {
-            toastNotificationService.notify(400, "Некорректные данные.");
+            toastNotificationService.notifyError("Некорректные данные.");
+            return {};
         }
 
         let path = '/api/v1/account/login';
 
-        return restService.post(path, requestModel).then(response => {
-            if (this.validateResponse(response)) {
-                return {
-                    token: response.data
-                };
-            } else {
-                toastNotificationService.notify(400, "Что-то пошло не так :C");
-            }
-            console.log(response)
-        });
+        return restService.post(path, requestModel)
+            .then(response => {
+                if (this.validateResponse(response)) {
+                    return {
+                        token: response.data
+                        // возможно нужно сохранить в локалсторадж
+                    };
+                } else {
+                    toastNotificationService.notify(response.status, "Unauthorized.");
+                }
+            });
     }
 
     register(registerUser) {
-        console.log(registerUser);
-
         let path = '/api/v1/account/register';
 
-        return restService.post(path, registerUser).then(function (response) {
-           toastNotificationService.notifyErrorList(404,response.data);
-           // console.log(response.data)
-        });
+        if (!this.validateRequest(registerUser)) {
+            toastNotificationService.notifyError("Некорректные данные.");
+            return {};
+        }
+
+        return restService.post(path, registerUser)
+            .then(response => {
+                if (this.validateResponse(response)) {
+                    return {
+                        token: response.data
+                        // возможно нужно сохранить в локалсторадж
+                    };
+                } else {
+                    toastNotificationService.notifyErrorList(response.status, response.data)
+                }
+            });
     }
 
 
@@ -48,15 +60,15 @@ export default class AccountService {
             return false;
         }
 
-        if (user.Login === null || typeof user.Login === 'undefined') {
+        if (user.login === null || typeof user.login === 'undefined' || user.login === '') {
             return false;
         }
 
-        if (user.Password === null || typeof user.Password === 'undefined') {
+        if (user.password === null || typeof user.password === 'undefined' || user.password === '') {
             return false;
         }
-
-        return true;
+        
+        return true; 
     }
 
     validateResponse(response) {
@@ -64,20 +76,20 @@ export default class AccountService {
             return false;
         }
 
-        if (response.status === 401) {
-            return false;
+        switch (response.status) {
+            case 500:
+            case 404:
+            case 400:
+            case 401:
+                return false;
+
+            case 200:
+                return true;
+
+
+            default:
+                return false;
         }
-
-        if (response.status === 400) {
-            return false;
-        }
-
-        if (response.status === 500) {
-            return false;
-        }
-
-
-        return true;
     }
 
 }

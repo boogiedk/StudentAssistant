@@ -5,7 +5,7 @@ namespace StudentAssistant.Backend.Models.Account.Requests
     public class AccountRegisterRequest
     {
         [Required]
-        public string UserName { get; set; }
+        public string Login { get; set; }
         
         [Required]
         public string Password { get; set; }
@@ -15,5 +15,8 @@ namespace StudentAssistant.Backend.Models.Account.Requests
         
         [Required]
         public string LastName { get; set; }
+        
+        [Required]
+        public string GroupName { get; set; }
     }
 }
