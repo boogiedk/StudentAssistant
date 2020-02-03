@@ -7,7 +7,7 @@ const toastNotificationService = new ToastNotificationService();
 export default class AccountService {
 
     login(login, password) {
-
+        
         let requestModel = {
             login: login,
             password: password
@@ -23,12 +23,15 @@ export default class AccountService {
         return restService.post(path, requestModel)
             .then(response => {
                 if (this.validateResponse(response)) {
+                    localStorage.setItem("token",response.data.token);
                     return {
-                        token: response.data
-                        // возможно нужно сохранить в локалсторадж
+                        registered:true
                     };
                 } else {
                     toastNotificationService.notify(response.status, "Unauthorized.");
+                    return {
+                        registered:false
+                    };
                 }
             });
     }
@@ -44,12 +47,15 @@ export default class AccountService {
         return restService.post(path, registerUser)
             .then(response => {
                 if (this.validateResponse(response)) {
+                    localStorage.setItem("token",response.data.token);
                     return {
-                        token: response.data
-                        // возможно нужно сохранить в локалсторадж
-                    };
+                        registered: true
+                    }
                 } else {
-                    toastNotificationService.notifyErrorList(response.status, response.data)
+                    toastNotificationService.notifyErrorList(response.status, response.data);
+                    return {
+                        registered: false
+                    }
                 }
             });
     }

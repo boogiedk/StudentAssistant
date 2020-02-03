@@ -39,6 +39,7 @@ export default class RestService {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
         };
     }
 }

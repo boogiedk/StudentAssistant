@@ -48,7 +48,7 @@ namespace StudentAssistant.Backend.Controllers
             await _signInManager.SignInAsync(user, true);
 
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
-            var response = new AccountRegisterResponse { Token = token };
+            var response = new AccountRegisterResponse {Token = token};
 
             return Ok(response);
         }
@@ -68,9 +68,35 @@ namespace StudentAssistant.Backend.Controllers
 
             var user = await _userManager.FindByNameAsync(model?.Login);
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
-            var response = new AccountLoginResponse { Token = token };
+            var response = new AccountLoginResponse {Token = token};
 
             return Ok(response);
         }
+
+        // POST api/v1/account/login
+        [HttpPost("getuser")]
+        [ProducesResponseType(typeof(AccountGetUserRequestModel), 200)]
+        [Authorize]
+        public async Task<IActionResult> GetUser(
+            [FromBody] AccountGetUserRequestModel model,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByNameAsync(model?.Login);
+            var response = new AccountGetUserResponseModel {User = user};
+
+            return Ok(response);
+        }
+    }
+
+    public class AccountGetUserResponseModel
+    {
+        public IdentityUser User { get; set; }
+    }
+
+    public class AccountGetUserRequestModel
+    {
+        public string Login { get; set; }
     }
 }
