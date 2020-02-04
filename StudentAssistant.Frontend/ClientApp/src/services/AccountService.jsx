@@ -15,7 +15,9 @@ export default class AccountService {
 
         if (!this.validateRequest(requestModel)) {
             toastNotificationService.notifyError("Некорректные данные.");
-            return {};
+            return {
+                success:false
+            };
         }
 
         let path = '/api/v1/account/login';
@@ -25,12 +27,12 @@ export default class AccountService {
                 if (this.validateResponse(response)) {
                     localStorage.setItem("token",response.data.token);
                     return {
-                        registered:true
+                        success:true
                     };
                 } else {
                     toastNotificationService.notify(response.status, "Unauthorized.");
                     return {
-                        registered:false
+                        success:false
                     };
                 }
             });
@@ -41,7 +43,9 @@ export default class AccountService {
 
         if (!this.validateRequest(registerUser)) {
             toastNotificationService.notifyError("Некорректные данные.");
-            return {};
+            return {
+                success:false
+            };
         }
 
         return restService.post(path, registerUser)
@@ -49,15 +53,23 @@ export default class AccountService {
                 if (this.validateResponse(response)) {
                     localStorage.setItem("token",response.data.token);
                     return {
-                        registered: true
-                    }
+                        success:true
+                    };
                 } else {
                     toastNotificationService.notifyErrorList(response.status, response.data);
                     return {
-                        registered: false
-                    }
+                        success:false
+                    };
                 }
             });
+    }
+
+    logout() {
+        // remove user from local storage to log user out
+        localStorage.removeItem('token');
+        return {
+            success:true
+        };
     }
 
 

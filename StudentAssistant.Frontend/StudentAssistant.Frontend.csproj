@@ -18,9 +18,12 @@
     <Content Include="ClientApp\src\components\LoginPage\LoginPage.jsx" />
     <Content Include="ClientApp\src\components\ControlWeek\controlWeek.jsx" />
     <Content Include="ClientApp\src\components\ExamSchedule\examSchedule.jsx" />
-    <Content Include="ClientApp\src\components\Register\RegisterPage.css" />
-    <Content Include="ClientApp\src\components\Register\RegisterPage.jsx" />
+    <Content Include="ClientApp\src\components\PrivateRoute\PrivateRoute.jsx" />
+    <Content Include="ClientApp\src\components\ProfilePage\ProfilePage.js" />
+    <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.css" />
+    <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
+    <Content Include="ClientApp\src\helpers\history.js" />
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
     <Content Include="ClientApp\src\services\ExamScheduleService.jsx" />

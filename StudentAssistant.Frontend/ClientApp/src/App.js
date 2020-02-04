@@ -8,19 +8,20 @@ import {controlWeek} from "./components/ControlWeek/controlWeek";
 import {examSchedule} from "./components/ExamSchedule/examSchedule";
 import {ToastContainer} from "react-toastify";
 import {LoginPage} from "./components/LoginPage/LoginPage";
-import {RegisterPage} from "./components/Register/RegisterPage";
+import {RegisterPage} from "./components/RegisterPage/RegisterPage";
+import {PrivateRoute} from "./components/PrivateRoute/PrivateRoute";
 
 export default class App extends Component {
     static displayName = 'App.name';
-
-//        <Route path='/logs' component={Logs} /> 
+    
     render() {
+
         return (
             <Layout>
                 <ToastContainer/>
                 <Route exact path='/' component={Home}/>
                 <Route path='/courseSchedule' component={courseSchedule}/>
-                <Route path='/logs' component={logProvider}/>
+                <PrivateRoute path='/logs' component={logProvider}/>
                 <Route path='/controlWeek' component={controlWeek}/>
                 <Route path='/examSchedule' component={examSchedule}/>
                 <Route path='/login' component={LoginPage}/>

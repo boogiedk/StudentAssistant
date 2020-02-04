@@ -39,8 +39,14 @@ export class LoginPage extends React.Component {
         });
         const {login, password} = this.state;
         if (login && password) {
-            accountService.login(login, password);
+            accountService.login(login, password).then(result => {
+                if (result.success) {
+                    const {from} = this.props.location.state || {from: {pathname: "/"}};
+                    this.props.history.push(from);
+                }
+            });
         }
+
     }
 
     render() {
