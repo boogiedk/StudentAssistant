@@ -1,11 +1,11 @@
-﻿ import {toast} from 'react-toastify';
+﻿import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
 export default class ToastNotificationService {
 
     notify(statusCode, message) {
-        
+
         switch (statusCode) {
             case 200:
                 toast.success(message, {
@@ -30,7 +30,7 @@ export default class ToastNotificationService {
                     draggable: true,
                 });
                 break;
-                
+
             default:
                 toast.info(message, {
                     position: "top-right",
@@ -43,16 +43,14 @@ export default class ToastNotificationService {
                 break;
         }
     }
-    
-    notifyErrorList(status,errorList)
-    {
-        errorList.map((item)=>{
-            this.notify(status,item.description)
-        })
+
+    notifyErrorList(status, errorList) {
+        errorList.map((item) => {
+            return this.notify(status, item.description)
+        });
     }
-    
-    notifyError(message)
-    {
+
+    notifyError(message) {
         toast.error(message, {
             position: "top-right",
             autoClose: 3000,
@@ -63,8 +61,7 @@ export default class ToastNotificationService {
         });
     }
 
-    notifySuccess(message)
-    {
+    notifySuccess(message) {
         toast.success(message, {
             position: "top-right",
             autoClose: 3000,
@@ -74,7 +71,7 @@ export default class ToastNotificationService {
             draggable: true,
         });
     }
-    
+
     notifyInfo(message) {
         toast.info(message, {
             position: "top-right",

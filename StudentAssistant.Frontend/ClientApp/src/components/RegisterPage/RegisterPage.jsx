@@ -40,7 +40,12 @@ export class RegisterPage extends React.Component {
         this.setState({ submitted: true });
         const { user } = this.state;
         if (user.firstName && user.lastName && user.login && user.password && user.groupName) {
-            accountService.register(user);
+            accountService.register(user).then(result => {
+                if (result.success) {
+                    const {from} = this.props.location.state || {from: {pathname: "/"}};
+                    this.props.history.push(from);
+                }
+            });
         }
     }
 

@@ -1,5 +1,6 @@
 import RestService from "./RestService";
 import ToastNotificationService from "./ToastNotificationService";
+import {history} from "../helpers/history";
 
 const restService = new RestService();
 const toastNotificationService = new ToastNotificationService();
@@ -65,8 +66,8 @@ export default class AccountService {
     }
 
     logout() {
-        // remove user from local storage to log user out
         localStorage.removeItem('token');
+        history.push('/login');
         return {
             success:true
         };
