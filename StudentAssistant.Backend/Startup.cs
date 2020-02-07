@@ -178,10 +178,8 @@ namespace StudentAssistant.Backend
             });
             
             #endregion
-            
-            services.AddMvc().AddJsonOptions(option => { option.JsonSerializerOptions.MaxDepth = 256; });
-            
-          //  services.AddControllers();
+
+            services.AddMvc();
         }
         
         public void Configure(

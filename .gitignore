@@ -568,3 +568,4 @@ thumb
 sketch
 
 /StudentAssistant.Backend/Infrastructure/StudentAssistantDb.Db
+/StudentAssistant.Backend/Infrastructure/ScheduleFile/scheduleFile.xlsx
