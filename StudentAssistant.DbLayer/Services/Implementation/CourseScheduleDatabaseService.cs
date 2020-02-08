@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudentAssistant.DbLayer.Interfaces;
 using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
@@ -14,13 +15,16 @@ namespace StudentAssistant.DbLayer.Services.Implementation
     {
         private readonly ApplicationDbContext _context;
         private readonly IImportDataExcelService _importDataExcelService;
+        private readonly ILogger<CourseScheduleDatabaseService> _logger;
 
         public CourseScheduleDatabaseService(
             ApplicationDbContext context,
-            IImportDataExcelService importDataExcelService)
+            IImportDataExcelService importDataExcelService,
+            ILogger<CourseScheduleDatabaseService> logger)
         {
             _context = context;
             _importDataExcelService = importDataExcelService;
+            _logger = logger;
         }
 
         public async Task InsertAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
@@ -75,7 +79,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 var result = list.Where(f =>
-                        f.NameOfDayWeek == parameters.NameOfDayWeek
+                        string.Equals(f.NameOfDayWeek, parameters.NameOfDayWeek, StringComparison.OrdinalIgnoreCase)
                         && (f.NumberWeek.Any(a => a == parameters.NumberWeek) || f.NumberWeek.Count == 0)
                         && f.ParityWeek == parameters.ParityWeek
                         && f.StudyGroupModel?.Name == parameters.GroupName

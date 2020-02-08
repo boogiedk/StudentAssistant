@@ -94,6 +94,7 @@ namespace StudentAssistant.Backend
                         ValidateIssuer = false
                     };
                 });
+            
 
             #endregion
 

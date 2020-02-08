@@ -64,7 +64,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
                     NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat
-                        .GetDayName(input.DateTimeRequest.DayOfWeek),
+                        .GetDayName(input.DateTimeRequest.DayOfWeek).ToLower(),
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest),
                     GroupName = input.GroupName,
                     DatetimeRequest = input.DateTimeRequest,
