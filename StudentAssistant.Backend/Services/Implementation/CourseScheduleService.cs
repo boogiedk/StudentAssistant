@@ -64,7 +64,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                 {
                     NumberWeek = _parityOfTheWeekService.GetCountParityOfWeek(input.DateTimeRequest),
                     NameOfDayWeek = CultureInfo.GetCultureInfo("ru-RU").DateTimeFormat
-                        .GetDayName(input.DateTimeRequest.DayOfWeek),
+                        .GetDayName(input.DateTimeRequest.DayOfWeek).ToLower(),
                     ParityWeek = _parityOfTheWeekService.GetParityOfTheWeekByDateTime(input.DateTimeRequest),
                     GroupName = input.GroupName,
                     DatetimeRequest = input.DateTimeRequest,
@@ -184,9 +184,8 @@ namespace StudentAssistant.Backend.Services.Implementation
                 // TODO: ссылки хранить в бд
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
-                    //https://www.mirea.ru/upload/medialibrary/892/KBiSP-4-kurs-2-sem.xlsx
                     PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
-                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/892/"),
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/29a/"),
                     FileNameLocal = "scheduleFile",
                     FileNameRemote = "KBiSP-4-kurs-2-sem",
                     FileFormat = "xlsx"

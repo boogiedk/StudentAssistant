@@ -94,6 +94,7 @@ namespace StudentAssistant.Backend
                         ValidateIssuer = false
                     };
                 });
+            
 
             #endregion
 
@@ -178,7 +179,7 @@ namespace StudentAssistant.Backend
             });
             
             #endregion
-            
+
             services.AddMvc();
         }
         
