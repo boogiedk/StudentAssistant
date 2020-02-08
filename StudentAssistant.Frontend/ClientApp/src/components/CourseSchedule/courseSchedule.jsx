@@ -1,28 +1,18 @@
 import React from 'react';
-
 import "./courseSchedule.css";
-
 import Popup from "reactjs-popup";
-
 import DatePicker, {registerLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
-
 import 'react-toastify/dist/ReactToastify.css';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import ru from "date-fns/locale/ru";
-
-import CourseScheduleService from "../../services/CourseScheduleService";
-
 import moment from 'moment';
 import {TitleComponent} from "../TitleComponent/TitleComponent";
-
+import CourseScheduleService from "../../services/CourseScheduleService";
 registerLocale("ru", ru);
 
 const courseScheduleService = new CourseScheduleService();
-
 
 const title = "Расписание - Student Assistant";
 

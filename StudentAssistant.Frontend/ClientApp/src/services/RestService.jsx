@@ -19,7 +19,8 @@ export default class RestService {
 
     post(path, body) {
         return axios.post(this.url(backendUrl, path), body, {
-            headers: this.headers()
+            headers: this.headers(),
+            withCredentials:true
         })
             .then(function (response) {
                 return response;
@@ -39,7 +40,6 @@ export default class RestService {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',
-            'Authorization': 'Bearer ' + localStorage.getItem("token")
         };
     }
 }

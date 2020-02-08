@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import './NavMenu.css';
+import Cookies from 'js-cookie';
+import {store} from '../../services/AccountService'
 
 import {history} from "../../helpers/history";
 
@@ -24,20 +26,21 @@ export class NavMenu extends Component {
     }
 
     logout() {
-        localStorage.removeItem('token');
+        Cookies.remove('.AspNetCore.Application.Token');
         history.push('/login');
     }
+    
 
     render() {
         const LogInOutNavLink = (() => {
 
-           const currentUser = localStorage.getItem("token");
-           if (currentUser) {
+            const authorizationToken = false;
+            if (authorizationToken) {
 
-               return <NavLink tag={Link} className="text-dark" onClick={this.logout} to="/">Выйти</NavLink>
-           }
+                return <NavLink tag={Link} className="text-dark" onClick={this.logout} to="/">Выйти</NavLink>
+            }
 
-           return <NavLink tag={Link} className="text-dark" to="/login">Войти</NavLink>
+            return <NavLink tag={Link} className="text-dark" to="/login">Войти</NavLink>
         });
 
         return (

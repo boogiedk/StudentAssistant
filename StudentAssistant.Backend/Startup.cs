@@ -15,6 +15,8 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Hosting;
@@ -56,7 +58,7 @@ namespace StudentAssistant.Backend
             _configuration = builder.Build();
 
             #region Logger
-            
+
             NLogBuilder.ConfigureNLog(Path.Combine(env.ContentRootPath, "Infrastructure", "NLog", "nlog.config"));
 
             LogManager.Configuration.Variables["appdir"] =
@@ -94,7 +96,6 @@ namespace StudentAssistant.Backend
                         ValidateIssuer = false
                     };
                 });
-            
 
             #endregion
 
@@ -102,7 +103,7 @@ namespace StudentAssistant.Backend
 
             var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new AutoMapperConfiguration()); });
 
-            IMapper mapper = mappingConfig.CreateMapper();
+            var mapper = mappingConfig.CreateMapper();
 
             #endregion
 
@@ -138,17 +139,18 @@ namespace StudentAssistant.Backend
             #endregion
 
             #region Cors
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .SetIsOriginAllowed((host) => true)
+                    builder => builder
+                        .SetIsOriginAllowed(host => true)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
+                        .AllowCredentials()
                 );
             });
-            
+
             #endregion
 
             #region Configure
@@ -163,7 +165,7 @@ namespace StudentAssistant.Backend
             #endregion
 
             #region Swagger
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -177,12 +179,12 @@ namespace StudentAssistant.Backend
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-            
+
             #endregion
 
             services.AddMvc();
         }
-        
+
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env
@@ -190,22 +192,31 @@ namespace StudentAssistant.Backend
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentAssistant API v1");
                 c.RoutePrefix = string.Empty;
             });
-
             app.UseRouting();
-
             app.UseCors("CorsPolicy");
-            
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.None,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.None
+            });
+            //TODO: вынести в отдельный мидлвар
+            app.Use(async (context, next) =>
+            {
+                var token = context.Request.Cookies[".AspNetCore.Application.Token"];
+                if (!string.IsNullOrEmpty(token))
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+
+                await next();
+            });
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

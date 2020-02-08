@@ -1,14 +1,15 @@
 import RestService from "./RestService";
 import ToastNotificationService from "./ToastNotificationService";
 import {history} from "../helpers/history";
+import {createStore} from "redux";
+import {AddUser} from "./StoreService";
 
 const restService = new RestService();
 const toastNotificationService = new ToastNotificationService();
 
 export default class AccountService {
-
     login(login, password) {
-        
+
         let requestModel = {
             login: login,
             password: password
@@ -17,7 +18,7 @@ export default class AccountService {
         if (!this.validateRequest(requestModel)) {
             toastNotificationService.notifyError("Некорректные данные.");
             return {
-                success:false
+                success: false
             };
         }
 
@@ -26,14 +27,14 @@ export default class AccountService {
         return restService.post(path, requestModel)
             .then(response => {
                 if (this.validateResponse(response)) {
-                    localStorage.setItem("token",response.data.token);
+                    AddUser(response.data);
                     return {
-                        success:true
+                        success: true
                     };
                 } else {
                     toastNotificationService.notify(response.status, "Unauthorized.");
                     return {
-                        success:false
+                        success: false
                     };
                 }
             });
@@ -45,21 +46,20 @@ export default class AccountService {
         if (!this.validateRequest(registerUser)) {
             toastNotificationService.notifyError("Некорректные данные.");
             return {
-                success:false
+                success: false
             };
         }
 
         return restService.post(path, registerUser)
             .then(response => {
                 if (this.validateResponse(response)) {
-                    localStorage.setItem("token",response.data.token);
                     return {
-                        success:true
+                        success: true
                     };
                 } else {
                     toastNotificationService.notifyErrorList(response.status, response.data);
                     return {
-                        success:false
+                        success: false
                     };
                 }
             });
@@ -69,7 +69,7 @@ export default class AccountService {
         localStorage.removeItem('token');
         history.push('/login');
         return {
-            success:true
+            success: true
         };
     }
 
@@ -86,8 +86,8 @@ export default class AccountService {
         if (user.password === null || typeof user.password === 'undefined' || user.password === '') {
             return false;
         }
-        
-        return true; 
+
+        return true;
     }
 
     validateResponse(response) {

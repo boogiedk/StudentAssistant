@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudentAssistant.Backend.Interfaces;
@@ -50,6 +51,13 @@ namespace StudentAssistant.Backend.Controllers
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
             var response = new AccountRegisterResponse {Token = token};
 
+            //TODO: вынести в отдельный мидлвар
+            HttpContext.Response.Cookies.Append(".AspNetCore.Application.Token", token,
+                new CookieOptions
+                {
+                    MaxAge = TimeSpan.FromDays(7),
+                });
+
             return Ok(response);
         }
 
@@ -70,11 +78,18 @@ namespace StudentAssistant.Backend.Controllers
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
             var response = new AccountLoginResponse {Token = token};
 
-            return Ok(response);
+            //TODO: вынести в отдельный мидлвар
+            HttpContext.Response.Cookies.Append(".AspNetCore.Application.Token", token,
+                new CookieOptions
+                {
+                    MaxAge = TimeSpan.FromDays(7)
+                });
+
+            return Ok(user);
         }
 
         // POST api/v1/account/login
-        [HttpPost("getuser")]
+        [HttpPost("get")]
         [ProducesResponseType(typeof(AccountGetUserRequestModel), 200)]
         [Authorize]
         public async Task<IActionResult> GetUser(
