@@ -1,8 +1,6 @@
 import RestService from "./RestService";
 import ToastNotificationService from "./ToastNotificationService";
 import {history} from "../helpers/history";
-import {createStore} from "redux";
-import {AddUser} from "./StoreService";
 
 const restService = new RestService();
 const toastNotificationService = new ToastNotificationService();
@@ -27,7 +25,6 @@ export default class AccountService {
         return restService.post(path, requestModel)
             .then(response => {
                 if (this.validateResponse(response)) {
-                    AddUser(response.data);
                     return {
                         success: true
                     };

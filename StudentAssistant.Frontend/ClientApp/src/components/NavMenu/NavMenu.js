@@ -3,7 +3,6 @@ import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLin
 import {Link} from 'react-router-dom';
 import './NavMenu.css';
 import Cookies from 'js-cookie';
-import {store} from '../../services/AccountService'
 
 import {history} from "../../helpers/history";
 

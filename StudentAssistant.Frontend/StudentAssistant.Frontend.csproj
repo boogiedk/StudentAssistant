@@ -22,13 +22,10 @@
     <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.css" />
     <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
-    <Content Include="ClientApp\src\helpers\globalStore.js" />
-    <Content Include="ClientApp\src\helpers\history.js" />
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
     <Content Include="ClientApp\src\services\ExamScheduleService.jsx" />
     <Content Include="ClientApp\src\services\RestService.jsx" />
-    <Content Include="ClientApp\src\services\StoreService.jsx" />
     <Content Include="ClientApp\src\services\ToastNotificationService.jsx" />
     <EmbeddedResource Remove="Pages\**" />
     <None Remove="$(SpaRoot)**" />
@@ -54,6 +51,11 @@
     <None Update="ClientApp\public\favicon.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\redux\actions" />
+    <Folder Include="ClientApp\src\redux\reducers" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
