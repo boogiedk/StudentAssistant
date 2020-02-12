@@ -1,10 +1,12 @@
 ﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import AccountService from "../../services/AccountService";
+import {setAuthFlag} from "../../redux/actions/authenticationAction";
+import {connect} from "react-redux";
 
 const accountService = new AccountService();
 
-export class RegisterPage extends React.Component {
+class RegisterPage extends React.Component {
     constructor(props) {
         super(props);
 
@@ -42,6 +44,7 @@ export class RegisterPage extends React.Component {
         if (user.firstName && user.lastName && user.login && user.password && user.groupName) {
             accountService.register(user).then(result => {
                 if (result.success) {
+                    this.props.setIsAuth(result.success);
                     const {from} = this.props.location.state || {from: {pathname: "/"}};
                     this.props.history.push(from);
                 }
@@ -50,6 +53,7 @@ export class RegisterPage extends React.Component {
     }
 
     render() {
+        
         const { registering  } = this.props;
         const { user, submitted } = this.state;
         return (
@@ -101,3 +105,20 @@ export class RegisterPage extends React.Component {
         );
     }
 }
+
+const mapStateToProps = store => {
+    console.log(store);
+    return {
+        IsAuthentication: store.authentication.IsAuthentication
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    setIsAuth: flag => dispatch( setAuthFlag({
+        type: 'SET_VALUE',
+        payload: flag
+    })),
+});
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(RegisterPage);

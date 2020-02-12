@@ -6,10 +6,12 @@ import "./LoginPage.css";
 
 import 'react-toastify/dist/ReactToastify.css';
 import AccountService from "../../services/AccountService";
+import {connect} from "react-redux";
+import {setAuthFlag} from "../../redux/actions/authenticationAction";
 
 const accountService = new AccountService();
 
-export class LoginPage extends React.Component {
+class LoginPage extends React.Component {
     constructor(props) {
         super(props);
 
@@ -30,6 +32,7 @@ export class LoginPage extends React.Component {
                 [name]: value
             });
     }
+    
 
     handleSubmit(e) {
         e.preventDefault();
@@ -41,6 +44,7 @@ export class LoginPage extends React.Component {
         if (login && password) {
             accountService.login(login, password).then(result => {
                 if (result.success) {
+                    this.props.setIsAuth(result.success);
                     const {from} = this.props.location.state || {from: {pathname: "/"}};
                     this.props.history.push(from);
                 }
@@ -50,8 +54,9 @@ export class LoginPage extends React.Component {
     }
 
     render() {
-        const {loggingIn} = this.props;
+        const { loggingIn } = this.props;
         const {login, password, submitted} = this.state;
+        console.log(this.props.IsAuthentication);
         return (
             <div className="col-md-6 col-md-offset-3">
                 <h2>Login</h2>
@@ -82,3 +87,20 @@ export class LoginPage extends React.Component {
         );
     }
 }
+
+const mapStateToProps = store => {
+    console.log(store);
+    return {
+        IsAuthentication: store.authentication.IsAuthentication
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    setIsAuth: flag => dispatch( setAuthFlag({
+        type: 'SET_VALUE',
+        payload: flag
+    })),
+});
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(LoginPage);

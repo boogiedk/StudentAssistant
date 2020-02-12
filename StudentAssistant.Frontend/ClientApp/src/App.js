@@ -7,9 +7,9 @@ import {logProvider} from './components/LogProvider/logProvider'
 import {controlWeek} from "./components/ControlWeek/controlWeek";
 import {examSchedule} from "./components/ExamSchedule/examSchedule";
 import {ToastContainer} from "react-toastify";
-import {LoginPage} from "./components/LoginPage/LoginPage";
-import {RegisterPage} from "./components/RegisterPage/RegisterPage";
-import {PrivateRoute} from "./components/PrivateRoute/PrivateRoute";
+import LoginPage from "./components/LoginPage/LoginPage";
+import RegisterPage from "./components/RegisterPage/RegisterPage";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 export default class App extends Component {
     static displayName = 'App.name';

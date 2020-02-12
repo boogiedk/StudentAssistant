@@ -22,6 +22,11 @@
     <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.css" />
     <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
+    <Content Include="ClientApp\src\redux\actions\authenticationAction.js" />
+    <Content Include="ClientApp\src\redux\reducers\authenticationReducer.js" />
+    <Content Include="ClientApp\src\redux\reducers\index.js" />
+    <Content Include="ClientApp\src\redux\reducers\userReducer.js" />
+    <Content Include="ClientApp\src\redux\store\configureStore.js" />
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
     <Content Include="ClientApp\src\services\ExamScheduleService.jsx" />
@@ -51,11 +56,6 @@
     <None Update="ClientApp\public\favicon.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClientApp\src\redux\actions" />
-    <Folder Include="ClientApp\src\redux\reducers" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

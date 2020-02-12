@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import './NavMenu.css';
-import Cookies from 'js-cookie';
 
+import {connect} from "react-redux";
+import {setAuthFlag} from "../../redux/actions/authenticationAction";
 import {history} from "../../helpers/history";
 
-export class NavMenu extends Component {
+ class NavMenu extends Component {
     static displayName = 'NavMenu.name';
 
     constructor(props) {
         super(props);
-
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
             collapsed: true
@@ -24,23 +24,27 @@ export class NavMenu extends Component {
         });
     }
 
-    logout() {
-        Cookies.remove('.AspNetCore.Application.Token');
-        history.push('/login');
-    }
-    
+     logout() {
+         this.props.setIsAuth(false);
+         history.push('/login');
+         return {
+             success: true
+         };
+     }
 
-    render() {
+
+     render() {
         const LogInOutNavLink = (() => {
-
-            const authorizationToken = false;
-            if (authorizationToken) {
+            const isAuthorizationUser = this.props.IsAuthentication;
+            console.log(isAuthorizationUser);
+            if (isAuthorizationUser) {
 
                 return <NavLink tag={Link} className="text-dark" onClick={this.logout} to="/">Выйти</NavLink>
             }
 
             return <NavLink tag={Link} className="text-dark" to="/login">Войти</NavLink>
         });
+        
 
         return (
             <header>
@@ -67,7 +71,7 @@ export class NavMenu extends Component {
                                         экзаменов</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <LogInOutNavLink/>
+                                    <LogInOutNavLink />
                                 </NavItem>
                             </ul>
                         </Collapse>
@@ -77,3 +81,20 @@ export class NavMenu extends Component {
         );
     }
 }
+
+const mapStateToProps = store => {
+    console.log(store);
+    return {
+        IsAuthentication: store.authentication.IsAuthentication
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    setIsAuth: flag => dispatch( setAuthFlag({
+        type: 'SET_VALUE',
+        payload: flag
+    })),
+});
+ 
+// в наш компонент App, с помощью connect(mapStateToProps)
+export default connect(mapStateToProps,mapDispatchToProps)(NavMenu);

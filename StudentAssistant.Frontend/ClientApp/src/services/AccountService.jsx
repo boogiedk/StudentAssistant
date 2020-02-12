@@ -1,6 +1,8 @@
 import RestService from "./RestService";
 import ToastNotificationService from "./ToastNotificationService";
 import {history} from "../helpers/history";
+import {connect} from "react-redux";
+import {setValue} from "../redux/actions/authenticationAction";
 
 const restService = new RestService();
 const toastNotificationService = new ToastNotificationService();
@@ -50,6 +52,7 @@ export default class AccountService {
         return restService.post(path, registerUser)
             .then(response => {
                 if (this.validateResponse(response)) {
+                    
                     return {
                         success: true
                     };
@@ -64,7 +67,7 @@ export default class AccountService {
 
     logout() {
         localStorage.removeItem('token');
-        history.push('/login');
+      //  history.push('/login');
         return {
             success: true
         };
@@ -107,5 +110,6 @@ export default class AccountService {
                 return false;
         }
     }
-
 }
+
+
