@@ -27,6 +27,7 @@ namespace StudentAssistant.Backend.Controllers
     public class AccountController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtTokenFactory _jwtTokenFactory;
         private readonly ApplicationDbContext _context;
@@ -35,11 +36,12 @@ namespace StudentAssistant.Backend.Controllers
         public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IJwtTokenFactory jwtTokenFactory, ApplicationDbContext context, IAccountService accountService)
+            IJwtTokenFactory jwtTokenFactory, ApplicationDbContext context, IAccountService accountService, RoleManager<IdentityRole> roleManager)
         {
             _jwtTokenFactory = jwtTokenFactory ?? throw new ArgumentNullException(nameof(signInManager));
             _context = context;
             _accountService = accountService;
+            _roleManager = roleManager;
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
@@ -57,6 +59,7 @@ namespace StudentAssistant.Backend.Controllers
             [FromBody] AccountRegisterRequest model,
             CancellationToken cancellationToken)
         {
+            model.ApplicationRoles = IdentityRoles.Student;
             var user = new IdentityUser(model.Login);
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -71,9 +74,47 @@ namespace StudentAssistant.Backend.Controllers
                     Code = "IdentityRoleError",
                     Description = "Can't registered with role Administrator"
                 }));
-            
-            await _userManager.AddToRoleAsync(user, model.ApplicationRoles.Humanize());
-            
+
+            await _roleManager.CreateAsync(new IdentityRole(model.ApplicationRoles.Humanize()));
+
+              await _userManager.AddToRoleAsync(user, model.ApplicationRoles.Humanize());
+
+            switch (model.ApplicationRoles)
+            {
+                case IdentityRoles.Student:
+
+                    var group = _context.StudyGroups.FirstOrDefault(w => w.Name == model.GroupName) ??
+                                throw new NullReferenceException();
+
+                    var user2 = new StudentModel
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                     //   IdentityUser = user,
+                        StudyGroupModel = group
+                    };
+                    
+                     _context.Students.Add(user2);
+                    break;
+               
+                case IdentityRoles.Teacher:
+                    await _context.Teachers.AddAsync(new TeacherModel()
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        IdentityUser = user
+                    }, cancellationToken);
+                    break;
+                case IdentityRoles.Administrator:
+                    break;
+                case IdentityRoles.User:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
             var response = new AccountRegisterResponse {Token = token, Success = true};
 

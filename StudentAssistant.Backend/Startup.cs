@@ -124,6 +124,7 @@ namespace StudentAssistant.Backend
             services.AddScoped<ICourseScheduleDatabaseService, CourseScheduleDatabaseService>();
             services.AddScoped<IControlWeekDatabaseService, ControlWeekDatabaseService>();
             services.AddScoped<IExamScheduleDatabaseService, ExamScheduleDatabaseService>();
+            services.AddScoped<IAccountService,AccountService>();
 
             services.AddSingleton(mapper);
 

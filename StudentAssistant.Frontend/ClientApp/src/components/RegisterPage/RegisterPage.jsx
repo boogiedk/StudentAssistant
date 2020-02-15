@@ -13,6 +13,8 @@ export default class RegisterPage extends React.Component {
                 lastName: '',
                 login: '', 
                 groupName:'',
+                email:'',
+                role:0,
                 password: ''
             },
             submitted: false
@@ -78,6 +80,23 @@ export default class RegisterPage extends React.Component {
                         <div className="requiredNotify">Group name is required</div>
                         }
                     </div>
+
+                    <div className={'form-group' + (submitted && !user.email ? ' has-error' : '')}>
+                        <label htmlFor="email">Email</label>
+                        <input type="text" className="form-control" name="email" value={user.email} onChange={this.handleChange} />
+                        {submitted && !user.email &&
+                        <div className="requiredNotify">Email is required</div>
+                        }
+                    </div>
+
+                    <div className={'form-group' + (submitted && !user.role ? ' has-error' : '')}>
+                        <label htmlFor="role">Role</label>
+                        <input type="text" className="form-control" name="role" value={user.role} onChange={this.handleChange} />
+                        {submitted && !user.role &&
+                        <div className="requiredNotify">Role is required</div>
+                        }
+                    </div>
+                    
                     <div className={'form-group' + (submitted && !user.login ? ' has-error' : '')}>
                         <label htmlFor="login">Username</label>
                         <input type="text" className="form-control" name="login" value={user.login} onChange={this.handleChange} />

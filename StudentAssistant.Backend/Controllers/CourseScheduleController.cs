@@ -19,7 +19,6 @@ namespace StudentAssistant.Backend.Controllers
     [Produces("application/json")]
     [Route("api/v1/schedule")]
     [EnableCors("CorsPolicy")]
-    [Authorize]
     public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
