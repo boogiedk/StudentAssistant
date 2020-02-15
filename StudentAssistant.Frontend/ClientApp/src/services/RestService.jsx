@@ -7,7 +7,8 @@ export default class RestService {
     get(path, params) {
        return axios.get(this.url(backendUrl, path), {
             headers: this.headers(),
-            params: params
+            params: params,
+            withCredentials:true
         })
             .then(response => {
                 return response;
@@ -29,6 +30,7 @@ export default class RestService {
                return error.response;
             });
     }
+    
 
     url(url, path) {
         return url + path;

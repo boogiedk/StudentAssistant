@@ -2,12 +2,9 @@ import React, {Component} from 'react';
 import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import './NavMenu.css';
-
-import {connect} from "react-redux";
-import {setAuthFlag} from "../../redux/actions/authenticationAction";
 import {history} from "../../helpers/history";
 
- class NavMenu extends Component {
+ export default class NavMenu extends Component {
     static displayName = 'NavMenu.name';
 
     constructor(props) {
@@ -25,7 +22,7 @@ import {history} from "../../helpers/history";
     }
 
      logout() {
-         this.props.setIsAuth(false);
+        localStorage.setItem("isAuth",false);
          history.push('/login');
          return {
              success: true
@@ -35,7 +32,7 @@ import {history} from "../../helpers/history";
 
      render() {
         const LogInOutNavLink = (() => {
-            const isAuthorizationUser = this.props.IsAuthentication;
+            const isAuthorizationUser = localStorage.getItem("isAuth")==='true';
             console.log(isAuthorizationUser);
             if (isAuthorizationUser) {
 
@@ -71,7 +68,7 @@ import {history} from "../../helpers/history";
                                         экзаменов</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <LogInOutNavLink />
+                                    <NavLink tag={Link} className="text-dark" to="/profile">Профиль</NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>
@@ -81,20 +78,3 @@ import {history} from "../../helpers/history";
         );
     }
 }
-
-const mapStateToProps = store => {
-    console.log(store);
-    return {
-        IsAuthentication: store.authentication.IsAuthentication
-    }
-};
-
-const mapDispatchToProps = dispatch => ({
-    setIsAuth: flag => dispatch( setAuthFlag({
-        type: 'SET_VALUE',
-        payload: flag
-    })),
-});
- 
-// в наш компонент App, с помощью connect(mapStateToProps)
-export default connect(mapStateToProps,mapDispatchToProps)(NavMenu);

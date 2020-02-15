@@ -33,7 +33,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 try
                 {
-                    _context.CourseScheduleDatabaseModels.AddRange(input);
+                    _context.CourseSchedules.AddRange(input);
 
                     _context.SaveChanges();
 
@@ -58,7 +58,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     throw new NotSupportedException();
                 }
 
-                var courseScheduleDatabaseModel = _context.CourseScheduleDatabaseModels
+                var courseScheduleDatabaseModel = _context.CourseSchedules
                     .Include(i => i.TeacherModel)
                     .Include(d => d.StudyGroupModel)
                     .Where(d => (d.CourseType == CourseType.Lecture
@@ -96,7 +96,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
         public void MarkLikeDeleted()
         {
-            var notDeletedList = _context.CourseScheduleDatabaseModels
+            var notDeletedList = _context.CourseSchedules
                 .Where(d => d.IsDeleted == false &&
                             (d.CourseType == CourseType.Lecture
                              || d.CourseType == CourseType.Practicte
@@ -106,7 +106,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
 
-            _context.CourseScheduleDatabaseModels.UpdateRange(notDeletedList);
+            _context.CourseSchedules.UpdateRange(notDeletedList);
         }
 
         public async Task UpdateAsync(List<CourseScheduleDatabaseModel> input, CancellationToken cancellationToken)
@@ -115,19 +115,19 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var csd = _context.CourseScheduleDatabaseModels.Where
+                var csd = _context.CourseSchedules.Where
                 (w => w.CourseType == CourseType.Lecture
                       || w.CourseType == CourseType.Practicte
                       || w.CourseType == CourseType.LaboratoryWork
                       || w.CourseType == CourseType.Other);
 
-                _context.CourseScheduleDatabaseModels
+                _context.CourseSchedules
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
 
                 // берем из бд всех преподов
-                var teachersDbAll = _context.TeacherDatabaseModels.ToList();
+                var teachersDbAll = _context.Teachers.ToList();
 
                 // изменяем модели преподов во входящем списке
                 foreach (var model in input)
@@ -137,7 +137,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 // группы
-                var studyGroupDbAll = _context.StudyGroupDatabaseModels.ToList();
+                var studyGroupDbAll = _context.StudyGroups.ToList();
 
                 // изменяем модели групп во входящем списке
                 foreach (var model in input)

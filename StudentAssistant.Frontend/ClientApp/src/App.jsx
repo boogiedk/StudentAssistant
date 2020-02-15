@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router';
+import React from 'react';
+import {Route} from 'react-router-dom';
 import {Layout} from './components/Layout';
 import {Home} from './components/Home/Home';
 import {courseSchedule} from './components/CourseSchedule/courseSchedule'
@@ -9,12 +9,14 @@ import {examSchedule} from "./components/ExamSchedule/examSchedule";
 import {ToastContainer} from "react-toastify";
 import LoginPage from "./components/LoginPage/LoginPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import {PrivateRoute} from "./components/PrivateRoute/PrivateRoute";
+import ProfilePage from "./components/Profile/ProfilePage";
 
-export default class App extends Component {
+export default class App extends React.Component {
     static displayName = 'App.name';
     
     render() {
+        
         return (
             <Layout>
                 <ToastContainer/>
@@ -25,6 +27,7 @@ export default class App extends Component {
                 <Route path='/examSchedule' component={examSchedule}/>
                 <Route path='/login' component={LoginPage}/>
                 <Route path='/register' component={RegisterPage}/>
+                <PrivateRoute path='/profile' component={ProfilePage}/>
             </Layout>
         );
     }

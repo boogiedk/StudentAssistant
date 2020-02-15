@@ -1,10 +1,18 @@
+using System;
+using Microsoft.AspNetCore.Identity;
+
 namespace StudentAssistant.DbLayer.Models
 {
     /// <summary>
     /// Студент.
     /// </summary>
-    public class StudentModel : UserModel
+    public class StudentModel : IProfileInfo
     {
+        /// <summary>
+        /// Идентификатор пользователя системы.
+        /// </summary>
+        public Guid Id { get; set; }
+        
         /// <summary>
         /// Имя.
         /// </summary>
@@ -24,5 +32,10 @@ namespace StudentAssistant.DbLayer.Models
         /// Учебная группа.
         /// </summary>
         public StudyGroupModel StudyGroupModel { get; set; }
+        
+        /// <summary>
+        /// Пользователь приложения.
+        /// </summary>
+        public IdentityUser IdentityUser { get; set; }
     }
 }

@@ -203,7 +203,7 @@ namespace StudentAssistant.Backend
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 MinimumSameSitePolicy = SameSiteMode.None,
-                HttpOnly = HttpOnlyPolicy.Always,
+             //   HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.None
             });
             //TODO: вынести в отдельный мидлвар

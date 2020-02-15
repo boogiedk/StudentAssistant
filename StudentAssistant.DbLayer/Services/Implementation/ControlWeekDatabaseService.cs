@@ -27,7 +27,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 {
                     foreach (var courseScheduleDatabaseModel in input)
                     {
-                        _context.CourseScheduleDatabaseModels.Add(courseScheduleDatabaseModel);
+                        _context.CourseSchedules.Add(courseScheduleDatabaseModel);
 
                         await _context.SaveChangesAsync(cancellationToken);
                     }
@@ -50,7 +50,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                return await _context.CourseScheduleDatabaseModels
+                return await _context.CourseSchedules
                     .Include(d => d.StudyGroupModel)
                     .Include(d => d.TeacherModel)
                     .Where(w => w.CourseType == CourseType.ControlCourse
@@ -69,10 +69,10 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var csd = _context.CourseScheduleDatabaseModels
+                var csd = _context.CourseSchedules
                     .Where(w => w.CourseType == CourseType.ControlCourse);
 
-                _context.CourseScheduleDatabaseModels
+                _context.CourseSchedules
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
@@ -98,7 +98,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }*/
 
                 // берем из бд всех преподов
-                var teachersDbAll = _context.TeacherDatabaseModels.ToList();
+                var teachersDbAll = _context.Teachers.ToList();
 
                 // изменяем модели преподов во входящем списке
                 foreach (var model in input)
@@ -108,7 +108,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 // группы
-                var studyGroupDbAll = _context.StudyGroupDatabaseModels.ToList();
+                var studyGroupDbAll = _context.StudyGroups.ToList();
 
                 // изменяем модели групп во входящем списке
                 foreach (var model in input)
@@ -129,14 +129,14 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
         public void MarkLikeDeleted()
         {
-            var notDeletedList = _context.CourseScheduleDatabaseModels
+            var notDeletedList = _context.CourseSchedules
                 .Where(d => d.IsDeleted == false
                             && d.CourseType == CourseType.ControlCourse)
                 .ToList();
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
             
-            _context.CourseScheduleDatabaseModels.UpdateRange(notDeletedList);
+            _context.CourseSchedules.UpdateRange(notDeletedList);
         }
     }
 }

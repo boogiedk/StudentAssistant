@@ -1,8 +1,6 @@
 import RestService from "./RestService";
 import ToastNotificationService from "./ToastNotificationService";
-import {history} from "../helpers/history";
-import {connect} from "react-redux";
-import {setValue} from "../redux/actions/authenticationAction";
+import {history} from "./../helpers/history"
 
 const restService = new RestService();
 const toastNotificationService = new ToastNotificationService();
@@ -66,11 +64,40 @@ export default class AccountService {
     }
 
     logout() {
-        localStorage.removeItem('token');
-      //  history.push('/login');
-        return {
-            success: true
-        };
+        history.push('/login');
+        let path = '/api/v1/account/logout';
+        return restService.get(path).then(response => {
+            if (this.validateResponse(response)) {
+                return {
+                    success: true
+                };
+            } else {
+                return {
+                    success: false
+                };
+            }
+        });
+    }
+
+    getProfile()
+    {
+        let path = '/api/v1/account/get';
+
+        return restService.get(path)
+            .then(response => {
+                console.log(response);
+                if (this.validateResponse(response)) {
+                    return {
+                        user:response.data,
+                        success: true
+                    };
+                } else {
+                    toastNotificationService.notify(response.status, "Unauthorized.");
+                    return {
+                        success: false
+                    };
+                }
+            });
     }
 
 
@@ -88,6 +115,22 @@ export default class AccountService {
         }
 
         return true;
+    }
+
+
+    isAuth() {
+        let path = '/api/v1/account/isAuth';
+        return restService.get(path).then(response => {
+            if (this.validateResponse(response)) {
+                return {
+                    success: true
+                };
+            } else {
+                return {
+                    success: false
+                };
+            }
+        });
     }
 
     validateResponse(response) {
