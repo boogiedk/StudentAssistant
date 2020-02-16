@@ -29,7 +29,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 {
                     foreach (var examScheduleDatabaseModel in input)
                     {
-                        _context.ExamScheduleDatabaseModels.Add(examScheduleDatabaseModel);
+                        _context.ExamSchedules.Add(examScheduleDatabaseModel);
 
                         await _context.SaveChangesAsync(cancellationToken);
                     }
@@ -55,7 +55,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     throw new NotSupportedException();
                 }
 
-                var examScheduleDatabaseModels = _context.ExamScheduleDatabaseModels
+                var examScheduleDatabaseModels = _context.ExamSchedules
                     .Include(i => i.TeacherModel)
                     .Include(d => d.StudyGroupModel)
                     .ToList();
@@ -77,7 +77,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
         public void MarkLikeDeleted()
         {
-            var notDeletedList = _context.ExamScheduleDatabaseModels
+            var notDeletedList = _context.ExamSchedules
                 .Where(d => d.IsDeleted == false
                             & (d.CourseType ==
                                CourseType.ExamCourse
@@ -88,7 +88,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
             notDeletedList.ForEach(s => s.IsDeleted = true);
 
-            _context.ExamScheduleDatabaseModels.UpdateRange(notDeletedList);
+            _context.ExamSchedules.UpdateRange(notDeletedList);
         }
 
         public async Task UpdateAsync(List<ExamScheduleDatabaseModel> input, CancellationToken cancellationToken)
@@ -97,19 +97,19 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var csd = _context.ExamScheduleDatabaseModels
+                var csd = _context.ExamSchedules
                     .Where(w =>
                         w.CourseType == CourseType.ExamCourse
                         || w.CourseType == CourseType.СonsultationCourse
                     );
 
-                _context.ExamScheduleDatabaseModels
+                _context.ExamSchedules
                     .RemoveRange(csd);
 
                 _context.SaveChanges();
                 
                 // берем из бд всех преподов
-                var teachersDbAll = _context.TeacherDatabaseModels.ToList();
+                var teachersDbAll = _context.Teachers.ToList();
 
                 // изменяем модели преподов во входящем списке
                 foreach (var model in input)
@@ -119,7 +119,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                 }
 
                 // группы
-                var studyGroupDbAll = _context.StudyGroupDatabaseModels.ToList();
+                var studyGroupDbAll = _context.StudyGroups.ToList();
 
                 // изменяем модели групп во входящем списке
                 foreach (var model in input)

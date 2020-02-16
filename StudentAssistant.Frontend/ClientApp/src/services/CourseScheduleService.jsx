@@ -51,6 +51,8 @@ export default class CourseScheduleService {
     validateCourseScheduleModel(courseScheduleModel) {
         if ((typeof courseScheduleModel === "undefined") ||
             (courseScheduleModel === null) || (
+                typeof courseScheduleModel.coursesViewModel === "undefined" ||
+                courseScheduleModel.coursesViewModel===null ||
                 courseScheduleModel.coursesViewModel.length === 1 &
                 courseScheduleModel.coursesViewModel[0].courseName === ""
                 || courseScheduleModel.teacherModel === null

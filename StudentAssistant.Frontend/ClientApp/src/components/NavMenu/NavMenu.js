@@ -3,12 +3,11 @@ import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLin
 import {Link} from 'react-router-dom';
 import './NavMenu.css';
 
-export class NavMenu extends Component {
+export default class NavMenu extends Component {
     static displayName = 'NavMenu.name';
 
     constructor(props) {
         super(props);
-
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
             collapsed: true
@@ -35,13 +34,16 @@ export class NavMenu extends Component {
                                     <NavLink tag={Link} className="text-dark" to="/">Главная</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/courseSchedule">Расписание пар</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/courseSchedule">Расписание
+                                        пар</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/controlWeek">Расписание зачётов</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/controlWeek">Расписание
+                                        зачётов</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/examSchedule">Расписание экзаменов</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/examSchedule">Расписание
+                                        экзаменов</NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>

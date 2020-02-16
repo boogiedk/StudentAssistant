@@ -14,8 +14,13 @@
     <Compile Remove="Pages\**" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="Pages\**" />
+    <Content Include="ClientApp\src\components\LoginPage\LoginPage.css" />
+    <Content Include="ClientApp\src\components\LoginPage\LoginPage.jsx" />
     <Content Include="ClientApp\src\components\ControlWeek\controlWeek.jsx" />
     <Content Include="ClientApp\src\components\ExamSchedule\examSchedule.jsx" />
+    <Content Include="ClientApp\src\components\PrivateRoute\PrivateRoute.jsx" />
+    <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.css" />
+    <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />
     <Content Include="ClientApp\src\services\ControlWeekService.jsx" />
     <Content Include="ClientApp\src\services\CourseScheduleService.jsx" />
@@ -32,14 +37,14 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.1" />
 
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>

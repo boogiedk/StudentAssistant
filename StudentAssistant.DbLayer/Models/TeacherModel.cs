@@ -1,14 +1,20 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace StudentAssistant.DbLayer.Models
 {
     /// <summary>
     /// Преподаватель.
     /// </summary>
-    public class TeacherModel : UserModel
+    public class TeacherModel
     {
+        /// <summary>
+        /// Идентификатор пользователя системы.
+        /// </summary>
+        public Guid Id { get; set; }
+        
         /// <summary>
         /// Имя.
         /// </summary>
@@ -28,5 +34,10 @@ namespace StudentAssistant.DbLayer.Models
         /// Полное имя (временно)
         /// </summary>
         public string FullName { get; set; }
+        
+        /// <summary>
+        /// Пользователь приложения.
+        /// </summary>
+        public IdentityUser IdentityUser { get; set; }
     }
 }

@@ -7,27 +7,30 @@ export default class RestService {
     get(path, params) {
        return axios.get(this.url(backendUrl, path), {
             headers: this.headers(),
-            params: params
+            params: params,
+            withCredentials:true
         })
             .then(response => {
                 return response;
             }) 
             .catch((error) => {
-                console.log(error);
+               return error.response;
             });
     }
 
     post(path, body) {
         return axios.post(this.url(backendUrl, path), body, {
-            headers: this.headers()
+            headers: this.headers(),
+            withCredentials:true
         })
             .then(function (response) {
                 return response;
             })
             .catch(function (error) {
-                console.log(error);
+               return error.response;
             });
     }
+    
 
     url(url, path) {
         return url + path;

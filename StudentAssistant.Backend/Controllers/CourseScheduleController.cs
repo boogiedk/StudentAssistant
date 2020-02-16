@@ -19,7 +19,6 @@ namespace StudentAssistant.Backend.Controllers
     [Produces("application/json")]
     [Route("api/v1/schedule")]
     [EnableCors("CorsPolicy")]
-    [AllowAnonymous]
     public class CourseScheduleController : Controller
     {
         private readonly ICourseScheduleService _courseScheduleService;
@@ -80,6 +79,7 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
         [HttpGet("today")]
+        [Authorize(Roles = "Student")]
         public IActionResult GetToday()
         {
             try

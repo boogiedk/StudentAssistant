@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default class ToastNotificationService {
 
     notify(statusCode, message) {
-        
+
         switch (statusCode) {
             case 200:
                 toast.success(message, {
@@ -18,16 +18,9 @@ export default class ToastNotificationService {
                 });
                 break;
             case 500:
-                toast.error(message, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
-                break;
             case 404:
+            case 400:
+            case 401:
                 toast.error(message, {
                     position: "top-right",
                     autoClose: 3000,
@@ -37,7 +30,7 @@ export default class ToastNotificationService {
                     draggable: true,
                 });
                 break;
-                
+
             default:
                 toast.info(message, {
                     position: "top-right",
@@ -50,7 +43,35 @@ export default class ToastNotificationService {
                 break;
         }
     }
-    
+
+    notifyErrorList(status, errorList) {
+        errorList.map((item) => {
+            return this.notify(status, item.description)
+        });
+    }
+
+    notifyError(message) {
+        toast.error(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    }
+
+    notifySuccess(message) {
+        toast.success(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    }
+
     notifyInfo(message) {
         toast.info(message, {
             position: "top-right",

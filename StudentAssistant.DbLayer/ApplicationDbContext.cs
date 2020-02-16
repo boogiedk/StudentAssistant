@@ -12,14 +12,12 @@ namespace StudentAssistant.DbLayer
     public sealed class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext() => Database.EnsureCreated();
-        public DbSet<CourseScheduleDatabaseModel> CourseScheduleDatabaseModels { get; set; }
-        public DbSet<ExamScheduleDatabaseModel> ExamScheduleDatabaseModels { get; set; }
-        public DbSet<StudyGroupModel> StudyGroupDatabaseModels { get; set; }
-        public DbSet<TeacherModel> TeacherDatabaseModels { get; set; }
-
-        public DbSet<StudentModel> StudentModels { get; set; }
-
-        public DbSet<UserModel> UserModels { get; set; }
+        public DbSet<CourseScheduleDatabaseModel> CourseSchedules { get; set; }
+        public DbSet<ExamScheduleDatabaseModel> ExamSchedules { get; set; }
+        public DbSet<StudyGroupModel> StudyGroups { get; set; }
+        public DbSet<TeacherModel> Teachers { get; set; }
+        
+        public DbSet<StudentModel> Students { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
