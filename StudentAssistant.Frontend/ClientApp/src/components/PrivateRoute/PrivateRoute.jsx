@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Redirect, Route} from 'react-router-dom';
 import Cookies from 'js-cookie';
 import AccountService from "../../services/AccountService";

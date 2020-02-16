@@ -10,7 +10,6 @@ import {ToastContainer} from "react-toastify";
 import LoginPage from "./components/LoginPage/LoginPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
 import {PrivateRoute} from "./components/PrivateRoute/PrivateRoute";
-import ProfilePage from "./components/Profile/ProfilePage";
 
 export default class App extends React.Component {
     static displayName = 'App.name';
@@ -27,7 +26,6 @@ export default class App extends React.Component {
                 <Route path='/examSchedule' component={examSchedule}/>
                 <Route path='/login' component={LoginPage}/>
                 <Route path='/register' component={RegisterPage}/>
-                <PrivateRoute path='/profile' component={ProfilePage}/>
             </Layout>
         );
     }

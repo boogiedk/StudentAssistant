@@ -1,6 +1,5 @@
 import RestService from "./RestService";
 import ToastNotificationService from "./ToastNotificationService";
-import {history} from "./../helpers/history"
 
 const restService = new RestService();
 const toastNotificationService = new ToastNotificationService();
@@ -64,7 +63,6 @@ export default class AccountService {
     }
 
     logout() {
-        history.push('/login');
         let path = '/api/v1/account/logout';
         return restService.get(path).then(response => {
             if (this.validateResponse(response)) {
@@ -77,27 +75,6 @@ export default class AccountService {
                 };
             }
         });
-    }
-
-    getProfile()
-    {
-        let path = '/api/v1/account/get';
-
-        return restService.get(path)
-            .then(response => {
-                console.log(response);
-                if (this.validateResponse(response)) {
-                    return {
-                        user:response.data,
-                        success: true
-                    };
-                } else {
-                    toastNotificationService.notify(response.status, "Unauthorized.");
-                    return {
-                        success: false
-                    };
-                }
-            });
     }
 
 

@@ -8,7 +8,7 @@ namespace StudentAssistant.DbLayer.Models
     /// <summary>
     /// Преподаватель.
     /// </summary>
-    public class TeacherModel : IProfileInfo
+    public class TeacherModel
     {
         /// <summary>
         /// Идентификатор пользователя системы.

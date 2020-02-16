@@ -19,7 +19,6 @@
     <Content Include="ClientApp\src\components\ControlWeek\controlWeek.jsx" />
     <Content Include="ClientApp\src\components\ExamSchedule\examSchedule.jsx" />
     <Content Include="ClientApp\src\components\PrivateRoute\PrivateRoute.jsx" />
-    <Content Include="ClientApp\src\components\Profile\ProfilePage.js" />
     <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.css" />
     <Content Include="ClientApp\src\components\RegisterPage\RegisterPage.jsx" />
     <Content Include="ClientApp\src\components\TitleComponent\TitleComponent.jsx" />

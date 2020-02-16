@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using StudentAssistant.Backend.Interfaces;
 using StudentAssistant.Backend.Models.Account.Requests;
 using StudentAssistant.Backend.Models.Account.Responses;
-using StudentAssistant.Backend.Services;
 using StudentAssistant.DbLayer;
 using StudentAssistant.DbLayer.Models;
 
@@ -36,14 +35,17 @@ namespace StudentAssistant.Backend.Controllers
         public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IJwtTokenFactory jwtTokenFactory, ApplicationDbContext context, IAccountService accountService, RoleManager<IdentityRole> roleManager)
+            IJwtTokenFactory jwtTokenFactory, 
+            ApplicationDbContext context,
+            IAccountService accountService,
+            RoleManager<IdentityRole> roleManager)
         {
-            _jwtTokenFactory = jwtTokenFactory ?? throw new ArgumentNullException(nameof(signInManager));
+            _jwtTokenFactory = jwtTokenFactory;
             _context = context;
             _accountService = accountService;
             _roleManager = roleManager;
-            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -59,67 +61,12 @@ namespace StudentAssistant.Backend.Controllers
             [FromBody] AccountRegisterRequest model,
             CancellationToken cancellationToken)
         {
-            model.ApplicationRoles = IdentityRoles.Student;
-            var user = new IdentityUser(model.Login);
-            var result = await _userManager.CreateAsync(user, model.Password);
+           var response = await _accountService.Register(model,cancellationToken);
 
-            if (!result.Succeeded) return BadRequest(result.Errors);
-            cancellationToken.ThrowIfCancellationRequested();
-
-            await _signInManager.SignInAsync(user, true);
-
-            if (model.ApplicationRoles == IdentityRoles.Administrator)
-                return BadRequest(IdentityResult.Failed(new IdentityError
-                {
-                    Code = "IdentityRoleError",
-                    Description = "Can't registered with role Administrator"
-                }));
-
-            await _roleManager.CreateAsync(new IdentityRole(model.ApplicationRoles.Humanize()));
-
-              await _userManager.AddToRoleAsync(user, model.ApplicationRoles.Humanize());
-
-            switch (model.ApplicationRoles)
-            {
-                case IdentityRoles.Student:
-
-                    var group = _context.StudyGroups.FirstOrDefault(w => w.Name == model.GroupName) ??
-                                throw new NullReferenceException();
-
-                    var user2 = new StudentModel
-                    {
-                        Id = Guid.NewGuid(),
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                     //   IdentityUser = user,
-                        StudyGroupModel = group
-                    };
-                    
-                     _context.Students.Add(user2);
-                    break;
-               
-                case IdentityRoles.Teacher:
-                    await _context.Teachers.AddAsync(new TeacherModel()
-                    {
-                        Id = Guid.NewGuid(),
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        IdentityUser = user
-                    }, cancellationToken);
-                    break;
-                case IdentityRoles.Administrator:
-                    break;
-                case IdentityRoles.User:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
-            var response = new AccountRegisterResponse {Token = token, Success = true};
-
-            //TODO: вынести в отдельный мидлвар
-            HttpContext.Response.Cookies.Append(".AspNetCore.Application.Token", token,
+           if (!response.IdentityResult.Succeeded) return BadRequest(response.IdentityResult.Errors);
+           
+           //TODO: вынести в отдельный мидлвар
+            HttpContext.Response.Cookies.Append(".AspNetCore.Application.Token", response.Token,
                 new CookieOptions
                 {
                     HttpOnly = true,
@@ -143,9 +90,9 @@ namespace StudentAssistant.Backend.Controllers
             CancellationToken cancellationToken)
         {
             var result = await _signInManager.PasswordSignInAsync(
-                model?.Login, 
-                model?.Password, 
-                false, 
+                model?.Login,
+                model?.Password,
+                false,
                 false);
 
             if (!result.Succeeded)
@@ -155,7 +102,7 @@ namespace StudentAssistant.Backend.Controllers
 
             var user = await _userManager.FindByNameAsync(model?.Login);
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
-            var response = new AccountLoginResponse {Token = token,Success = true};
+            var response = new AccountLoginResponse {Token = token, Success = true};
 
             //TODO: вынести в отдельный мидлвар
             HttpContext.Response.Cookies.Append(".AspNetCore.Application.Token", token,
@@ -165,7 +112,7 @@ namespace StudentAssistant.Backend.Controllers
                     MaxAge = TimeSpan.FromDays(7)
                 }
             );
-            
+
             HttpContext.Response.Cookies.Append("isAuth", "true",
                 new CookieOptions
                 {
@@ -183,7 +130,7 @@ namespace StudentAssistant.Backend.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("get")]
-        [ProducesResponseType(typeof(AccountGetResponseModel), 200)]
+        [ProducesResponseType(typeof(ProfileViewModel), 200)]
         [Authorize]
         public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
@@ -193,10 +140,9 @@ namespace StudentAssistant.Backend.Controllers
 
             var response = await _accountService.Get(requestUserId);
 
-           return Ok(response);
+            return Ok(response);
         }
         
-
         /// <summary>
         /// Метод для получения флага авторизован пользователь или нет.
         /// </summary>
@@ -216,13 +162,13 @@ namespace StudentAssistant.Backend.Controllers
                     HttpOnly = false,
                     MaxAge = TimeSpan.FromDays(7)
                 });
-            
+
             return Ok(new AccountIsAuthenticationResponseModel
             {
                 Success = true
             });
         }
-        
+
         /// <summary>
         /// Метод для получения флага авторизован пользователь или нет.
         /// </summary>
@@ -231,57 +177,14 @@ namespace StudentAssistant.Backend.Controllers
         [HttpGet("logout")]
         [ProducesResponseType(typeof(AccountLogoutResponseModel), 200)]
         public IActionResult Logout()
-        { 
+        {
             Response.Cookies.Delete("isAuth");
             Response.Cookies.Delete(".AspNetCore.Application.Token");
-            
+
             return Ok(new AccountLogoutResponseModel
             {
                 Success = true
             });
         }
-    }
-    
-    /// <summary>
-    /// Модель ответа.
-    /// </summary>
-    public class AccountLogoutResponseModel
-    {
-        /// <summary>
-        /// Успешность операции.
-        /// </summary>
-        public bool Success { get; set; }
-    }
-
-    /// <summary>
-    /// Модель ответа.
-    /// </summary>
-    public class AccountIsAuthenticationResponseModel
-    {
-        /// <summary>
-        /// Успешность операции.
-        /// </summary>
-        public bool Success { get; set; }
-    }
-
-    /// <summary>
-    /// Модель ответа.
-    /// </summary>
-    public class AccountGetResponseModel
-    {
-        /// <summary>
-        /// Пользователь.
-        /// </summary>
-        public IdentityUserViewModel IdentityUser { get; set; }
-    }
-
-    public class IdentityUserViewModel
-    {
-        public Guid Id { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public bool EmailConfirmed { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool TwoFactorEnabled { get; set; }
     }
 }

@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import "./LoginPage.css";
 import 'react-toastify/dist/ReactToastify.css';
 import AccountService from "../../services/AccountService";
-import {history} from "../../helpers/history";
 
 const accountService = new AccountService();
 
@@ -40,8 +39,8 @@ export default class LoginPage extends React.Component {
         if (login && password) {
             accountService.login(login, password).then(result => {
                 if (result.success) {
-                    const {from} = this.props.location.state || {from: {pathname: "/"}};
-                    this.props.history.push(from);
+                   // const {from} = this.props.location.state || {from: {pathname: "/"}};
+                   // this.props.history.push(from);
                 }
             });
         }

@@ -6,7 +6,7 @@ namespace StudentAssistant.DbLayer.Models
     /// <summary>
     /// Студент.
     /// </summary>
-    public class StudentModel : IProfileInfo
+    public class StudentModel
     {
         /// <summary>
         /// Идентификатор пользователя системы.

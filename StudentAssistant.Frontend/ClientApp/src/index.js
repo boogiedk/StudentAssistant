@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import App from './App.jsx';
 import registerServiceWorker from './registerServiceWorker';
-import {history} from "./helpers/history";
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');

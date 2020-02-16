@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import './NavMenu.css';
-import {history} from "../../helpers/history";
 
- export default class NavMenu extends Component {
+export default class NavMenu extends Component {
     static displayName = 'NavMenu.name';
 
     constructor(props) {
@@ -21,28 +20,7 @@ import {history} from "../../helpers/history";
         });
     }
 
-     logout() {
-        localStorage.setItem("isAuth",false);
-         history.push('/login');
-         return {
-             success: true
-         };
-     }
-
-
-     render() {
-        const LogInOutNavLink = (() => {
-            const isAuthorizationUser = localStorage.getItem("isAuth")==='true';
-            console.log(isAuthorizationUser);
-            if (isAuthorizationUser) {
-
-                return <NavLink tag={Link} className="text-dark" onClick={this.logout} to="/">Выйти</NavLink>
-            }
-
-            return <NavLink tag={Link} className="text-dark" to="/login">Войти</NavLink>
-        });
-        
-
+    render() {
         return (
             <header>
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
@@ -66,9 +44,6 @@ import {history} from "../../helpers/history";
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/examSchedule">Расписание
                                         экзаменов</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/profile">Профиль</NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>
