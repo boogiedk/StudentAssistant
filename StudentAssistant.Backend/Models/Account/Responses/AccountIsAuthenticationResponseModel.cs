@@ -1,4 +1,4 @@
-namespace StudentAssistant.Backend.Controllers
+namespace StudentAssistant.Backend.Models.Account.Responses
 {
     /// <summary>
     /// Модель ответа.

@@ -172,11 +172,12 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Theory]
-        [InlineData("11-11-2018", true)]
-        [InlineData("01-01-2019", false)]
-        [InlineData("02-28-2021", true)]
+        [InlineData("11-11-2018", true, true)]
+        [InlineData("01-01-2019", true, false)]
+        [InlineData("02-28-2021", false, true)]
         public void IsHoliday_IsHolidayValue_ReturnsExpectedValue(
             DateTime dateTime,
+            bool isSixDayWeek,
             bool expected)
         {
             // Arrange
@@ -184,7 +185,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
             // Act
             var service = new ParityOfTheWeekService(_parityOfTheWeekConfigurationModel.Object, _mockMapper.Object);
-            var result = service.IsHoliday(dateTimeTest);
+            var result = service.IsHoliday(dateTimeTest,isSixDayWeek);
 
             // Assert
             Assert.Equal(expected, result);

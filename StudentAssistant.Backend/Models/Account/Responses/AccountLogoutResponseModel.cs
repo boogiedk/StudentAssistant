@@ -1,4 +1,6 @@
-namespace StudentAssistant.Backend.Controllers
+using Microsoft.AspNetCore.Identity;
+
+namespace StudentAssistant.Backend.Models.Account.Responses
 {
     /// <summary>
     /// Модель ответа.
@@ -6,8 +8,8 @@ namespace StudentAssistant.Backend.Controllers
     public class AccountLogoutResponseModel
     {
         /// <summary>
-        /// Успешность операции.
+        /// Состояние операции.
         /// </summary>
-        public bool Success { get; set; }
+        public IdentityResult IdentityResult { get; set; }
     }
 }
