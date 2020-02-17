@@ -17,6 +17,7 @@ using StudentAssistant.Backend.Models.Account.Requests;
 using StudentAssistant.Backend.Models.Account.Responses;
 using StudentAssistant.DbLayer;
 using StudentAssistant.DbLayer.Models;
+using AccountIsAuthenticationResponseModel = StudentAssistant.Backend.Models.Account.Responses.AccountIsAuthenticationResponseModel;
 
 namespace StudentAssistant.Backend.Controllers
 {
@@ -26,24 +27,18 @@ namespace StudentAssistant.Backend.Controllers
     public class AccountController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtTokenFactory _jwtTokenFactory;
-        private readonly ApplicationDbContext _context;
         private readonly IAccountService _accountService;
 
         public AccountController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IJwtTokenFactory jwtTokenFactory, 
-            ApplicationDbContext context,
-            IAccountService accountService,
-            RoleManager<IdentityRole> roleManager)
+            IJwtTokenFactory jwtTokenFactory,
+            IAccountService accountService)
         {
             _jwtTokenFactory = jwtTokenFactory;
-            _context = context;
             _accountService = accountService;
-            _roleManager = roleManager;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -102,7 +97,7 @@ namespace StudentAssistant.Backend.Controllers
 
             var user = await _userManager.FindByNameAsync(model?.Login);
             var token = await _jwtTokenFactory.CreateJwtToken(user.Id);
-            var response = new AccountLoginResponse {Token = token, Success = true};
+            var response = new AccountLoginResponse {Token = token, IdentityResult = IdentityResult.Success};
 
             //TODO: вынести в отдельный мидлвар
             HttpContext.Response.Cookies.Append(".AspNetCore.Application.Token", token,
@@ -183,7 +178,7 @@ namespace StudentAssistant.Backend.Controllers
 
             return Ok(new AccountLogoutResponseModel
             {
-                Success = true
+                IdentityResult = IdentityResult.Success
             });
         }
     }
