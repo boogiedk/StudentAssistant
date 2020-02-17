@@ -4,6 +4,10 @@ using Xunit;
 
 namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 {
+    /// <summary>
+    /// Принцип именования методов:
+    /// [Тестируемый метод]_[Возвращаемое значение]_[Ожидаемое поведение]
+    /// </summary>
     public class JwtTokenFactoryTests
     {
         [Theory]

@@ -191,7 +191,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             Assert.Equal(expected, result);
         }
 
-        /*[Theory]
+        [Theory]
         [MemberData(nameof(GetParityOfTheWeekModel))]
         public void PrepareViewModel_ViewModel_ReturnsExpectedValue(
            IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel,
@@ -209,7 +209,26 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
             // Assert
             Assert.True(isCompare);
-        }*/
+        }
+        
+        [Theory]
+        [MemberData(nameof(GetParityOfTheWeekConfigurationModel))]
+        public void GenerateDataOfTheWeek_ParityOfTheWeekModel_ReturnsExpectedValue(
+            DateTime dateTime, 
+            IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel, 
+            ParityOfTheWeekModel expected)
+        {
+            // Arrange
+            var dateTimeTest = dateTime;
+
+            // Act
+            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mapper);
+            var result = service.GenerateDataOfTheWeek(dateTimeTest);
+            var isCompare = Compare(result, expected);
+
+            // Assert
+            Assert.True(isCompare);
+        }
 
         #region Help Methods
 
