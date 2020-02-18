@@ -49,7 +49,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     ParityOfWeekCount = GetCountParityOfWeek(dateTimeOffsetRequest),
                     PartOfSemester = GetPartOfSemester(dateTimeOffsetRequest),
                     NumberOfSemester = GetNumberOfSemester(dateTimeOffsetRequest, _parityOfTheWeekConfigurationModel.StartLearningYear),
-                    DayOfName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(dateTimeOffsetRequest.DayOfWeek),
+                    DayOfName = new CultureInfo("ru-RU").DateTimeFormat.GetDayName(dateTimeOffsetRequest.DayOfWeek),
                     StatusDay = GetStatusDay(dateTimeOffsetRequest)
                 };
 
