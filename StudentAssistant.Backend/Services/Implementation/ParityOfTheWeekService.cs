@@ -202,7 +202,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             var resultViewModel = _mapper.Map<ParityOfTheWeekViewModel>(input);
 
             resultViewModel.ParityOfWeekToday = input.ParityOfWeekToday ? "Чётная" : "Нечётная";
-            resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D", CultureInfo.CurrentCulture);
+            resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D", new CultureInfo("ru-RU"));
             resultViewModel.StatusDay = input.StatusDay.Humanize();
             resultViewModel.IsParity = input.ParityOfWeekToday;
             // тестовый вариант
