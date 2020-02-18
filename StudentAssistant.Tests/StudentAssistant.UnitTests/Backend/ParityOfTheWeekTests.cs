@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using AutoFixture;
 using AutoFixture.AutoMoq;
@@ -335,7 +336,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                     },
                     new ParityOfTheWeekViewModel
                     {
-                        DateTimeRequest = "11 ноября 2018 г.",
+                        DateTimeRequest =  new DateTimeOffset(new DateTime(2018, 11, 11)).ToString("D",new CultureInfo("ru-RU")),  //"11 ноября 2018 г.",
                         DayOfName = "воскресенье",
                         NumberOfSemester = 5,
                         ParityOfWeekCount = 10,
@@ -361,7 +362,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                     },
                     new ParityOfTheWeekViewModel
                     {
-                        DateTimeRequest = "29 апреля 2021 г.",
+                        DateTimeRequest = new DateTimeOffset(new DateTime(2021, 04, 29)).ToString("D",new CultureInfo("ru-RU")),
                         DayOfName = "четверг",
                         NumberOfSemester = 8,
                         ParityOfWeekCount = 11,
@@ -387,7 +388,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                     },
                     new ParityOfTheWeekViewModel
                     {
-                        DateTimeRequest = "4 января 2019 г.",
+                        DateTimeRequest = new DateTimeOffset(new DateTime(2019, 1, 4)).ToString("D",new CultureInfo("ru-RU")),
                         DayOfName = "пятница",
                         NumberOfSemester = 2,
                         ParityOfWeekCount = 1,
