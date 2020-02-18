@@ -138,26 +138,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Assert
             Assert.Equal(expected, result);
         }
-
-        /*[Theory]
-        [MemberData(nameof(GetParityOfTheWeekConfigurationModel))]
-        public void GenerateDataOfTheWeek_ParityOfTheWeekModel_ReturnsExpectedValue(
-            DateTime dateTime, 
-            IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel, 
-            ParityOfTheWeekModel expected)
-        {
-            // Arrange
-            var dateTimeTest = dateTime;
-
-            // Act
-            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mockMapper.Object);
-            var result = service.GenerateDataOfTheWeek(dateTimeTest);
-            var isCompare = Compare(result, expected);
-
-            // Assert
-            Assert.True(isCompare);
-        }*/
-
+        
         [Theory]
         [InlineData("11-11-2018", StatusDayType.DayOff)]
         [InlineData("01-01-2019", StatusDayType.ExamsTime)]
@@ -233,6 +214,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Act
             var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mapper);
             var result = service.GenerateDataOfTheWeek(dateTimeTest);
+            
+            _testOutputHelper.WriteLine(result.ToJson());
+            _testOutputHelper.WriteLine(expected.ToJson());
             var isCompare = Compare(result, expected);
 
             // Assert
