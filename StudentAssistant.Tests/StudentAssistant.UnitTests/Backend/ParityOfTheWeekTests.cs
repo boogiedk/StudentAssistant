@@ -5,13 +5,16 @@ using System.Reflection;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using Moq;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services.Implementation;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 {
@@ -22,12 +25,14 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
     public class ParityOfTheWeekTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private readonly Mock<IOptions<ParityOfTheWeekConfigurationModel>> _parityOfTheWeekConfigurationModel;
         private readonly Mock<IMapper> _mockMapper;
         private readonly IMapper _mapper;
 
-        public ParityOfTheWeekTests()
+        public ParityOfTheWeekTests(ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization());
             _parityOfTheWeekConfigurationModel =
@@ -206,6 +211,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Act
             var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mapper);
             var result = service.PrepareViewModel(parityOfTheWeekModel);
+            
+            _testOutputHelper.WriteLine(result.ToJson());
+            _testOutputHelper.WriteLine(expected.ToJson());
             var isCompare = Compare(result, expected);
 
             // Assert
