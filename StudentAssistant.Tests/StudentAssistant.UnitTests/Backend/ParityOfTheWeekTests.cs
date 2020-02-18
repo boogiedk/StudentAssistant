@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using Moq;
 using StudentAssistant.Backend.Infrastructure.AutoMapper;
 using StudentAssistant.Backend.Models.ParityOfTheWeek;
 using StudentAssistant.Backend.Models.ParityOfTheWeek.ViewModels;
 using StudentAssistant.Backend.Services.Implementation;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 {
@@ -21,12 +25,14 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
     public class ParityOfTheWeekTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private readonly Mock<IOptions<ParityOfTheWeekConfigurationModel>> _parityOfTheWeekConfigurationModel;
         private readonly Mock<IMapper> _mockMapper;
         private readonly IMapper _mapper;
 
-        public ParityOfTheWeekTests()
+        public ParityOfTheWeekTests(ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             var fixture = new Fixture();
             fixture.Customize(new AutoMoqCustomization());
             _parityOfTheWeekConfigurationModel =
@@ -132,26 +138,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Assert
             Assert.Equal(expected, result);
         }
-
-        /*[Theory]
-        [MemberData(nameof(GetParityOfTheWeekConfigurationModel))]
-        public void GenerateDataOfTheWeek_ParityOfTheWeekModel_ReturnsExpectedValue(
-            DateTime dateTime, 
-            IOptions<ParityOfTheWeekConfigurationModel> parityOfTheWeekConfigurationModel, 
-            ParityOfTheWeekModel expected)
-        {
-            // Arrange
-            var dateTimeTest = dateTime;
-
-            // Act
-            var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mockMapper.Object);
-            var result = service.GenerateDataOfTheWeek(dateTimeTest);
-            var isCompare = Compare(result, expected);
-
-            // Assert
-            Assert.True(isCompare);
-        }*/
-
+        
         [Theory]
         [InlineData("11-11-2018", StatusDayType.DayOff)]
         [InlineData("01-01-2019", StatusDayType.ExamsTime)]
@@ -205,6 +192,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Act
             var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mapper);
             var result = service.PrepareViewModel(parityOfTheWeekModel);
+            
+            _testOutputHelper.WriteLine(result.ToJson());
+            _testOutputHelper.WriteLine(expected.ToJson());
             var isCompare = Compare(result, expected);
 
             // Assert
@@ -224,6 +214,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Act
             var service = new ParityOfTheWeekService(parityOfTheWeekConfigurationModel, _mapper);
             var result = service.GenerateDataOfTheWeek(dateTimeTest);
+            
+            _testOutputHelper.WriteLine(result.ToJson());
+            _testOutputHelper.WriteLine(expected.ToJson());
             var isCompare = Compare(result, expected);
 
             // Assert
@@ -335,7 +328,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                     },
                     new ParityOfTheWeekViewModel
                     {
-                        DateTimeRequest = "11 ноября 2018 г.",
+                        DateTimeRequest =  new DateTimeOffset(new DateTime(2018, 11, 11)).ToString("D",new CultureInfo("ru-RU")),  //"11 ноября 2018 г.",
                         DayOfName = "воскресенье",
                         NumberOfSemester = 5,
                         ParityOfWeekCount = 10,
@@ -361,7 +354,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                     },
                     new ParityOfTheWeekViewModel
                     {
-                        DateTimeRequest = "29 апреля 2021 г.",
+                        DateTimeRequest = new DateTimeOffset(new DateTime(2021, 04, 29)).ToString("D",new CultureInfo("ru-RU")),
                         DayOfName = "четверг",
                         NumberOfSemester = 8,
                         ParityOfWeekCount = 11,
@@ -387,7 +380,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                     },
                     new ParityOfTheWeekViewModel
                     {
-                        DateTimeRequest = "4 января 2019 г.",
+                        DateTimeRequest = new DateTimeOffset(new DateTime(2019, 1, 4)).ToString("D",new CultureInfo("ru-RU")),
                         DayOfName = "пятница",
                         NumberOfSemester = 2,
                         ParityOfWeekCount = 1,

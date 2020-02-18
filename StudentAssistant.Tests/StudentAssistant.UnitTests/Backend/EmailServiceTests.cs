@@ -19,15 +19,5 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             
             Assert.False(result.IsSended);
         }
-       
-       [Fact]
-       public void Send_EmailResultModel_ShouldBeReturnOkResult()
-       {
-           var emailService = new EmailService();
-
-           var result = emailService.Send(new EmailRequestModel());
-            
-           Assert.False(result.IsSended);
-       }
     }
 }

@@ -49,7 +49,7 @@ namespace StudentAssistant.Backend.Services.Implementation
                     ParityOfWeekCount = GetCountParityOfWeek(dateTimeOffsetRequest),
                     PartOfSemester = GetPartOfSemester(dateTimeOffsetRequest),
                     NumberOfSemester = GetNumberOfSemester(dateTimeOffsetRequest, _parityOfTheWeekConfigurationModel.StartLearningYear),
-                    DayOfName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(dateTimeOffsetRequest.DayOfWeek),
+                    DayOfName = new CultureInfo("ru-RU").DateTimeFormat.GetDayName(dateTimeOffsetRequest.DayOfWeek),
                     StatusDay = GetStatusDay(dateTimeOffsetRequest)
                 };
 
@@ -202,7 +202,7 @@ namespace StudentAssistant.Backend.Services.Implementation
             var resultViewModel = _mapper.Map<ParityOfTheWeekViewModel>(input);
 
             resultViewModel.ParityOfWeekToday = input.ParityOfWeekToday ? "Чётная" : "Нечётная";
-            resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D");
+            resultViewModel.DateTimeRequest = input.DateTimeRequest.ToString("D", new CultureInfo("ru-RU"));
             resultViewModel.StatusDay = input.StatusDay.Humanize();
             resultViewModel.IsParity = input.ParityOfWeekToday;
             // тестовый вариант
