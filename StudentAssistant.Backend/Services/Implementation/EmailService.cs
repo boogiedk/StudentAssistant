@@ -55,13 +55,13 @@ namespace StudentAssistant.Backend.Services.Implementation
                     Message = "Сообщение успешно отправлено."
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //log
                 return new EmailResultModel
                 {
                     IsSended = false,
-                    Message = "Произошла ошибка при отправке сообщения: возникло исключение в системе." + ex
+                    Message = "Произошла ошибка при отправке сообщения: возникло исключение в системе."
                 };
             }
         }
