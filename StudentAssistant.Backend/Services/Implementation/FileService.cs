@@ -12,7 +12,7 @@ namespace StudentAssistant.Backend.Services.Implementation
     {
         public Task<bool> CheckExcelFile(DateTime datetimeUfc, string fileName) => Task.Run(() =>
         {
-            var lastAccessTimeUtc = File.GetLastAccessTimeUtc(
+            var lastAccessTimeUtc = File.GetLastWriteTimeUtc(
                 Path.Combine($"{fileName}"));
 
             return lastAccessTimeUtc.Date == datetimeUfc.Date;

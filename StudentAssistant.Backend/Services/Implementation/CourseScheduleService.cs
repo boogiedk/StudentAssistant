@@ -178,29 +178,30 @@ namespace StudentAssistant.Backend.Services.Implementation
                 _logger.LogInformation("DownloadAsync: " + "Start");
 
                 // проверяем свежесть файла
-                var isNewFile = _fileService.CheckExcelFile(DateTime.UtcNow, _fileName);
+                var isNewFile =  await  _fileService.CheckExcelFile(DateTime.UtcNow, _fileName);
 
                 // TODO: вынести в конфиг
                 // TODO: ссылки хранить в бд
+                // https://www.mirea.ru/upload/medialibrary/8b7/KBiSP-4-kurs-2-sem.xlsx
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
                     PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
-                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/29a/"),
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/8b7/"),
                     FileNameLocal = "scheduleFile",
                     FileNameRemote = "KBiSP-4-kurs-2-sem",
                     FileFormat = "xlsx"
                 };
 
-                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + await isNewFile);
+                _logger.LogInformation("DownloadAsync: " + "isNewFile: " + isNewFile);
 
                 var result = new DownloadAsyncResponseModel
                 {
-                    IsNewFile = await isNewFile
+                    IsNewFile = isNewFile
                 };
 
 
                 // если не свежий => качаем новый (1 сутки)
-                if (!(await isNewFile))
+                if (!isNewFile)
                 {
                     await _fileService.DownloadAsync(
                         downloadFileParametersModel, cancellationToken);
