@@ -79,7 +79,6 @@ namespace StudentAssistant.Backend.Controllers
         /// </summary>
         /// <returns><see cref="CourseScheduleViewModel"/> Модель представления расписания.</returns>
         [HttpGet("today")]
-        [Authorize(Roles = "Student")]
         public IActionResult GetToday()
         {
             try
