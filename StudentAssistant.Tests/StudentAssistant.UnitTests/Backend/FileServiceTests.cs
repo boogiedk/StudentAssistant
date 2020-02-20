@@ -41,15 +41,17 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Theory]
-        [InlineData(1, "01-31-2020", true)]
-        public async void CheckExcelFile_Bool_ShouldBeReturnTrue(int flag, DateTime datetimeUtc, bool expected)
+        [InlineData(2,3, true)]
+        public async void CheckExcelFile_Bool_ShouldBeReturnTrue(int urlFlag, int fileNameFlag, bool expected)
         {
             // Arrange
+            var dateTime = DateTime.Now;
             var fileService = new FileService();
-            var fileName = GetFilePath(flag);
+            var fileName = GetFilePath(fileNameFlag);
+            await fileService.DownloadByLinkAsync(new Uri(GetFilePath(urlFlag)), fileName, CancellationToken.None);
 
             // Act
-            var result = await fileService.CheckExcelFile(datetimeUtc, fileName);
+            var result = await fileService.CheckExcelFile(dateTime, fileName);
               _testOutputHelper.WriteLine(result.ToString(CultureInfo.CurrentCulture));
 
             // Assert
@@ -74,19 +76,20 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         }
 
         [Theory]
-        [InlineData(1, "01-31-2020")]
-        public async void GetLastWriteTime_DateTime_ShouldBeReturnTrueLastAccessTimeUtc(int flag, DateTime expected)
+        [InlineData(2,3)]
+        public async void GetLastWriteTime_DateTime_ShouldBeReturnTrueLastAccessTimeUtc(int urlFlag, int fileNameFlag)
         {
             // Arrange
+            var dateTime = DateTime.Now;
             var fileService = new FileService();
-            var fileName = GetFilePath(flag);
-
+            var fileName = GetFilePath(fileNameFlag);
+            await fileService.DownloadByLinkAsync(new Uri(GetFilePath(urlFlag)), fileName, CancellationToken.None);
+            
             // Act
             var result = await fileService.GetLastWriteTime(fileName);
-            
-            _testOutputHelper.WriteLine(result.ToString(CultureInfo.CurrentCulture));
+
             // Assert
-            Assert.Equal(expected.Date, result.Date);
+            Assert.Equal(dateTime.Date, result.Date);
         }
 
         [Theory]
