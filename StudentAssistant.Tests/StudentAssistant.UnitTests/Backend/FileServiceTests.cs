@@ -1,10 +1,12 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Security.Policy;
 using System.Threading;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.Backend.Services.Implementation;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 {
@@ -14,6 +16,13 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
     /// </summary>
     public class FileServiceTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public FileServiceTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Theory]
         [InlineData("02-05-2020", 1, false)]
         [InlineData("01-26-2020", 1, false)]
@@ -41,6 +50,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
             // Act
             var result = await fileService.CheckExcelFile(datetimeUtc, fileName);
+              _testOutputHelper.WriteLine(result.ToString(CultureInfo.CurrentCulture));
 
             // Assert
             Assert.Equal(expected, result);
@@ -73,7 +83,8 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
 
             // Act
             var result = await fileService.GetLastWriteTime(fileName);
-
+            
+            _testOutputHelper.WriteLine(result.ToString(CultureInfo.CurrentCulture));
             // Assert
             Assert.Equal(expected.Date, result.Date);
         }
