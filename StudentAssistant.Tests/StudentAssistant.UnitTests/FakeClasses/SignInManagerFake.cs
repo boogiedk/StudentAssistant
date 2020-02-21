@@ -10,9 +10,9 @@ using StudentAssistant.DbLayer.Models;
 
 namespace StudentAssistant.Tests.StudentAssistant.UnitTests.FakeClasses
 {
-    public class FakeSignInManager : SignInManager<IdentityUser>
+    public class SignInManagerFake : SignInManager<IdentityUser>
     {
-        public FakeSignInManager()
+        public SignInManagerFake()
             : base(new UserManagerFake(),
                 new Mock<IHttpContextAccessor>().Object,
                 new Mock<IUserClaimsPrincipalFactory<IdentityUser>>().Object,

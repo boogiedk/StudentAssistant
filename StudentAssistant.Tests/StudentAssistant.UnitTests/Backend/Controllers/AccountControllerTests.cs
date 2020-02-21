@@ -22,7 +22,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend.Controllers
 
         private readonly Mock<SignInManager<IdentityUser>> _signInManager;
         private readonly Mock<IJwtTokenFactory> _jwtTokenFactory;
-        private readonly FakeSignInManager _fakeSignInManager;
+        private readonly SignInManagerFake _signInManagerFake;
 
         public AccountControllerTests()
         {
@@ -34,7 +34,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend.Controllers
 
             _jwtTokenFactory = new Mock<IJwtTokenFactory>();
             _signInManager = new Mock<SignInManager<IdentityUser>>();
-            _fakeSignInManager = new FakeSignInManager();
+            _signInManagerFake = new SignInManagerFake();
         }
 
         [Fact]

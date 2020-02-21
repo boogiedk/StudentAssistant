@@ -40,6 +40,9 @@
     <None Update="TestFiles\examScheduleFileTest.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestFiles\scheduleFileTest.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
