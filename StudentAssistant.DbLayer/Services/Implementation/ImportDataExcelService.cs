@@ -415,7 +415,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        private string ParseGroupName(string groupName)
+        public string ParseGroupName(string groupName)
         {
             if (groupName == null) // БББО-01-16 (КБ-1)10.03.01
             {
@@ -453,7 +453,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="parityWeek"></param>
         /// <returns></returns>
-        private bool ParseParityWeek(string parityWeek)
+        public bool ParseParityWeek(string parityWeek)
         {
             if (string.IsNullOrEmpty(parityWeek))
             {
@@ -478,7 +478,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="courseType"></param>
         /// <returns></returns>
-        private CourseType ParseCourseType(string courseType)
+        public CourseType ParseCourseType(string courseType)
         {
             if (string.IsNullOrEmpty(courseType))
             {
@@ -554,7 +554,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private bool IsNumberContains(string input)
+        public bool IsNumberContains(string input)
         {
             foreach (char c in input)
                 if (Char.IsNumber(c))
@@ -567,7 +567,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
         /// </summary>
         /// <param name="courseName"></param>
         /// <returns></returns>
-        private string PrepareCourseName(string courseName)
+        public string PrepareCourseName(string courseName)
         {
             if (string.IsNullOrEmpty(courseName))
             {
@@ -580,7 +580,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             {
                 var result = courseName.Remove(0, stringNumbers.Length + 1);
 
-                return result;
+                return result.TrimStart().TrimEnd();
             }
 
             return courseName;

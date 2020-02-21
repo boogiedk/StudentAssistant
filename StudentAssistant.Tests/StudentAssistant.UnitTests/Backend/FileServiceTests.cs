@@ -118,9 +118,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var fileName = Path.Combine(GetFilePath(fileNameFlag));
             var downloadFileParametersModel = new DownloadFileParametersModel
             {
-                //https://www.mirea.ru/upload/medialibrary/8b7/KBiSP-4-kurs-2-sem.xlsx
+                //https://www.mirea.ru/upload/medialibrary/39e/KBiSP-4-kurs-2-sem.xlsx
                 PathToFile = string.Empty,
-                RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/8b7/"),
+                RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/39e/"),
                 FileNameLocal = fileName,
                 FileNameRemote = "KBiSP-4-kurs-2-sem",
                 FileFormat = "xlsx"
@@ -144,7 +144,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                 case 1:
                     return Path.Combine("TestFiles", "examScheduleFileTest.xls");
                 case 2:
-                    return @"https://www.mirea.ru/upload/medialibrary/8b7/KBiSP-4-kurs-2-sem.xlsx";
+                    return @"https://www.mirea.ru/upload/medialibrary/39e/KBiSP-4-kurs-2-sem.xlsx";
                 case 3:
                     return Guid.NewGuid().ToString();
                 case 4:
