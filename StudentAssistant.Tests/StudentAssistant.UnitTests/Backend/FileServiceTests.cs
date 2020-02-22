@@ -5,6 +5,7 @@ using System.Security.Policy;
 using System.Threading;
 using StudentAssistant.Backend.Models.DownloadFileService;
 using StudentAssistant.Backend.Services.Implementation;
+using StudentAssistant.Tests.Helpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -31,7 +32,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         {
             // Arrange
             var fileService = new FileService();
-            var fileName = GetFilePath(flag);
+            var fileName = TestValueProvider.GetValueStringByFlag(flag);
 
             // Act
             var result = await fileService.CheckExcelFile(datetimeUtc, fileName);
@@ -47,8 +48,8 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Arrange
             var dateTime = DateTime.Now;
             var fileService = new FileService();
-            var fileName = GetFilePath(fileNameFlag);
-            await fileService.DownloadByLinkAsync(new Uri(GetFilePath(urlFlag)), fileName, CancellationToken.None);
+            var fileName = TestValueProvider.GetValueStringByFlag(fileNameFlag);
+            await fileService.DownloadByLinkAsync(new Uri(TestValueProvider.GetValueStringByFlag(urlFlag)), fileName, CancellationToken.None);
 
             // Act
             var result = await fileService.CheckExcelFile(dateTime, fileName);
@@ -66,7 +67,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         {
             // Arrange
             var fileService = new FileService();
-            var fileName = GetFilePath(flag);
+            var fileName = TestValueProvider.GetValueStringByFlag(flag);
 
             // Act
             var result = await fileService.GetLastWriteTime(fileName);
@@ -82,8 +83,8 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             // Arrange
             var dateTime = DateTime.Now;
             var fileService = new FileService();
-            var fileName = GetFilePath(fileNameFlag);
-            await fileService.DownloadByLinkAsync(new Uri(GetFilePath(urlFlag)), fileName, CancellationToken.None);
+            var fileName = TestValueProvider.GetValueStringByFlag(fileNameFlag);
+            await fileService.DownloadByLinkAsync(new Uri(TestValueProvider.GetValueStringByFlag(urlFlag)), fileName, CancellationToken.None);
             
             // Act
             var result = await fileService.GetLastWriteTime(fileName);
@@ -98,8 +99,8 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         {
             // Arrange
             var fileService = new FileService();
-            var url = GetFilePath(urlFlag);
-            var fileName = Path.Combine(GetFilePath(fileNameFlag) + ".xlsx");
+            var url = TestValueProvider.GetValueStringByFlag(urlFlag);
+            var fileName = Path.Combine(TestValueProvider.GetValueStringByFlag(fileNameFlag) + ".xlsx");
 
             // Act
             await fileService.DownloadByLinkAsync(new Uri(url), fileName, CancellationToken.None);
@@ -115,7 +116,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
         {
             // Arrange
             var fileService = new FileService();
-            var fileName = Path.Combine(GetFilePath(fileNameFlag));
+            var fileName = Path.Combine(TestValueProvider.GetValueStringByFlag(fileNameFlag));
             var downloadFileParametersModel = new DownloadFileParametersModel
             {
                 //https://www.mirea.ru/upload/medialibrary/39e/KBiSP-4-kurs-2-sem.xlsx
@@ -133,28 +134,5 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var result = File.Exists(fileName + ".xlsx");
             Assert.True(result);
         }
-
-
-        #region Helpers
-
-        private string GetFilePath(int flag)
-        {
-            switch (flag)
-            {
-                case 1:
-                    return Path.Combine("TestFiles", "examScheduleFileTest.xls");
-                case 2:
-                    return @"https://www.mirea.ru/upload/medialibrary/39e/KBiSP-4-kurs-2-sem.xlsx";
-                case 3:
-                    return Guid.NewGuid().ToString();
-                case 4:
-                    return Path.Combine("TestFiles");
-
-                default:
-                    return string.Empty;
-            }
-        }
-
-        #endregion
     }
 }

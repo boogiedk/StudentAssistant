@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using StudentAssistant.DbLayer.Interfaces;
-using StudentAssistant.DbLayer.Models;
 using StudentAssistant.DbLayer.Models.CourseSchedule;
 using StudentAssistant.DbLayer.Models.Exam;
-using StudentAssistant.DbLayer.Models.ImportData;
-
 
 namespace StudentAssistant.DbLayer.Services.Implementation
 {
@@ -48,57 +45,21 @@ namespace StudentAssistant.DbLayer.Services.Implementation
             return await result;
         }
 
-        public IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input)
+        // добавляем в модель с расписанием комбинированные пары с другими группами
+        /*foreach (var courseScheduleDatabaseModel in filterByGroup)
         {
-            try
+            foreach (var scheduleDatabaseModel in filterByParameters)
             {
-                if (input == null) throw new ArgumentNullException(nameof(input));
-
-                var courseScheduleDatabaseModels = _importDataExcelService
-                    .GetCourseScheduleDatabaseModels(input.FileName);
-
-                // фильтруем по дням недели - берем только то, что может быть в указанный день недели.
-                var filterByNameOfWeek = courseScheduleDatabaseModels
-                    .Where(w => string.Equals(w.NameOfDayWeek, input.NameOfDayWeek,
-                        StringComparison.InvariantCultureIgnoreCase));
-
-                // если указаны номера недель и там указана указанная неделя, то фильтруем по этому параметру 
-                // или если не указаны номера недель, то фильтруем по четности.
-                var filterByParameters = filterByNameOfWeek;
-                  //  .Where(w => (w.NumberWeek != null
-                                // && w.NumberWeek.Any(s=>s.NumberWeek == input.NumberWeek))
-                               // || (w.NumberWeek == null || w.NumberWeek.Count == 0)
-                              //  && w.ParityWeek == input.ParityWeek).ToArray();
-
-                // фильтруем по группе
-                var filterByGroup =
-                    filterByParameters.Where(w => string.Equals(w.StudyGroupModel.Name, input.GroupName));
-
-                var result = new List<StudyGroupModel>();
-
-                // добавляем в модель с расписанием комбинированные пары с другими группами
-                foreach (var courseScheduleDatabaseModel in filterByGroup)
+                if (courseScheduleDatabaseModel.CoursePlace == scheduleDatabaseModel.CoursePlace
+                    && courseScheduleDatabaseModel.CourseNumber == scheduleDatabaseModel.CourseNumber
+                    && courseScheduleDatabaseModel.StudyGroupModel.Name !=
+                    scheduleDatabaseModel.StudyGroupModel.Name)
                 {
-                    foreach (var scheduleDatabaseModel in filterByParameters)
-                    {
-                        if (courseScheduleDatabaseModel.CoursePlace == scheduleDatabaseModel.CoursePlace
-                            && courseScheduleDatabaseModel.CourseNumber == scheduleDatabaseModel.CourseNumber
-                            && courseScheduleDatabaseModel.StudyGroupModel.Name !=
-                            scheduleDatabaseModel.StudyGroupModel.Name)
-                        {
-                            result.Add(scheduleDatabaseModel.StudyGroupModel);
+                    result.Add(scheduleDatabaseModel.StudyGroupModel);
 
-                            courseScheduleDatabaseModel.CombinedGroup = result.Distinct().ToList();
-                        }
-                    }
+                    courseScheduleDatabaseModel.CombinedGroup = result.Distinct().ToList();
                 }
-
-                return filterByGroup;
             }
-            catch (Exception ex)
-            {
-                throw new NotSupportedException("Ошибка во время выполнения." + ex);
-            }
-        }
+        }*/
     }
 }

@@ -57,28 +57,28 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
         public void GetExamScheduleDatabaseModels_CountDatabaseModels_ShouldParseExcelAndReturnCountModels()
         {
             // Arrange
-                var importDataExcelService = new ImportDataExcelService(_logger.Object);
-                var fileName = Path.Combine("TestFiles", "scheduleFileTest.xlsx");
+            var importDataExcelService = new ImportDataExcelService(_logger.Object);
+            var fileName = Path.Combine("TestFiles", "scheduleFileTest.xlsx");
 
-                //Act
-                var result = importDataExcelService.GetCourseScheduleDatabaseModels(fileName).ToList();
+            //Act
+            var result = importDataExcelService.GetCourseScheduleDatabaseModels(fileName).ToList();
 
-                //Assert
-                Assert.True(result.Count > 0);
-            }
-        
+            //Assert
+            Assert.True(result.Count > 0);
+        }
+
         [Fact]
         public void ParseExcelFileForThreeGroup_EnumerableModels_ShouldParseExcelAndReturnModels()
         {
-                // Arrange
-                var importDataExcelService = new ImportDataExcelService(_logger.Object);
-                var fileName = Path.Combine("TestFiles", "examScheduleFileTest.xls");
+            // Arrange
+            var importDataExcelService = new ImportDataExcelService(_logger.Object);
+            var fileName = Path.Combine("TestFiles", "examScheduleFileTest.xls");
 
-                //Act
-                var result = importDataExcelService.GetExamScheduleDatabaseModels(fileName).ToList();
+            //Act
+            var result = importDataExcelService.GetExamScheduleDatabaseModels(fileName).ToList();
 
-                //Assert
-                Assert.True(result.Count > 0);
+            //Assert
+            Assert.True(result.Count > 0);
         }
 
         [Theory]
@@ -96,7 +96,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
             //Assert
             Assert.Equal(expected, result);
         }
-        
+
         [Theory]
         [InlineData("I", false)]
         [InlineData("II", true)]
@@ -113,7 +113,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
             //Assert
             Assert.Equal(expected, result);
         }
-        
+
         [Theory]
         [InlineData("пр", CourseType.Practicte)]
         [InlineData("лр", CourseType.LaboratoryWork)]
@@ -127,24 +127,24 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
         {
             // Arrange
             var importDataExcelService = new ImportDataExcelService(_logger.Object);
-            
-          /* case "пр":
-            return CourseType.Practicte;
-            case "лр":
-            return CourseType.LaboratoryWork;
-            case "лб":
-            return CourseType.LaboratoryWork;
-            case "лек":
-            return CourseType.Lecture;
-            case "зач":
-            return CourseType.ControlCourse;
-            case "консультация":
-            return CourseType.СonsultationCourse;
-            case "экзамен":
-            return CourseType.ExamCourse;
-            case "лк":
-            return CourseType.Lecture;
-            */
+
+            /* case "пр":
+              return CourseType.Practicte;
+              case "лр":
+              return CourseType.LaboratoryWork;
+              case "лб":
+              return CourseType.LaboratoryWork;
+              case "лек":
+              return CourseType.Lecture;
+              case "зач":
+              return CourseType.ControlCourse;
+              case "консультация":
+              return CourseType.СonsultationCourse;
+              case "экзамен":
+              return CourseType.ExamCourse;
+              case "лк":
+              return CourseType.Lecture;
+              */
 
             //Act
             var result = importDataExcelService.ParseCourseType(courseType);
@@ -152,7 +152,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
             //Assert
             Assert.Equal(expected, result);
         }
-        
+
         [Theory]
         [InlineData("1,2,3 н Предмет", 1)]
         [InlineData("1 н Предмет", 2)]
@@ -169,7 +169,7 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
             //Assert
             Assert.Equal(expected, result);
         }
-        
+
         [Theory]
         [InlineData("1 2 3 н Предмет", true)]
         [InlineData("1 н Предмет", true)]
@@ -183,9 +183,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
             var result = importDataExcelService.IsNumberContains(stringValue);
 
             //Assert
-             Assert.Equal(expected, result);
+            Assert.Equal(expected, result);
         }
-        
+
         [Theory]
         [InlineData("1 2 3 н Предмет", "Предмет")]
         [InlineData("Предмет", "Предмет")]
@@ -204,23 +204,23 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.DbLayer
 
 
         #region MyRegion
-        
+
         public List<int> GetValueByFlag(int flag)
         {
             switch (flag)
             {
-            case 1:
-                return new List<int> {1,2,3};
-            case 2:
-                return new List<int> {1};
-            case 3:
-                return new List<int>();
-                
-            default:
-                return new List<int>();
+                case 1:
+                    return new List<int> {1, 2, 3};
+                case 2:
+                    return new List<int> {1};
+                case 3:
+                    return new List<int>();
+
+                default:
+                    return new List<int>();
             }
         }
-        
+
         #endregion
     }
 }
