@@ -16,13 +16,6 @@ namespace StudentAssistant.DbLayer.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<List<CourseScheduleDatabaseModel>> GetFromExcelFile(string fileName);
-        
-        /// <summary>
-        /// Возвращает расписание, взятое из Excel файла и отфильтрованное по заданным параметрам.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-       IEnumerable<CourseScheduleDatabaseModel> GetFromExcelFileByParameters(CourseScheduleParameters input);
 
         /// <summary>
         /// Возвращает расписание с экзаменами.
