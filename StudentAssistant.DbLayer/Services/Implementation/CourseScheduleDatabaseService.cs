@@ -58,7 +58,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     throw new NotSupportedException();
                 }
 
-                var courseScheduleDatabaseModel = _context.CourseSchedules
+                var courseSchedules = _context.CourseSchedules
                     .Include(i => i.TeacherModel)
                     .Include(d => d.StudyGroupModel)
                     .Where(d => (d.CourseType == CourseType.Lecture
@@ -69,7 +69,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
 
                 var list = new List<CourseScheduleDatabaseModel>();
 
-                foreach (var scheduleDatabaseModel in courseScheduleDatabaseModel)
+                foreach (var scheduleDatabaseModel in courseSchedules)
                 {
                     var model = scheduleDatabaseModel;
 
@@ -85,6 +85,28 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         && f.StudyGroupModel?.Name == parameters.GroupName
                         && f.IsDeleted == false)
                     .ToList();
+                
+                var studyGroupCombined = new List<StudyGroupModel>();
+                
+                var filteredCourseSchedules = courseSchedules.Where(f =>
+                        string.Equals(f.NameOfDayWeek, parameters.NameOfDayWeek, StringComparison.OrdinalIgnoreCase)
+                        && (f.NumberWeek.Any(a => a == parameters.NumberWeek) || f.NumberWeek.Count == 0)
+                        && f.ParityWeek == parameters.ParityWeek
+                        && f.IsDeleted == false)
+                    .ToList();
+                
+                foreach (var model in result)
+                {
+                    foreach (var scheduleDatabaseModel in filteredCourseSchedules
+                        .Where(scheduleDatabaseModel => model.CoursePlace == scheduleDatabaseModel.CoursePlace 
+                                                        && model.CourseNumber == scheduleDatabaseModel.CourseNumber 
+                                                        && model.StudyGroupModel.Name != scheduleDatabaseModel.StudyGroupModel.Name))
+                    {
+                        studyGroupCombined.Add(scheduleDatabaseModel.StudyGroupModel);
+
+                        model.CombinedGroup = studyGroupCombined.Distinct().ToList();
+                    }
+                }
 
                 return result;
             }
