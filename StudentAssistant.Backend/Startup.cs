@@ -114,7 +114,6 @@ namespace StudentAssistant.Backend
             services.AddScoped<IParityOfTheWeekService, ParityOfTheWeekService>();
             services.AddScoped<IUserSupportService, UserSupportService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IValidationService, ValidationService>();
             services.AddScoped<ICourseScheduleService, CourseScheduleService>();
             services.AddScoped<ICourseScheduleFileService, CourseScheduleFileService>();
             services.AddScoped<IImportDataExcelService, ImportDataExcelService>();
