@@ -158,7 +158,7 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                     .Select(s => new StudyGroupModel
                     {
                         Id = Guid.NewGuid(),
-                        Name = ParseGroupName(s.GroupName)
+                        Name = ParseGroupName(s.GroupName) 
                     })
                     .ToList();
 
@@ -183,7 +183,6 @@ namespace StudentAssistant.DbLayer.Services.Implementation
                         NumberWeek = ParseNumberWeek(importDataExcelModel.CourseName),
                         NumberWeekString = String.Join(",",
                             ParseNumberWeek(importDataExcelModel.CourseName).Select(p => p.ToString())),
-
                         ParityWeek = ParseParityWeek(importDataExcelModel.ParityWeek),
                         TeacherModel = teachers.FirstOrDefault(w => w.FullName == importDataExcelModel.TeacherFullName),
                         StudyGroupModel = studyGroups.FirstOrDefault(w => string.Equals(w.Name,ParseGroupName(importDataExcelModel.GroupName))),

@@ -82,11 +82,15 @@ namespace StudentAssistant.Backend.Services.Implementation
             await _signInManager.SignInAsync(user, true);
 
             if (model.ApplicationRoles == IdentityRoles.Administrator)
+            {
+               await _userManager.DeleteAsync(user);
+                
                 return new AccountRegisterResponse { IdentityResult = IdentityResult.Failed(new IdentityError
                 {
                     Code = "IdentityRoleError",
                     Description = "Can't registered with role Administrator"
                 })};
+            }
 
             await _roleManager.CreateAsync(new IdentityRole(model.ApplicationRoles.Humanize()));
             await _userManager.AddToRoleAsync(user, model.ApplicationRoles.Humanize());

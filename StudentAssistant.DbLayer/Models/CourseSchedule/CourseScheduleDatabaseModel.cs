@@ -20,6 +20,9 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         [NotMapped]
         public List<int> NumberWeek { get; set; }
 
+        /// <summary>
+        /// Номер недели в виде строки.
+        /// </summary>
         public string NumberWeekString { get; set; }
 
         /// <summary>
@@ -75,6 +78,7 @@ namespace StudentAssistant.DbLayer.Models.CourseSchedule
         /// <summary>
         /// Группы, с которыми объединенные пары.
         /// </summary>
+        [NotMapped]
         public List<StudyGroupModel> CombinedGroup { get; set; }
 
         /// <summary>
