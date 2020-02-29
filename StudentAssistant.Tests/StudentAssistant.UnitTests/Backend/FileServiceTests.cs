@@ -123,14 +123,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                 PathToFile = string.Empty,
                 RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/97d/"),
                 FileNameLocal = fileName,
-                FileNameRemote = "KBiSP-4-kurs-2-sem",
+                FileNameRemote = "KBiSP-4-kurs-2-sem-_1_",
                 FileFormat = "xlsx"
             };
-
-            var f = (5f - 5f) * -1;
-            var f2 = (5f - 5f) / -5f;
-            
-            Console.WriteLine(f);
 
             // Act
             await fileService.DownloadAsync(downloadFileParametersModel, CancellationToken.None);
