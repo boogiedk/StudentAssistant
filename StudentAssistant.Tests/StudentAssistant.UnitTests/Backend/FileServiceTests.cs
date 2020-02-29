@@ -127,6 +127,11 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
                 FileFormat = "xlsx"
             };
 
+            var f = (5f - 5f) * -1;
+            var f2 = (5f - 5f) / -5f;
+            
+            Console.WriteLine(f);
+
             // Act
             await fileService.DownloadAsync(downloadFileParametersModel, CancellationToken.None);
 

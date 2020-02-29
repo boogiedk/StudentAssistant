@@ -37,16 +37,6 @@ export default class NavMenu extends Component {
                                     <NavLink tag={Link} className="text-dark" to="/courseSchedule">Расписание
                                         пар</NavLink>
                                 </NavItem>
-                                /*
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/controlWeek">Расписание
-                                        зачётов</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/examSchedule">Расписание
-                                        экзаменов</NavLink>
-                                </NavItem>
-                                */
                             </ul>
                         </Collapse>
                     </Container>
