@@ -254,7 +254,7 @@ export class courseSchedule extends React.Component {
                             alt="iconUpdate"/>
 
 
-                        <a href="https://www.mirea.ru/upload/medialibrary/0b8/KBiSP-4-kurs-1-sem.xlsx">
+                        <a href="https://www.mirea.ru/upload/medialibrary/97d/KBiSP-4-kurs-2-sem-_1_.xlsx">
                             <img
                                 src="https://image.flaticon.com/icons/svg/152/152555.svg"
                                 title="Скачать расписание"
