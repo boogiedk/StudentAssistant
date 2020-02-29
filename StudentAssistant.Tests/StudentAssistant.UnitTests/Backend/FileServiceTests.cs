@@ -119,9 +119,9 @@ namespace StudentAssistant.Tests.StudentAssistant.UnitTests.Backend
             var fileName = Path.Combine(TestValueProvider.GetValueStringByFlag(fileNameFlag));
             var downloadFileParametersModel = new DownloadFileParametersModel
             {
-                //https://www.mirea.ru/upload/medialibrary/39e/KBiSP-4-kurs-2-sem.xlsx
+                //https://www.mirea.ru/upload/medialibrary/97d/KBiSP-4-kurs-2-sem-_1_.xlsx
                 PathToFile = string.Empty,
-                RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/39e/"),
+                RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/97d/"),
                 FileNameLocal = fileName,
                 FileNameRemote = "KBiSP-4-kurs-2-sem",
                 FileFormat = "xlsx"
