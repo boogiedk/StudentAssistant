@@ -182,11 +182,11 @@ namespace StudentAssistant.Backend.Services.Implementation
 
                 // TODO: вынести в конфиг
                 // TODO: ссылки хранить в бд
-                // https://www.mirea.ru/upload/medialibrary/8b7/KBiSP-4-kurs-2-sem.xlsx
+                // https://www.mirea.ru/upload/medialibrary/97d/KBiSP-4-kurs-2-sem-_1_.xlsx
                 var downloadFileParametersModel = new DownloadFileParametersModel
                 {
                     PathToFile = Path.Combine("Infrastructure", "ScheduleFile"),
-                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/8b7/"),
+                    RemoteUri = new Uri("https://www.mirea.ru/upload/medialibrary/97d/"),
                     FileNameLocal = "scheduleFile",
                     FileNameRemote = "KBiSP-4-kurs-2-sem",
                     FileFormat = "xlsx"
