@@ -8,7 +8,7 @@
     "date-fns": "latest",
     "jquery": "3.4.0",
     "js-cookie": "^2.2.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "react": "^16.4.0",
     "react-bootstrap": "^1.0.0-beta.12",
     "react-cookie": "^4.0.3",
